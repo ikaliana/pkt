@@ -15,8 +15,6 @@ function editModel(id)
         }
     });
 }
-
-
 </script>
 <section class="content">
         <div class="container-fluid">
@@ -36,12 +34,25 @@ function editModel(id)
                         <div class="header">
                             <div class="row clearfix">
                                 <div class="col-xs-12 col-sm-6">
-                                    <h2>Daftar Model</h2>
+                                    <div class="media">
+										<div class="media-left">
+											<a href="#">
+												<img class="media-object" src="images/icon/model.png" alt="Area Perkebunan" width="20">
+											</a>
+										</div>
+										<div class="media-body">
+											<h4 class="media-heading">Daftar Model</h4>
+										</div>
+									</div>
                                 </div>
                             </div>
                             <ul class="header-dropdown m-r--5">
                                 <li>
-									<button class="btn btn-xs bg-blue waves-effect" data-toggle="collapse" style="cursor: pointer;" data-target="#tambahModel" aria-expanded="false" aria-controls="tambahModel"><i class="material-icons">add_box</i> TAMBAH</button>
+									<button class="btn btn-xs bg-grey waves-effect" style="cursor: pointer;" onclick="window.location.reload(); "aria-expanded="false"><i class="material-icons">replay</i> REFRESH</button>
+									
+								</li>
+								<li>
+									<button class="btn btn-xs bg-blue waves-effect" data-toggle="modal" style="cursor: pointer;" data-target="#tambah_area" aria-expanded="false" aria-controls="tambah_area"><i class="material-icons">add_box</i> TAMBAH</button>
 									
 								</li>
                             </ul>

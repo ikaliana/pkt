@@ -41,13 +41,12 @@
                             <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content"){echo 'active';}};?>">
                                 <a href="index.php?p=area_content">Area Lahan</a>
                             </li>
-                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="model_content"){echo 'active';}};?>">
-                                <a href="index.php?p=model_content">Model Perhitungan Nutrisi</a>
-                            </li>
                             <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="citra_content"){echo 'active';}};?>">
                                 <a href="index.php?p=citra_content">Citra Sentinel</a>
                             </li>
-
+							<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="model_content"){echo 'active';}};?>">
+                                <a href="index.php?p=model_content">Model Perhitungan Nutrisi</a>
+                            </li>
                             <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="pupuk_content" OR $_GET['p']=="ppks_content"){echo 'active';}};?>">
                                 <a href="javascript:void(0);" class="menu-toggle">Pupuk</a>
 								<ul class="ml-menu">
@@ -65,7 +64,7 @@
 							</li>
                         </ul>
                     </li>
-					<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hasil_content" OR $_GET['p']=="hitung_content" OR $_GET['p']=="hasil_content_dummy" ){echo 'active';}};?>">
+					<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hasil_content" OR $_GET['p']=="hitung_content" ){echo 'active';}};?>">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">assignment</i>
                             <span>Rekomendasi Pupuk</span>

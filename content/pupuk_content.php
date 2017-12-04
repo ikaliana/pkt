@@ -49,8 +49,8 @@
                                     </tfoot>
                                     <tbody>
                                         <tr>
-                                            <td>UREA</td>
-                                            <td>46</td>
+                                            <td>Urea</td>
+                                            <td>45</td>
 											<td>0</td>
 											<td>0</td>
                                             <td>
@@ -58,28 +58,19 @@
 											</td>
                                         </tr>
                                         <tr>
-                                            <td>KCL</td>
-                                            <td>0</td>
-											<td>0</td>
-											<td>60</td>
-                                            <td>
-												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editPupuk" aria-expanded="false" aria-controls="editPupuk">Edit</a> | <a href="">Delete</a>
-											</td>
-                                        </tr>
-										<tr>
-                                            <td>TSP</td>
-                                            <td>0</td>
-											<td>36</td>
-											<td>0</td>
-                                            <td>
-												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editPupuk" aria-expanded="false" aria-controls="editPupuk">Edit</a> | <a href="">Delete</a>
-											</td>
-                                        </tr>
-										<tr>
                                             <td>NPK</td>
                                             <td>15</td>
 											<td>15</td>
 											<td>15</td>
+                                            <td>
+												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editPupuk" aria-expanded="false" aria-controls="editPupuk">Edit</a> | <a href="">Delete</a>
+											</td>
+                                        </tr>
+										<tr>
+                                            <td>NPK 2</td>
+                                            <td>10</td>
+											<td>10</td>
+											<td>10</td>
                                             <td>
 												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editPupuk" aria-expanded="false" aria-controls="editPupuk">Edit</a> | <a href="">Delete</a>
 											</td>

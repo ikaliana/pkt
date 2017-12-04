@@ -13,11 +13,14 @@ include './user_access.php';
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link href="fonts/fonts.css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="fonts/icons.css?family=Material+Icons" rel="stylesheet" type="text/css">
 	
 	<!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
+	
+	<!-- Malsup Jquery Form -->
+	<script src="plugins/malsup/jquery.form.js"></script> 
 	
     <!-- Bootstrap Core Css -->
     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -68,9 +71,6 @@ include './user_access.php';
 	<!-- datepicker-->
 	<link rel="stylesheet" href="plugins/datepicker/css/datepicker.css">
 	
-    <style type="text/css">
-        div.media { margin-bottom: 0 }
-    </style>
 	
 </head>
 

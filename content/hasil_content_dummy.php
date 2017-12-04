@@ -1,4 +1,4 @@
-<script type="text/javscript">
+<script type="text/javascript">
 	function hapus() {
 		swal({
 			title: "Ajax request example",
@@ -315,21 +315,15 @@
 	<script>
 		var imageUrl = 'result/1/';
 		var imageBounds = [[-6.4765,107.018], [-6.46722,107.036]];
-
 		var map1 = L.map('mapid1'); //.setView([107.018, -6.46722], 13);;
 		var map2 = L.map('mapid2');
-
 		var layer1 = L.imageOverlay(imageUrl + "Citra_Klasifikasi_N.png", imageBounds);
 		var layer2 = L.imageOverlay(imageUrl + "Citra_Klasifikasi_Pupuk_urea.png", imageBounds);
-
 		map1.addLayer(layer1);
 		map2.addLayer(layer2);
-
 		map1.fitBounds(imageBounds);
 		map2.fitBounds(imageBounds);
-
 		map1.sync(map2)
-
 	   $("#cbunsur").on('change', function() {
 	   		var unsur = $("#cbunsur").val();
 	   		layer1.setUrl(imageUrl + "Citra_Klasifikasi_" + unsur + ".png");

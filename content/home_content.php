@@ -22,52 +22,80 @@
 					<div class="row clearfix">
 						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 							<div class="info-box">
-								<div class="icon bg-red">
-									<i class="material-icons">add_location</i>
+								<div class="">
+									<div class="media">
+										<div class="media-left">
+											<a href="#">
+												<img class="media-object" style="padding:5px;" src="images/icon/map.png" alt="Area Perkebunan" width="70">
+											</a>
+										</div>
+										
+									</div>
 								</div>
 								<div class="content">
 									<span>Area</span><br/>
 									<a href="index.php?p=area_content"><button type="button" class="btn bg-blue-grey waves-effect">
-										<span>TAMBAH</span>
+										<span>KELOLA</span>
 									</button></a>
 								</div>
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 							<div class="info-box">
-								<div class="icon bg-indigo">
-									<i class="material-icons">code</i>
-								</div>
-								<div class="content">
-									<span>Model</span><br/>
-									<a href="index.php?p=model_content"><button type="button" class="btn bg-blue-grey waves-effect">
-										<span>TAMBAH</span>
-									</button></a>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-							<div class="info-box">
-								<div class="icon bg-purple">
-									<i class="material-icons">satellite</i>
+								<div class="">
+									<div class="media">
+										<div class="media-left">
+											<a href="#">
+												<img class="media-object" style="padding:5px;" src="images/icon/satellite.png" alt="citra satelit" width="70">
+											</a>
+										</div>
+										
+									</div>
 								</div>
 								<div class="content">
 									<span>Citra</span><br/>
 									<a href="index.php?p=citra_content"><button type="button" class="btn bg-blue-grey waves-effect">
-										<span>TAMBAH</span>
+										<span>KELOLA</span>
 									</button></a>
 								</div>
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 							<div class="info-box">
-								<div class="icon bg-deep-purple">
-									<i class="material-icons">spa</i>
+								<div class="">
+									<div class="media">
+										<div class="media-left">
+											<a href="#">
+												<img class="media-object" style="padding:5px;" src="images/icon/model.png" alt="model perhitungan" width="70">
+											</a>
+										</div>
+										
+									</div>
+								</div>
+								<div class="content">
+									<span>Model</span><br/>
+									<a href="index.php?p=model_content"><button type="button" class="btn bg-blue-grey waves-effect">
+										<span>KELOLA</span>
+									</button></a>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+							<div class="info-box">
+								<div class="">
+									<div class="media">
+										<div class="media-left">
+											<a href="#">
+												<img class="media-object" style="padding:5px;" src="images/icon/fertilizer.png" alt="pupuk" width="70">
+											</a>
+										</div>
+										
+									</div>
 								</div>
 								<div class="content">
 									<span>Pupuk</span><br/>
 									<a href="index.php?p=pupuk_content"><button type="button" class="btn bg-blue-grey waves-effect">
-										<span>TAMBAH</span>
+										<span>KELOLA</span>
 									</button></a>
 								</div>
 							</div>

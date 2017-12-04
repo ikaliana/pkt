@@ -75,17 +75,17 @@
                                     </tfoot>
                                     <tbody>
                                         <tr>
-                                            <td>Kebun Percobaan IPB-Cargill</td>
+                                            <td>Kebun Jonggol</td>
                                             <td>25 Mei 2017</td>
-                                            <td>Jonggol N Daun Reloaded</td>
-											<td>Jonggol P Daun Reloaded</td>
-											<td>Jonggol K Daun Reloaded</td>
-											<td>31 Agustus 2017 17:00</td>
+                                            <td>Model Jonggol</td>
+											<td>Model Jonggol</td>
+											<td>Model Jonggol</td>
+											<td>1 Agustus 2017 17:00</td>
 											<td>
-												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editHasil" aria-expanded="false" aria-controls="editHasil">Edit</a> | <a href="">Delete</a> | <a href="index.php?p=hasil_content_dummy">Lihat</a>
+												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editHasil" aria-expanded="false" aria-controls="editHasil">Edit</a> | <a href="">Delete</a> | <a href="">Lihat</a>
 											</td>
                                         </tr>
-										<!--tr>
+										<tr>
                                             <td>PTPN VI Afd 3 Blok 320</td>
                                             <td>22 Agustus 2017</td>
                                             <td>Model Standard</td>
@@ -106,7 +106,7 @@
 											<td>
 												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editHasil" aria-expanded="false" aria-controls="editHasil">Edit</a> | <a href="">Delete</a> | <a href="">Lihat</a>
 											</td>
-                                        </tr-->
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
