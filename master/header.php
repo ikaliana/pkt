@@ -14,7 +14,7 @@ include './user_access.php';
 
     <!-- Google Fonts -->
     <link href="fonts/fonts.css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="fonts/icons.css?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link href="fonts/icon.css?family=Material+Icons" rel="stylesheet" type="text/css">
 	
 	<!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
