@@ -1,0 +1,2 @@
+13 Des 2017
+- upload citra berukuran besar gagal
