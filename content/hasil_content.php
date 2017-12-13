@@ -35,24 +35,13 @@
                                     <h2>Daftar Hasil Perhitungan</h2>
                                 </div>
                             </div>
-                            <ul class="header-dropdown m-r--5">
-                                <li class="dropdown">
-                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="javascript:void(0);">Action</a></li>
-                                        <li><a href="javascript:void(0);">Another action</a></li>
-                                        <li><a href="javascript:void(0);">Something else here</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                     <thead>
                                         <tr>
+                                            <!--
                                             <th width="25%" style="text-align:center;">Area</th>
                                             <th width="15%" style="text-align:center;">Tanggal Citra Sentinel</th>
                                             <th width="5%" style="text-align:center;">Model N</th>
@@ -60,53 +49,55 @@
 											<th width="5%" style="text-align:center;">Model K</th>
 											<th width="25%" style="text-align:center;">Tanggal Analisis</th>
 											<th width="20%" style="text-align:center;">Action</th>	
+											-->
+                                            <th width="35%" style="text-align:center;">Area</th>
+                                            <th width="20%" style="text-align:center;">Tanggal Citra Sentinel</th>
+											<th width="25%" style="text-align:center;">Tanggal Analisis</th>
+											<th width="20%" style="text-align:center;">Action</th>	
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-											<th style="text-align:center;">Area</th>
-                                            <th style="text-align:center;">Tanggal Citra Sentinel</th>
-                                            <th style="text-align:center;">Model N</th>
-											<th style="text-align:center;">Model P</th>
-											<th style="text-align:center;">Model K</th>
-											<th style="text-align:center;">Tanggal Analisis</th>
-											<th style="text-align:center;">Action</th>	
+                                            <!--
+                                            <th width="25%" style="text-align:center;">Area</th>
+                                            <th width="15%" style="text-align:center;">Tanggal Citra Sentinel</th>
+                                            <th width="5%" style="text-align:center;">Model N</th>
+											<th width="5%" style="text-align:center;">Model P</th>
+											<th width="5%" style="text-align:center;">Model K</th>
+											<th width="25%" style="text-align:center;">Tanggal Analisis</th>
+											<th width="20%" style="text-align:center;">Action</th>	
+											-->
+                                            <th width="35%" style="text-align:center;">Area</th>
+                                            <th width="20%" style="text-align:center;">Tanggal Citra Sentinel</th>
+											<th width="25%" style="text-align:center;">Tanggal Analisis</th>
+											<th width="20%" style="text-align:center;">Action</th>	
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        <tr>
-                                            <td>Kebun Jonggol</td>
-                                            <td>25 Mei 2017</td>
-                                            <td>Model Jonggol</td>
-											<td>Model Jonggol</td>
-											<td>Model Jonggol</td>
-											<td>1 Agustus 2017 17:00</td>
-											<td>
-												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editHasil" aria-expanded="false" aria-controls="editHasil">Edit</a> | <a href="">Delete</a> | <a href="">Lihat</a>
-											</td>
-                                        </tr>
-										<tr>
-                                            <td>PTPN VI Afd 3 Blok 320</td>
-                                            <td>22 Agustus 2017</td>
-                                            <td>Model Standard</td>
-											<td>Model Standard</td>
-											<td>Model Standard</td>
-											<td>3 September 2017 13:45</td>
-											<td>
-												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editHasil" aria-expanded="false" aria-controls="editHasil">Edit</a> | <a href="">Delete</a> | <a href="">Lihat</a>
-											</td>
-                                        </tr>
-										<tr>
-                                            <td>PTPN VI Afd 2 Blok 210</td>
-                                            <td>22 Agustus 2017</td>
-                                            <td>Model Standard</td>
-											<td>Model Standard</td>
-											<td>Model Standard</td>
-											<td>3 September 2017 13:43</td>
-											<td>
-												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editHasil" aria-expanded="false" aria-controls="editHasil">Edit</a> | <a href="">Delete</a> | <a href="">Lihat</a>
-											</td>
-                                        </tr>
+                                        <?php
+											$query = "";
+											$query .= "select a.kode_analisis,a.tanggal_analisis";
+											$query .= ",c.kode_citra,c.nama_file as nama_file_citra,c.tanggal as tanggal_citra";
+											$query .= ",ar.kode_area,ar.nama as nama_area ";
+											$query .= "from pkt_analisis a ";
+											$query .= "left join pkt_citra c on a.kode_citra = c.kode_citra ";
+											$query .= "left join pkt_area ar on c.kode_area = ar.kode_area";
+
+											$sql_area = pg_query($db_conn, $query);
+											while($data = pg_fetch_assoc($sql_area)){
+                                        ?>
+											<tr>
+												<td><?php echo $data['nama_area']; ?></td>
+	                                            <td align="center"><?php echo date('d F Y',strtotime($data['tanggal_citra'])); ?></td>
+	                                            <td align="center"><?php echo date('d F Y H:i:s',strtotime($data['tanggal_analisis'])); ?></td>
+												<td align="center">
+													<a data-toggle="collapse" style="cursor: pointer;" data-target="#editHasil" aria-expanded="false" aria-controls="editHasil">Edit</a> 
+													| <a href="">Delete</a> 
+													| <a href="">Lihat</a>
+												</td>
+	                                        </tr>
+										<?php } ?>
+
                                     </tbody>
                                 </table>
                             </div>

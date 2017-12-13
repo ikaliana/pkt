@@ -27,7 +27,7 @@ if(!empty($tanggal) && $area <> 0){
 				if ($_FILES["tif"]["error"] > 0) {
 					?>
 					<script type="text/javascript">
-						setTimeout(function () { swal("No!","Error: " . $_FILES["tif"]["error"] . "<br>","error");
+						setTimeout(function () { swal("No!",'Error: <?php echo $_FILES["tif"]["error"] ?> <br>',"error");
 					});</script>	
 					<?php
 				} else {

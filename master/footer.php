@@ -56,7 +56,7 @@
 	<script src="plugins/input-file/themes/fa/theme.js"></script>
 	<!-- optionally if you need translation for your language then include 
 		locale file as mentioned below -->
-	<script src="plugins/input-file/js/locales/en.js"></script>
+	<!--script src="plugins/input-file/js/locales/en.js"></script-->
 	
 	<!-- Google Maps API -->
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqYu6m0j-sxAcFnSrVwCTKgUiEYdw8IKY&callback=initMap"

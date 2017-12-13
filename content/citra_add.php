@@ -92,7 +92,7 @@
 								<input name="" id="tif" type="file" class="file" data-show-preview="false" data-show-upload="false" required>
 								<script>
 									$("#tif").fileinput({
-										maxFileCount: 1
+										maxFileCount: 1,
 										mainClass: "input-group-sm"
 									});
 								</script>
