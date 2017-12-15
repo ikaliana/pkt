@@ -88,7 +88,6 @@
                     </div>
                 </div>
             </div>
-            <!-- #END# CPU Usage -->
         </div>
     </section>
 <script type="text/javascript">
