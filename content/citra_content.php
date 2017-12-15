@@ -126,7 +126,7 @@ function deleteCitra(id, nama) {
 	var form = event.target.form; // storing the form
 	swal({
 	  title: "Anda yakin?",
-	  text: "Citra " + id + " akan dihapus",
+	  text: "Citra " + nama + " akan dihapus",
 	  type: "warning",
 	  showCancelButton: true,
 	  confirmButtonColor: "#DD6B55",

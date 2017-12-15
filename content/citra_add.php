@@ -86,35 +86,12 @@
 						</div>
 					</div>
 				</div>
-<<<<<<< HEAD
-=======
-				<div class="row clearfix">
-					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-						<label for="area">Citra (*.tif file)</label>
-					</div>
-					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-						<div class="form-group">
-							<div class="form-line">
-								<input name="" id="tif" type="file" class="file" data-show-preview="false" data-show-upload="false" required>
-								<script>
-									$("#tif").fileinput({
-										maxFileCount: 1,
-										mainClass: "input-group-sm"
-									});
-								</script>
-							</div>
-						</div>
-					</div>
-				</div>
->>>>>>> 2a8a2a0100142fe86dd0f6c045f6e8acd36e4321
 			</form>
 		</div>
 		<div class="modal-footer">
 			<button type="button" id="save2" class="btn btn-link waves-effect">SIMPAN</button>
 			<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">KELUAR</button>
 		</div>
-		<div id="progress-div"><div id="progress-bar"></div></div>
-		<div id="targetLayer"></div>
 		<div id="hasil_add_citra">
 		</div>
 	</div>
