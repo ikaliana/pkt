@@ -64,7 +64,7 @@
 							</li>
                         </ul>
                     </li>
-					<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hasil_content" OR $_GET['p']=="hitung_content" ){echo 'active';}};?>">
+					<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hasil_content" OR $_GET['p']=="hitung_content" OR $_GET['p']=="hasil_content_detail" ){echo 'active';}};?>">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">assignment</i>
                             <span>Rekomendasi Pupuk</span>
@@ -75,7 +75,7 @@
                                     <span>Perhitungan Baru</span>
                                 </a>
                             </li>
-                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hasil_content"){echo 'active';}};?>">
+                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hasil_content" OR $_GET['p']=="hasil_content_detail"){echo 'active';}};?>">
                                 <a href="index.php?p=hasil_content">
                                     <span>Hasil Perhitungan</span>
                                 </a>
