@@ -66,7 +66,7 @@
                                             <td><?php echo $data['tanggal'];?></td>
                                             <td><?php echo $data['nama'];?></td>
                                             <td>
-												<a data-toggle="modal" data-id="<?php echo $data['kode_citra']; ?>" id="getDetail" style="cursor: pointer;" data-color="grey" data-target="#tampil_detail" aria-expanded="false">Edit</a> | <a id="del_<?php echo $data['kode_citra']; ?>" style="cursor: pointer;" onclick="deleteArea('<?php echo $data['kode_citra'];?>', '<?php echo $data['nama'];?>')">Delete</a>
+												<a id="del_<?php echo $data['kode_citra']; ?>" style="cursor: pointer;" onclick="deleteCitra('<?php echo $data['kode_citra'];?>', '<?php echo $data['nama'];?>')">Delete</a>
 											</td>
                                         </tr>
 										<?php } ?>
@@ -88,6 +88,81 @@
                     </div>
                 </div>
             </div>
-            <!-- #END# CPU Usage -->
         </div>
     </section>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+    $(document).on('click', '#getDetail', function(e){
+  
+     e.preventDefault();
+  
+     var uid = $(this).data('id'); // get id of clicked row
+  
+     $('#dynamic-content').html(''); // leave this div blank
+ 
+     $.ajax({
+          url: './ajax/area_getdetail_action.php',
+          type: 'POST',
+          data: 'id='+uid,
+          dataType: 'html'
+     })
+     .done(function(data){
+          console.log(data); 
+          $('#dynamic-content').html(''); // blank before load.
+          $('#dynamic-content').html(data); // load here
+     })
+     .fail(function(){
+          $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+     });
+
+    });
+});
+
+function deleteCitra(id, nama) {
+	event.preventDefault(); // prevent form submit
+	var form = event.target.form; // storing the form
+	swal({
+	  title: "Anda yakin?",
+	  text: "Citra " + nama + " akan dihapus",
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonColor: "#DD6B55",
+	  confirmButtonText: "Ya, hapus saja",
+	  cancelButtonText: "Tidak, batalkan misi",
+	  closeOnConfirm: true,
+	  closeOnCancel: false
+	},
+	function(isConfirm){
+	  if (isConfirm) {
+		 // Delete 
+		  var el = document.getElementById('del_'+id);
+
+		  // Delete id
+		  var deleteid = id;
+		 
+		  // AJAX Request
+		  $.ajax({
+		   url: './ajax/citra_remove_action.php',
+		   type: 'POST',
+		   data: 'id='+deleteid,
+		   success: function(response){
+			// Removing row from HTML Table
+			$(el).closest('tr').css('background','tomato');
+			$(el).closest('tr').fadeOut(800, function(){ 
+			 $(this).remove();
+			});
+		   }
+		  });
+	  } else {
+		swal({
+			title: "Dibatalkan",
+			text: "Citra " + nama + " batal dihapus :)",
+			type: "success",
+			timer: 1500
+		});
+	  }
+	});
+}
+</script>
