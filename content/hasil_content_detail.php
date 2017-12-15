@@ -145,7 +145,7 @@
 						<div class="table-responsive">
 							<table class="table table-bordered table-striped table-hover text-center" style="margin-bottom: 6px;">
 								<thead>
-									<th class="text-left">Nama Pupuk</th>
+									<th class="text-center" style="vertical-align: middle">Nama Pupuk</th>
 									<th class="text-center">Total Kebutuhan<br>(kg)</th>
 									<th class="text-center">Dosis per hektar<br>(kg/ha)</th>
 									<th class="text-center">Dosis per pokok<br>(kg/btg)</th>
@@ -153,10 +153,15 @@
 								<tbody>
                                 <?php
 									$query = "";
-									$query .= "select * from pkt_analisis_detail ";
-									$query .= "where jenis_pupuk='TUNGGAL' and dosis_total<>0 ";
-									$query .= "and kode_analisis=".$analisis_id;
-									$query .= " order by nama_pupuk";
+									$query .= "select * from pkt_analisis_detail d ";
+									$query .= "inner join ( ";
+									$query .= "select kode_analisis,nama_pupuk,min(dosis_total) as dosis_total ";
+									$query .= "from pkt_analisis_detail where dosis_total<>0 ";
+									$query .= "group by kode_analisis,nama_pupuk ) d2 ";
+									$query .= "on d.kode_analisis=d2.kode_analisis and d.nama_pupuk=d2.nama_pupuk and d.dosis_total=d2.dosis_total ";
+									$query .= "where jenis_pupuk='TUNGGAL' and d.dosis_total<>0 ";
+									$query .= "and d.kode_analisis=".$analisis_id;
+									$query .= " order by d.nama_pupuk";
 
 									$sql_area = pg_query($db_conn, $query);
 									while($data = pg_fetch_assoc($sql_area)){
@@ -175,29 +180,95 @@
 						<div class="table-responsive">
 							<table class="table table-bordered table-striped table-hover text-center" style="margin-bottom: 6px;">
 								<thead>
-									<th class="text-left">Nama Pupuk</th>
+									<th class="text-center" style="vertical-align: middle">No.</th>
+									<th class="text-center" style="vertical-align: middle">Nama Pupuk</th>
 									<th class="text-center">Total Kebutuhan<br>(kg)</th>
 									<th class="text-center">Dosis per hektar<br>(kg/ha)</th>
 									<th class="text-center">Dosis per pokok<br>(kg/btg)</th>
 								</thead>
+								<tbody>
+                                <?php
+									$query = "";
+									$query .= "select * from pkt_analisis_detail d ";
+									$query .= "left join pkt_pupuk p on d.kode_pupuk = p.kode_pupuk ";
+									$query .= "inner join ( ";
+									$query .= "select kode_analisis,kode_pupuk,left(nama_unsur,1) as nama_unsur, min(dosis_total) as dosis_total ";
+									$query .= "from pkt_analisis_detail ";
+									$query .= "where jenis_pupuk = 'MAJEMUK' and dosis_total<>0 ";
+									$query .= "group by kode_analisis,kode_pupuk,left(nama_unsur,1) ";
+									$query .= ") d2 on d.kode_analisis=d2.kode_analisis and d.kode_pupuk=d2.kode_pupuk ";
+									$query .= "and left(d.nama_unsur,1)=d2.nama_unsur and d.dosis_total=d2.dosis_total ";
+									$query .= "where d.jenis_pupuk='MAJEMUK' and d.dosis_total<>0 ";
+									$query .= "and d.kode_analisis=".$analisis_id;
+									$query .= " order by d.nama_pupuk ASC, d.dosis_total ASC";
+
+									$counter = 0;
+									$urut = 1;
+									$prev_dosis = 0;
+
+									$sql_area = pg_query($db_conn, $query);
+									while($data = pg_fetch_assoc($sql_area)){
+										if(!$counter) {
+											$prev_dosis = $data['dosis_total'];
+                                ?>
 								<tr>
-									<td class="text-left">NPK</td>
-									<td>12826</td>
-									<td>230</td>
-									<td>1.70</td>
-								</tr>
+									<td align="center"><?php echo $urut; ?>.</td>
+									<td class="text-left"><?php echo $data['nama_pupuk']; ?></td>
+                                    <td align="center"><?php echo number_format($data['dosis_total'], 0); ?></td>
+                                    <td align="center"><?php echo number_format($data['dosis_hektar'], 0); ?></td>
+									<td align="center"><?php echo number_format($data['dosis_pohon'], 2); ?></td>
+                                </tr>
+								<?php 
+										}
+										else {
+											$curr_dosis = $data['dosis_total'] - $prev_dosis;
+											$nama_unsur = $data['nama_unsur'];
+											$komposisi_unsur = 0;
+											$query2 = "select * from pkt_pupuk ";
+											$col_index = 0;
+											
+											if($nama_unsur == "N") {
+												$komposisi_unsur = $data['komposisi_n'];
+												$query2 .= "where komposisi_n>0 and komposisi_p=0 and komposisi_k=0 order by komposisi_n";
+												$col_index = 2;
+											}
+											if($nama_unsur == "P") {
+												$komposisi_unsur = $data['komposisi_p'];
+												$query2 .= "where komposisi_n=0 and komposisi_p>0 and komposisi_k=0 order by komposisi_p";
+												$col_index = 3;
+											}
+											if($nama_unsur == "K") {
+												$komposisi_unsur = $data['komposisi_k'];
+												$query2 .= "where komposisi_n=0 and komposisi_p=0 and komposisi_k>0 order by komposisi_k";
+												$col_index = 4;
+											}
+
+											$query2 .= " limit 1";
+											$sql2 = pg_query($db_conn, $query2);
+											$data2 = pg_fetch_array($sql2);
+											$nama_pupuk_2 = $data2[1];
+											$komposisi_unsur_2 = $data2[$col_index];
+
+											$curr_dosis_molekul = ($komposisi_unsur/100) * $curr_dosis;
+											$curr_dosis_2 = (100/$komposisi_unsur_2) * $curr_dosis_molekul;
+											$curr_dosis_hektar = $curr_dosis_2 / $luas_area;
+											$curr_dosis_pohon = $curr_dosis_hektar / 136;
+
+                                ?>
 								<tr>
-									<td class="text-right">+ TSP</td>
-									<td>1710</td>
-									<td>31</td>
-									<td>0.23</td>
-								</tr>
-								<tr>
-									<td class="text-right">+ KCL</td>
-									<td>647</td>
-									<td>12</td>
-									<td>0.08</td>
-								</tr>
+									<td align="center">&nbsp;</td>
+									<td class="text-right">+ <?php echo $nama_pupuk_2; ?></td>
+                                    <td align="center"><?php echo number_format($curr_dosis_2, 0); ?></td>
+                                    <td align="center"><?php echo number_format($curr_dosis_hektar, 0); ?></td>
+									<td align="center"><?php echo number_format($curr_dosis_pohon, 2); ?></td>
+                                </tr>
+								<?php 
+										}
+										$counter++;
+										if($counter >= 3) { $counter = 0; $urut++; }
+									} 
+								?>
+								</tbody>
 							</table>
 						</div>
                     </div>
@@ -220,9 +291,12 @@
 									<div class="panel-body" style="padding:0">
 										<label for="cbunsur" class="col-xs-2" style="margin:5px 0 10px">Unsur</label>
 										<select id="cbunsur">
-											<option value="N" selected>Nitrogen</option>
-											<option value="P">Fosfor</option>
-											<option value="K">Kalium</option>
+											<option value="N" selected>Nitrogen Daun</option>
+											<option value="P">Fosfor Daun</option>
+											<option value="K">Kalium Daun</option>
+											<option value="N-Tanah">Nitrogen Tanah</option>
+											<option value="P-Tanah">Fosfor Tanah</option>
+											<option value="K-Tanah">Kalium Tanah</option>
 										</select>
 										<div id="mapid1" style="width: 100%; height: 350px;"></div>
 									</div>
@@ -241,6 +315,20 @@
 									<li class="list-group-item" style="padding: 5px 15px; border: none;">
 										<span style="width:25px;display:inline-block;background:#123A8F;margin-right:25px;">&nbsp;</span> &gt; 2.7 %</li>
 								</ul>							
+								<ul class="list-group" id="legend_N-Tanah" style="border: 1px solid #ddd;margin-bottom:0;display:none">
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#FF0000;margin-right:25px;">&nbsp;</span> &lt;= 0.04 %</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#FCFF2D;margin-right:25px;">&nbsp;</span> 0.04 % - 0.08 %</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#6AFE48;margin-right:25px;">&nbsp;</span> 0.08 % - 0.12 %</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#02C630;margin-right:25px;">&nbsp;</span> 0.12 % - 0.15 %</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#20E6DC;margin-right:25px;">&nbsp;</span> 0.15 % - 0.25 %</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#123A8F;margin-right:25px;">&nbsp;</span> &gt; 0.25 %</li>
+								</ul>							
 								<ul class="list-group" id="legend_P" style="border: 1px solid #ddd;margin-bottom:0;display:none;">
 									<li class="list-group-item" style="padding: 5px 15px; border: none;">
 										<span style="width:25px;display:inline-block;background:#FF0000;margin-right:25px;">&nbsp;</span> &lt;= 0.09 %</li>
@@ -255,6 +343,20 @@
 									<li class="list-group-item" style="padding: 5px 15px; border: none;">
 										<span style="width:25px;display:inline-block;background:#123A8F;margin-right:25px;">&nbsp;</span> &gt; 0.17 %</li>
 								</ul>							
+								<ul class="list-group" id="legend_P-Tanah" style="border: 1px solid #ddd;margin-bottom:0;display:none;">
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#FF0000;margin-right:25px;">&nbsp;</span> &lt;= 5 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#FCFF2D;margin-right:25px;">&nbsp;</span> 5 ppm - 10 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#6AFE48;margin-right:25px;">&nbsp;</span> 10 ppm - 25 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#02C630;margin-right:25px;">&nbsp;</span> 25 ppm - 40 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#20E6DC;margin-right:25px;">&nbsp;</span> 40 ppm - 60 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#123A8F;margin-right:25px;">&nbsp;</span> &gt; 60 ppm</li>
+								</ul>							
 								<ul class="list-group" id="legend_K" style="border: 1px solid #ddd;margin-bottom:0;display:none;">
 									<li class="list-group-item" style="padding: 5px 15px; border: none;">
 										<span style="width:25px;display:inline-block;background:#FF0000;margin-right:25px;">&nbsp;</span> &lt;= 0.4 %</li>
@@ -268,6 +370,20 @@
 										<span style="width:25px;display:inline-block;background:#20E6DC;margin-right:25px;">&nbsp;</span> 1.0 % - 1.2 %</li>
 									<li class="list-group-item" style="padding: 5px 15px; border: none;">
 										<span style="width:25px;display:inline-block;background:#123A8F;margin-right:25px;">&nbsp;</span> &gt; 1.2 %</li>
+								</ul>							
+								<ul class="list-group" id="legend_K-Tanah" style="border: 1px solid #ddd;margin-bottom:0;display:none;">
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#FF0000;margin-right:25px;">&nbsp;</span> &lt;= 16 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#FCFF2D;margin-right:25px;">&nbsp;</span> 16 ppm - 31.2 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#6AFE48;margin-right:25px;">&nbsp;</span> 31.2 ppm - 78 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#02C630;margin-right:25px;">&nbsp;</span> 78 ppm - 97.5 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#20E6DC;margin-right:25px;">&nbsp;</span> 97.5 ppm - 117 ppm</li>
+									<li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#123A8F;margin-right:25px;">&nbsp;</span> &gt; 117 ppm</li>
 								</ul>							
 							</div>
 							<div class="col-lg-6" style="margin-bottom:0">
@@ -300,8 +416,8 @@
 										<span style="width:25px;display:inline-block;background:#DCF09E;margin-right:25px;">&nbsp;</span> 0% - -50%</li>
 									<li class="list-group-item" style="padding: 5px 15px; border: none;">
 										<span style="width:25px;display:inline-block;background:#8ACC62;margin-right:25px;">&nbsp;</span> -50% - -100%</li>
-									<li class="list-group-item" style="padding: 5px 15px; border: none;">
-										<span style="width:25px;display:inline-block;background:#1A9641;margin-right:25px;">&nbsp;</span> &lt; -100%</li>
+									<!--li class="list-group-item" style="padding: 5px 15px; border: none;">
+										<span style="width:25px;display:inline-block;background:#1A9641;margin-right:25px;">&nbsp;</span> &lt; -100%</li-->
 								</ul>							
 							</div>
 						</div>
@@ -330,6 +446,9 @@
 	   		$("#legend_N").hide();
 	   		$("#legend_P").hide();
 	   		$("#legend_K").hide();
+	   		$("#legend_N-Tanah").hide();
+	   		$("#legend_P-Tanah").hide();
+	   		$("#legend_K-Tanah").hide();
 	   		$("#legend_" + unsur).show();
 	   });
 	   $("#cbpupuk").on('change', function() {

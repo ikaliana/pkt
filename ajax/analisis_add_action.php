@@ -36,7 +36,7 @@ if(empty($data_exist))
 	?>
 	<?php echo $kode_analisis[0]; ?>|
 	<script type="text/javascript">
-		setTimeout(function () { swal("Yes!","Analsis berhasil diinput dengan ID <?php echo $kode_analisis[0]; ?>","success");});
+		setTimeout(function () { swal("Yes!","Analisis berhasil diinput dan dijalankan dengan sukses","success");});
 	</script>		
 	<?php
 

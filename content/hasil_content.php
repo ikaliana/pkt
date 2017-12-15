@@ -93,7 +93,7 @@
 												<td align="center">
 													<a data-toggle="collapse" style="cursor: pointer;" data-target="#editHasil" aria-expanded="false" aria-controls="editHasil">Edit</a> 
 													| <a href="">Delete</a> 
-													| <a href="">Lihat</a>
+													| <a href="index.php?p=hasil_content_detail&kd=<?php echo $data['kode_analisis']; ?>">Lihat</a>
 												</td>
 	                                        </tr>
 										<?php } ?>

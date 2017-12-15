@@ -1,2 +1,11 @@
 13 Des 2017
 - upload citra berukuran besar gagal
+
+14 Des 2017
+- modul pupuk masih belum ada.
+- modul Model Regresi masih belum bisa add
+- script python:
+	-- rekomendasi pupuk PPKS masih hardcode dan belum melihat umur
+	-- umur tanaman belum dimasukin ke shape file dan belum digunakan
+	-- perhitungan berdasarkan tanah belum diikutsertakan (DONE --> pupuk majemuk masih ambigu, pake yg daun atau tanah atau gabungan)
+	-- perhitungan rekomendasi untuk pupuk majemuk (DONE --> test pake pupuk majemuk yg banyak)

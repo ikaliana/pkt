@@ -78,13 +78,30 @@ def CalculateDosisPupuk(nama_unsur,critical_value,current_value,prev_value,kompo
 	if nama_unsur[1:] == "": 			# perhitungan pupuk berdasarkan nutrisi daun
 		retval = ( critical_value / current_value ) * prev_value
 	else:								# perhitungan pupuk berdasarkan nutrisi tanah
-		R = 2 							# radius perakaran: 2 m (TM) / 1 m (TBM)
-		L = math.pi * math.pow(R,2) 	# luas area perakaran 
-		L = 1 * L 						# asumsi dalam 1 pixel ada 4 area perakaran --> jadinya pake 1 lingkaran
-		D = 0.2 	#0.6 				# kedalamanan perakaran: 0.2 m
-		BV = 1000  						# Berat jenis tanah. asumsi = 1000 kg/m3
-		retval = ( critical_value - current_value ) *  L * D * BV
-		retval = retval * 100 / komposisi_value	
+		# R = 2 							# radius perakaran: 2 m (TM) / 1 m (TBM)
+		# L = math.pi * math.pow(R,2) 	# luas area perakaran 
+		# L = 1 * L 						# asumsi dalam 1 pixel ada 4 area perakaran --> jadinya pake 1 lingkaran
+		# D = 0.2 	#0.6 				# kedalamanan perakaran: 0.2 m
+		# BV = 1000  						# Berat jenis tanah. asumsi = 1000 kg/m3
+		# retval = ( critical_value - current_value ) *  L * D * BV
+		# if retval <= 0: retval = 0
+		# retval = retval * 100 / komposisi_value	
+		L = math.pow(10,2)
+		D = 0.2
+		BV = 1000
+		retval = ( critical_value - current_value )
+		if retval <= 0: retval = 0
+		else:
+			retval = retval * L * D * BV
+			if nama_unsur[:1] == "N":
+				retval = retval / 100
+			if nama_unsur[:1] == "P":
+				retval = retval / 1000000
+				retval = retval * 142 / 62
+			if nama_unsur[:1] == "K":
+				retval = retval / 1000000
+				retval = retval * 94 / 39
+			retval = retval * 100 / komposisi_value
 
 	return retval
 
@@ -98,14 +115,16 @@ def ClassifyPupuk(data):
 
 	return retval
 
+def db_config():
+	
+	return { "host" : "localhost", "database": "pkt", "username": "postgres","password": "password" }
+
 def GetData(strquery,firstRowOnly):
 	try:
-		db_host = "localhost"
-		db_name = "pkt"
-		db_user = "postgres"
-		dp_pass = "password"
 
-		conn = psycopg2.connect(host=db_host,database=db_name, user=db_user, password=dp_pass)
+		dbconf = db_config()
+		# conn = psycopg2.connect(host=db_host,database=db_name, user=db_user, password=dp_pass)
+		conn = psycopg2.connect(host=dbconf["host"],database=dbconf["database"], user=dbconf["username"], password=dbconf["password"])
 		cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		cur.execute(strquery)
 		
@@ -128,13 +147,11 @@ def GetData(strquery,firstRowOnly):
 
 def ExecuteQuery(strquery,params,singleRowOnly,fetchResult):
 	try:
-		db_host = "localhost"
-		db_name = "pkt"
-		db_user = "postgres"
-		dp_pass = "password"
 
 		retval = 0;
-		conn = psycopg2.connect(host=db_host,database=db_name, user=db_user, password=dp_pass)
+		dbconf = db_config()
+		# conn = psycopg2.connect(host=db_host,database=db_name, user=db_user, password=dp_pass)
+		conn = psycopg2.connect(host=dbconf["host"],database=dbconf["database"], user=dbconf["username"], password=dbconf["password"])
 		cur = conn.cursor()
 		if singleRowOnly:
 			cur.execute(strquery,params)
@@ -160,8 +177,8 @@ def ExecuteQuery(strquery,params,singleRowOnly,fetchResult):
 
 ## ==================== VARIABLES  ====================
 
-kelompok_unsur = ["N", "P", "K"]
-# kelompok_unsur = ["N", "P", "K", "N-Tanah", "P-Tanah", "K-Tanah"]
+# kelompok_unsur = ["N", "P", "K"]
+kelompok_unsur = ["N", "P", "K", "N-Tanah", "P-Tanah", "K-Tanah"]
 nama_unsur = { "N" : "Nitrogen", "P" : "Fosfor", "K" : "Kalium", "N-Tanah" : "Nitrogen", "P-Tanah" : "Fosfor", "K-Tanah" : "Kalium" }
 null_value = -9999
 format_file = "GTiff"
@@ -248,7 +265,7 @@ warp_opts = gdal.WarpOptions(
     yRes=10.0,
 )
 gdal.Warp(clipped_file, sentinel_file, options=warp_opts,)
-#cari opsi lain buat clip raster (lihat di sample GDAL di internet)
+#cari opsi lain buat clip raster (lihat di sample GDAL di internet). bbrp titik hasilnya meleset
 
 ## ========== LOAD RASTER AND ITS BAND  ====================
 
@@ -428,6 +445,7 @@ for nama_pupuk in komposisi_pupuk:
 
 	if unsur_terpilih != "":
 		pupuk[nama_pupuk]["unsur_terpilih"] = unsur_terpilih
+		print "Unsur terpilih: ", unsur_terpilih
 
 		nama_raster = work_folder + "Citra_Pupuk_" + nama_pupuk + ".tif"
 		ds3 = driver.Create(nama_raster, g.RasterXSize, g.RasterYSize, 1, g.GetRasterBand(1).DataType)
