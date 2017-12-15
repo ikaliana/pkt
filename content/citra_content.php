@@ -66,7 +66,7 @@
                                             <td><?php echo $data['tanggal'];?></td>
                                             <td><?php echo $data['nama'];?></td>
                                             <td>
-												<a data-toggle="modal" data-id="<?php echo $data['kode_citra']; ?>" id="getDetail" style="cursor: pointer;" data-color="grey" data-target="#tampil_detail" aria-expanded="false">Edit</a> | <a id="del_<?php echo $data['kode_citra']; ?>" style="cursor: pointer;" onclick="deleteCitra('<?php echo $data['kode_citra'];?>', '<?php echo $data['nama'];?>')">Delete</a>
+												<a id="del_<?php echo $data['kode_citra']; ?>" style="cursor: pointer;" onclick="deleteCitra('<?php echo $data['kode_citra'];?>', '<?php echo $data['nama'];?>')">Delete</a>
 											</td>
                                         </tr>
 										<?php } ?>
