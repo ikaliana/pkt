@@ -10,7 +10,7 @@ include './user_access.php';
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title><?php echo $page_title; ?></title>
     <!-- Favicon-->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
 
     <!-- Google Fonts -->
     <link href="fonts/fonts.css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
