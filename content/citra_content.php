@@ -45,26 +45,36 @@
                                 <table id="citra_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                         <tr>
-                                            <th>Tanggal</th>
+                                            <th>Tanggal Akuisisi</th>
                                             <th>Area</th>
+											<th>Status</th>
                                             <th>Action</th>                                            
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-											<th>Tanggal</th>
+											<th>Tanggal Akuisisi</th>
                                             <th>Area</th>
+											<th>Status</th>
                                             <th>Action</th>   
                                         </tr>
                                     </tfoot>
                                     <tbody>
 										<?php
-										$sql_citra = pg_query($db_conn, "SELECT c.kode_citra as kode_citra, c.tanggal as tanggal, a.nama as nama FROM pkt_citra as c, pkt_area as a WHERE c.kode_area=a.kode_area");
-										while($data = pg_fetch_assoc($sql_citra)){											
+										$sql_citra = pg_query($db_conn, "SELECT c.kode_citra as kode_citra, c.tanggal as tanggal, c.download_status as status, a.nama as nama FROM pkt_citra as c, pkt_area as a WHERE c.kode_area=a.kode_area");
+										while($data = pg_fetch_assoc($sql_citra)){
+											if($data['status'] == 1){
+												$status = "READY";
+												$label 	= "success"; 	
+											}else{
+												$status = "DOWNLOADING";
+												$label 	= "info";
+											}
                                         ?>
                                         <tr>
-                                            <td><?php echo $data['tanggal'];?></td>
+                                            <td><?php echo date("d M Y", strtotime($data['tanggal']));;?></td>
                                             <td><?php echo $data['nama'];?></td>
+											<td><span class="label label-<?php echo $label; ?>"><?php echo $status;?></span></td>
                                             <td>
 												<a id="del_<?php echo $data['kode_citra']; ?>" style="cursor: pointer;" onclick="deleteCitra('<?php echo $data['kode_citra'];?>', '<?php echo $data['nama'];?>')">Delete</a>
 											</td>
