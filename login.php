@@ -1,10 +1,13 @@
-﻿<!DOCTYPE html>
+﻿<?php
+include('config.php');
+?>
+<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Sign In | Bootstrap Based Admin Template - Material Design</title>
+    <title>Sign In | <?php echo $page_title; ?></title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
@@ -29,8 +32,6 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <?php
-include('config.php');
-
 if(isset($_SESSION['user'])){
 	echo '<script language="javascript">document.location="index.php";</script>';
 }
@@ -97,7 +98,7 @@ if(isset($_POST['login'])){
                     </div>
                     <div class="row m-t-15 m-b--20">
                         <div class="col-xs-6 align-right">
-                            <a href="forgot-password.html">Lupa password?</a>
+                            <!--<a href="forgot-password.html">Lupa password?</a>-->
                         </div>
                     </div>
                 </form>
