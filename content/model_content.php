@@ -52,7 +52,7 @@ function editModel(id)
 									
 								</li>
 								<li>
-									<button class="btn btn-xs bg-blue waves-effect" data-toggle="modal" style="cursor: pointer;" data-target="#tambah_area" aria-expanded="false" aria-controls="tambah_area"><i class="material-icons">add_box</i> TAMBAH</button>
+									<button class="btn btn-xs bg-blue waves-effect" data-toggle="modal" style="cursor: pointer;" data-target="#tambah_model" aria-expanded="false" aria-controls="tambah_model"><i class="material-icons">add_box</i> TAMBAH</button>
 									
 								</li>
                             </ul>
@@ -101,7 +101,7 @@ function editModel(id)
                             </div>
 							<div class="modal fade" id="tampil_detail2"></div>
 							<div class="modal fade" id="tambah_model">
-								<?php include('./ajax/model_add.php') ?>
+								<?php include('model_add.php') ?>
 							</div>
                         </div>
                     </div>

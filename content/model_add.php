@@ -2,18 +2,23 @@
             $(document).ready(function (e) {
                 $('#save').on('click', function () {
                     var form_data = new FormData();
-					var lokasi = $("#lokasi").val();
-					var area_name = $("#area_name").val();
-					var deskripsi = $("#deskripsi").val();
-                    var ins = document.getElementById('multiSHP').files.length;
-                    for (var x = 0; x < ins; x++) {
-                        form_data.append("shp[]", document.getElementById('multiSHP').files[x]);
-                    }
-					form_data.append("lokasi", lokasi);
-					form_data.append("area_name", area_name);
-					form_data.append("deskripsi", deskripsi);
+					form_data.append("model_name",$("#model_name").val());
+					form_data.append("nutrisi",$("#nutrisi").val());
+					form_data.append("b1",$("#b1").val());
+					form_data.append("b2",$("#b2").val());
+					form_data.append("b3",$("#b3").val());
+					form_data.append("b4",$("#b4").val());
+					form_data.append("b5",$("#b5").val());
+					form_data.append("b6",$("#b6").val());
+					form_data.append("b7",$("#b7").val());
+					form_data.append("b8",$("#b8").val());
+					form_data.append("b8a",$("#b8a").val());
+					form_data.append("b9",$("#b9").val());
+					form_data.append("b10",$("#b10").val());
+					form_data.append("b11",$("#b11").val());
+					form_data.append("b12",$("#b12").val());
                     $.ajax({
-                        url: './ajax/area_add_action.php', // point to server-side PHP script 
+                        url: './ajax/model_add_action.php', // point to server-side PHP script 
                         dataType: 'text', // what to expect back from the PHP script
                         cache: false,
                         contentType: false,
@@ -21,10 +26,10 @@
                         data: form_data,
                         type: 'post',
                         success: function (response) {
-                            $('#hasil_add_area').html(response); // display success response from the PHP script
+                            $('#hasil_add_model').html(response); // display success response from the PHP script
                         },
                         error: function (response) {
-                            $('#hasil_add_area').html(response); // display error response from the PHP script
+                            $('#hasil_add_model').html(response); // display error response from the PHP script
                         }
                     });
                 });
@@ -36,11 +41,11 @@
 			<div class="media">
 				<div class="media-left">
 					<a href="#">
-						<img class="media-object" src="images/icon/map.png" alt="Area Perkebunan" width="20">
+						<img class="media-object" src="images/icon/model.png" alt="Model perhitungan" width="20">
 					</a>
 				</div>
 				<div class="media-body">
-					<h4 class="media-heading">Tambah Area</h4>
+					<h4 class="media-heading">Tambah Model</h4>
 				</div>
 			</div>
 		</div>
@@ -48,56 +53,148 @@
 			<form class="form-horizontal">
 				<div class="row clearfix">
 					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-						<label for="area">Area</label>
+						<label for="area">Nama model</label>
 					</div>
 					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 						<div class="form-group">
 							<div class="form-line">
-								<input type="text" class="form-control" id="area_name" required></input>
+								<input type="text" class="form-control" id="model_name" required></input>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row clearfix">
 					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-						<label for="lokasi">Lokasi</label>
+						<label for="nutrisi">Nutrisi</label>
 					</div>
 					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 						<div class="form-group">
-							<div class="form-line">
-								<input type="text" class="form-control" id="lokasi" required></input>
+							<div class="form-inline">
+								<select class="form-control show-tick" id="nutrisi" name="nutrisi">
+									<option value="" selected>-- pilih --</option>
+									<option value="N">N</option>
+									<option value="P">P</option>
+									<option value="K">K</option>
+								</select>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row clearfix">
 					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-						<label for="dekskripsi">Deskripsi</label>
+						<label for="resolusi_10">Resolusi 10 m</label>
 					</div>
 					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 						<div class="form-group">
-							<div class="form-line">
-								<input type="text" class="form-control" id="deskripsi" required></input>
+							<div class="col-sm-3">
+								<label>Band 2</label>
+								<div class="form-group">
+									<div class="form-line">
+										<input type="text" class="form-control" id="b2" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 3</label> <input type="text" class="form-control" id="b3" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 4</label> <input type="text" class="form-control" id="b4" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 8</label> <input type="text" class="form-control" id="b8" required></input>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row clearfix">
 					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-						<label for="area">Shapefile batas area (*.shp, *.shx, *.dbf, & *.prj file)</label>
+						<label for="resolusi_20">Resolusi 20 m</label>
 					</div>
 					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 						<div class="form-group">
-							<div class="form-line">
-								<input name="shp[]" id="multiSHP" type="file" class="file" data-show-preview="false" multiple 
-    data-show-upload="false" required>
-								<script>
-									$("#multiSHP").fileinput({
-										maxFileCount: 4,
-										mainClass: "input-group-sm",
-										allowedFileExtensions: ["shp", "shx", "dbf", "prj"],
-									});
-								</script>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 5</label> <input type="text" class="form-control" id="b5" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 6</label> <input type="text" class="form-control" id="b6" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 7</label> <input type="text" class="form-control" id="b7" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 8a</label> <input type="text" class="form-control" id="b8a" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 11</label> <input type="text" class="form-control" id="b11" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 12</label> <input type="text" class="form-control" id="b12" required></input>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row clearfix">
+					<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+						<label for="resolusi_60">Resolusi 60 m</label>
+					</div>
+					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+						<div class="form-group">
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 1</label> <input type="text" class="form-control" id="b1" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 9</label> <input type="text" class="form-control" id="b9" required></input>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<div class="form-line">
+										<label>Band 10</label> <input type="text" class="form-control" id="b10" required></input>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -108,7 +205,7 @@
 			<button type="button" id="save" class="btn btn-link waves-effect">SIMPAN</button>
 			<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">KELUAR</button>
 		</div>
-		<div id="hasil_add_area">
+		<div id="hasil_add_model">
 		</div>
 	</div>
 </div>
