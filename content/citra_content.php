@@ -76,7 +76,7 @@
                                             <td><?php echo $data['nama'];?></td>
 											<td><span class="label label-<?php echo $label; ?>"><?php echo $status;?></span></td>
                                             <td>
-												<a id="del_<?php echo $data['kode_citra']; ?>" style="cursor: pointer;" onclick="deleteCitra('<?php echo $data['kode_citra'];?>', '<?php echo $data['nama'];?>')">Delete</a>
+												<a id="del_<?php echo $data['kode_citra']; ?>" style="cursor: pointer;" onclick="deleteCitra('<?php echo $data['kode_citra'];?>', '<?php echo $data['nama'];?>', '<?php echo $data['tanggal'];?>')">Delete</a>
 											</td>
                                         </tr>
 										<?php } ?>
@@ -130,12 +130,12 @@ $(document).ready(function(){
     });
 });
 
-function deleteCitra(id, nama) {
+function deleteCitra(id, nama, tanggal) {
 	event.preventDefault(); // prevent form submit
 	var form = event.target.form; // storing the form
 	swal({
 	  title: "Anda yakin?",
-	  text: "Citra " + nama + " akan dihapus",
+	  text: "Citra " + nama + ", tanggal akuisisi " +tanggal+ " akan dihapus",
 	  type: "warning",
 	  showCancelButton: true,
 	  confirmButtonColor: "#DD6B55",
