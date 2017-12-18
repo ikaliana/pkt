@@ -58,7 +58,7 @@
 					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 						<div class="form-group">
 							<div class="form-line">
-								<input type="text" class="form-control" id="model_name" required></input>
+								<input type="text" class="form-control" id="model_name" required placeholder="masukkan nama model"></input>
 							</div>
 						</div>
 					</div>
@@ -87,31 +87,30 @@
 					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 						<div class="form-group">
 							<div class="col-sm-3">
-								<label>Band 2</label>
 								<div class="form-group">
 									<div class="form-line">
-										<input type="text" class="form-control" id="b2" required></input>
+										<label>Band 2</label> <input type="text" class="form-control" id="b2" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 3</label> <input type="text" class="form-control" id="b3" required></input>
+										<label>Band 3</label> <input type="text" class="form-control" id="b3" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 4</label> <input type="text" class="form-control" id="b4" required></input>
+										<label>Band 4</label> <input type="text" class="form-control" id="b4" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 8</label> <input type="text" class="form-control" id="b8" required></input>
+										<label>Band 8</label> <input type="text" class="form-control" id="b8" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
@@ -127,42 +126,42 @@
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 5</label> <input type="text" class="form-control" id="b5" required></input>
+										<label>Band 5</label> <input type="text" class="form-control" id="b5" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 6</label> <input type="text" class="form-control" id="b6" required></input>
+										<label>Band 6</label> <input type="text" class="form-control" id="b6" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 7</label> <input type="text" class="form-control" id="b7" required></input>
+										<label>Band 7</label> <input type="text" class="form-control" id="b7" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 8a</label> <input type="text" class="form-control" id="b8a" required></input>
+										<label>Band 8a</label> <input type="text" class="form-control" id="b8a" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 11</label> <input type="text" class="form-control" id="b11" required></input>
+										<label>Band 11</label> <input type="text" class="form-control" id="b11" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 12</label> <input type="text" class="form-control" id="b12" required></input>
+										<label>Band 12</label> <input type="text" class="form-control" id="b12" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
@@ -178,21 +177,21 @@
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 1</label> <input type="text" class="form-control" id="b1" required></input>
+										<label>Band 1</label> <input type="text" class="form-control" id="b1" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 9</label> <input type="text" class="form-control" id="b9" required></input>
+										<label>Band 9</label> <input type="text" class="form-control" id="b9" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
 									<div class="form-line">
-										<label>Band 10</label> <input type="text" class="form-control" id="b10" required></input>
+										<label>Band 10</label> <input type="text" class="form-control" id="b10" required placeholder="0"></input>
 									</div>
 								</div>
 							</div>
