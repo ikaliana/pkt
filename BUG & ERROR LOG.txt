@@ -9,3 +9,6 @@
 	-- umur tanaman belum dimasukin ke shape file dan belum digunakan
 	-- perhitungan berdasarkan tanah belum diikutsertakan (DONE --> pupuk majemuk masih ambigu, pake yg daun atau tanah atau gabungan)
 	-- perhitungan rekomendasi untuk pupuk majemuk (DONE --> test pake pupuk majemuk yg banyak)
+
+18 Des 2017
+- Fitur edit area dan edit model masih belum berfungsi
