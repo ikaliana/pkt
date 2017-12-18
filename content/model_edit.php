@@ -13,5 +13,6 @@
 			</div>
 		</div>
 		<div id="dynamic-content"></div>
+		<div id="hasil_edit_model"></div>
 	</div>
 </div>

@@ -83,7 +83,7 @@ function editModel(id)
                                             <td><?php echo $data['nama']; ?></td>
                                             <td><?php echo $data['nutrisi']; ?></td>
                                             <td>
-												<a data-toggle="modal" data-id="<?php echo $data['id_model']; ?>" id="getDetail" style="cursor: pointer;" data-color="grey" data-target="#tampil_detail" aria-expanded="false">Edit</a> | <a href="">Delete</a>
+												<a data-toggle="modal" data-id="<?php echo $data['id_model']; ?>" id="getDetail" style="cursor: pointer;" data-color="grey" data-target="#tampil_detail" aria-expanded="false">Edit</a> | <a id="del_<?php echo $data['id_model']; ?>" style="cursor: pointer;" onclick="deleteModel('<?php echo $data['id_model'];?>', '<?php echo $data['nama'];?>')">Delete</a>
 											</td>
                                         </tr>
 										<?php 
@@ -141,12 +141,12 @@ $(document).ready(function(){
     });
 });
 
-function deleteArea(id, nama) {
+function deleteModel(id, nama) {
 	event.preventDefault(); // prevent form submit
 	var form = event.target.form; // storing the form
 	swal({
 	  title: "Anda yakin?",
-	  text: "Area " + nama + " akan dihapus",
+	  text: "Model " + nama + " akan dihapus",
 	  type: "warning",
 	  showCancelButton: true,
 	  confirmButtonColor: "#DD6B55",
@@ -165,7 +165,7 @@ function deleteArea(id, nama) {
 		 
 		  // AJAX Request
 		  $.ajax({
-		   url: './ajax/area_remove_action.php',
+		   url: './ajax/model_remove_action.php',
 		   type: 'POST',
 		   data: 'id='+deleteid,
 		   success: function(response){
@@ -179,7 +179,7 @@ function deleteArea(id, nama) {
 	  } else {
 		swal({
 			title: "Dibatalkan",
-			text: "Area " + nama + " batal dihapus :)",
+			text: "Model " + nama + " batal dihapus :)",
 			type: "success",
 			timer: 1500
 		});

@@ -196,5 +196,3 @@ $nutrisi_selected = $data['nutrisi'];
 				<button type="button" onclick="editModel()" class="btn btn-link waves-effect">SIMPAN</button>
 				<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
 	</div>
-<div id="hasil_edit_model">
-</div>
