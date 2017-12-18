@@ -34,7 +34,7 @@
 									
 								</li>
                                 <li>
-									<button class="btn btn-xs bg-blue waves-effect" data-toggle="modal" style="cursor: pointer;" data-target="#tambahPupuk" aria-expanded="false" aria-controls="tambahPupuk"><i class="material-icons">add_box</i> TAMBAH</button>
+									<button class="btn btn-xs bg-blue waves-effect" data-toggle="modal" style="cursor: pointer;" data-target="#tambah_pupuk" aria-expanded="false" aria-controls="tambah_pupuk"><i class="material-icons">add_box</i> TAMBAH</button>
 									
 								</li>
                             </ul>
@@ -71,7 +71,7 @@
                                             <td><?php echo $data['komposisi_p']; ?></td>
                                             <td><?php echo $data['komposisi_k']; ?></td>
                                             <td>
-												<a data-toggle="collapse" style="cursor: pointer;" data-target="#editPupuk" aria-expanded="false" aria-controls="editPupuk">Edit</a> | <a href="">Delete</a>
+												<a data-toggle="modal" data-id="<?php echo $data['kode_pupuk']; ?>" id="getDetail" style="cursor: pointer;" data-color="grey" data-target="#tampil_detail" aria-expanded="false">Edit</a> | <a id="del_<?php echo $data['kode_pupuk']; ?>" style="cursor: pointer;" onclick="deletePupuk('<?php echo $data['kode_pupuk'];?>', '<?php echo $data['nama_pupuk'];?>')">Delete</a>
 											</td>
                                         </tr>
 										<?php 
@@ -87,115 +87,14 @@
 								  
 								</script>
                             </div>
-							<div class="collapse" id="editPupuk">
-								<h2 class="card-inside-title">Detail Pupuk Urea</h2>
-								<form class="form-horizontal">
-									<div class="row clearfix">
-										<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-											<label for="area">Nama Pupuk</label>
-										</div>
-										<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-											<div class="form-group">
-												<div class="form-line">
-													<input type="text" id="namaPupukEdit" class="form-control" placeholder="masukkan nama pupuk" value="Urea">
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row clearfix">
-										<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-											<label for="area">Komposisi</label>
-										</div>
-										<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-											<div class="form-group">
-												<div class="form-inline">
-													<div class="row">
-														<div class="col-md-2 form-inline">
-															<div class="col-xs-6">N</div><div class="col-xs-6"><input type="text" id="namaPupuk1" class="" placeholder="" value="45"></div>
-														</div>
-														<div class="col-md-2"></div>
-														<div class="col-md-2">
-															<div class="col-xs-6">P</div><div class="col-xs-6"><input type="text" id="namaPupuk2" class="" placeholder="" value="0"></div>
-														</div>
-														<div class="col-md-2"></div>
-														<div class="col-md-2">
-															<div class="col-xs-6">K</div><div class="col-xs-6"><input type="text" id="namaPupuk3" class="" placeholder="" value="0"></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									<div class="row clearfix">
-										<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-											<button type="button" class="btn btn-primary m-t-15 waves-effect">SIMPAN</button>								
-										</div>
-									</div>
-								</form>
+							<div class="modal fade" id="tampil_detail">
+								<?php include('pupuk_edit.php') ?>
 							</div>
-							<div class="modal fade" id="tambahPupuk">
-								<div class="modal-dialog modal-lg" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h4 class="modal-title" id="largeModalLabel">Tambah Data Pupuk</h4>
-										</div>
-										<div class="modal-body">
-											<form class="form-horizontal">
-												<div class="row clearfix">
-													<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-														<label for="area">Nama Pupuk</label>
-													</div>
-													<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-														<div class="form-group">
-															<div class="form-line">
-																<input type="text" id="namaPupuk" class="form-control" placeholder="masukkan nama pupuk" value="">
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="row clearfix">
-													<div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-														<label for="area">Komposisi</label>
-													</div>
-													<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-														<div class="form-group">
-															<div class="form-inline">
-																<div class="col-md-4">
-																	<div class="col-xs-2 form-control-label"><label for="area">N</label></div>
-																	<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
-																		<input type="text" id="pupuk_N" class="form-control" placeholder="0" value=""></div>
-																</div>
-																<div class="col-md-4">
-																	<div class="col-xs-2 form-control-label"><label for="area">P</label></div>
-																	<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
-																		<input type="text" id="pupuk_P" class="form-control" placeholder="0" value=""></div>
-																</div>
-																<div class="col-md-4">
-																	<div class="col-xs-2 form-control-label"><label for="area">K</label></div>
-																	<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
-																		<input type="text" id="pupuk_K" class="form-control" placeholder="0" value=""></div>
-																</div>
-																<!--div class="row">
-																</div-->
-															</div>
-														</div>
-													</div>
-												</div>
-												
-											</form>
-										</div>
-										<div class="modal-footer">
-											<button type="button" id="save" class="btn btn-link waves-effect">SIMPAN</button>
-											<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">KELUAR</button>
-										</div>
-										<div id="hasil_add_area">
-										</div>
-
-									</div>
-								</div>
+							<div class="modal fade" id="tambah_pupuk">
+								<?php include('pupuk_add.php') ?>
 							</div>
-
+							<div id="hasil_add_pupuk">
+							</div>
                         </div>	
 						
                     </div>
@@ -205,41 +104,78 @@
 
         </div>
     </section>
-
 <script type="text/javascript">
-    $(document).ready(function (e) {
-        $('#save').on('click', function () {
-			var namaPupuk = $("#namaPupuk").val();
-			var pupuk_N = $("#pupuk_N").val();
-			var pupuk_P = $("#pupuk_P").val();
-			var pupuk_K = $("#pupuk_K").val();
 
-			if(namaPupuk=="") { setTimeout(function () { swal("","Isikan nama pupuk","error")}); return; }
-			if(pupuk_N=="") { setTimeout(function () { swal("","Masukkan angka komposisi Nitrogen (N) dalam pupuk","error")}); return; }
-			if(pupuk_P=="") { setTimeout(function () { swal("","Masukkan angka komposisi Fosfor (P) dalam pupuk","error")}); return; }
-			if(pupuk_K=="") { setTimeout(function () { swal("","Masukkan angka komposisi Kalium (K) dalam pupuk","error")}); return; }
+$(document).ready(function(){
 
-            var form_data = new FormData();
-			form_data.append("nama_pupuk", namaPupuk);
-			form_data.append("pupuk_n", pupuk_N);
-			form_data.append("pupuk_p", pupuk_P);
-			form_data.append("pupuk_k", pupuk_K);
-            
-            $.ajax({
-                url: './ajax/pupuk_add_action.php', // point to server-side PHP script 
-                dataType: 'text', // what to expect back from the PHP script
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: form_data,
-                type: 'post',
-                success: function (response) {
-                    $('#hasil_add_area').html(response); // display success response from the PHP script
-                },
-                error: function (response) {
-                    $('#hasil_add_area').html(response); // display error response from the PHP script
-                }
-            });
-        });
+    $(document).on('click', '#getDetail', function(e){
+  
+     e.preventDefault();
+  
+     var uid = $(this).data('id'); // get id of clicked row
+  
+     $('#dynamic-content').html(''); // leave this div blank
+     $.ajax({
+          url: './ajax/pupuk_getdetail_action.php',
+          type: 'POST',
+          data: 'id='+uid,
+          dataType: 'html'
+     })
+     .done(function(data){
+          console.log(data); 
+          $('#dynamic-content').html(''); // blank before load.
+          $('#dynamic-content').html(data); // load here
+     })
+     .fail(function(){
+          $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+     });
+
     });
+});
+
+function deletePupuk(id, nama) {
+	event.preventDefault(); // prevent form submit
+	var form = event.target.form; // storing the form
+	swal({
+	  title: "Anda yakin?",
+	  text: "Pupuk " + nama + " akan dihapus",
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonColor: "#DD6B55",
+	  confirmButtonText: "Ya, hapus saja",
+	  cancelButtonText: "Tidak, batalkan misi",
+	  closeOnConfirm: true,
+	  closeOnCancel: false
+	},
+	function(isConfirm){
+	  if (isConfirm) {
+		 // Delete 
+		  var el = document.getElementById('del_'+id);
+
+		  // Delete id
+		  var deleteid = id;
+		 
+		  // AJAX Request
+		  $.ajax({
+		   url: './ajax/pupuk_remove_action.php',
+		   type: 'POST',
+		   data: 'id='+deleteid,
+		   success: function(response){
+			// Removing row from HTML Table
+			$(el).closest('tr').css('background','tomato');
+			$(el).closest('tr').fadeOut(800, function(){ 
+			 $(this).remove();
+			});
+		   }
+		  });
+	  } else {
+		swal({
+			title: "Dibatalkan",
+			text: "Model " + nama + " batal dihapus :)",
+			type: "success",
+			timer: 1500
+		});
+	  }
+	});
+}
 </script>

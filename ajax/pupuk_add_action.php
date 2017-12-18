@@ -20,7 +20,7 @@ if(empty($data_exist))
 	$sql = pg_query($db_conn, $query);	
 ?>
 	<script type="text/javascript">
-		setTimeout(function () { swal("Yes!","Data pupuk berhasil disimpan","success");});
+		setTimeout(function () { swal("Yes!","Data pupuk <?php echo $nama_pupuk; ?>berhasil disimpan","success");});
 	</script>		
 <?php
 } else {
