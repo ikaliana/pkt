@@ -62,6 +62,9 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqYu6m0j-sxAcFnSrVwCTKgUiEYdw8IKY&callback=initMap"
     async defer></script>
 	
+	<!-- clippyjs -->
+	
+	
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
     <script src="js/pages/index.js"></script>

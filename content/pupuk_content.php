@@ -1,3 +1,6 @@
+<?php
+$help_content = "Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disini loh ";
+?>
 	<section class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -29,7 +32,7 @@
                                 </div>
                             </div>
                             <ul class="header-dropdown m-r--5">
-                                <li>
+								<li>
 									<button class="btn btn-xs bg-grey waves-effect" style="cursor: pointer;" onclick="window.location.reload(); "aria-expanded="false"><i class="material-icons">replay</i> REFRESH</button>
 									
 								</li>
