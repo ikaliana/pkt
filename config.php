@@ -2,7 +2,7 @@
 session_start();
 //Koneksi ke Postgre
 $db_host="localhost";
-$db_port="5433";
+$db_port="5432";
 $db_name="pkt";
 $db_user="postgres";
 $db_password="password";

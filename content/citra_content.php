@@ -61,7 +61,8 @@
                                     </tfoot>
                                     <tbody>
 										<?php
-										$sql_citra = pg_query($db_conn, "SELECT c.kode_citra as kode_citra, c.tanggal as tanggal, c.download_status as status, a.nama as nama FROM pkt_citra as c, pkt_area as a WHERE c.kode_area=a.kode_area");
+										//$sql_citra = pg_query($db_conn, "SELECT c.kode_citra as kode_citra, c.tanggal as tanggal, c.download_status as status, a.nama as nama FROM pkt_citra as c, pkt_area as a WHERE c.kode_area=a.kode_area");
+										$sql_citra = pg_query($db_conn, "SELECT c.kode_citra as kode_citra, c.tanggal as tanggal, 1 as status, a.nama as nama FROM pkt_citra as c, pkt_area as a WHERE c.kode_area=a.kode_area");
 										while($data = pg_fetch_assoc($sql_citra)){
 											if($data['status'] == 1){
 												$status = "READY";

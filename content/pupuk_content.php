@@ -74,7 +74,14 @@ $help_content = "Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disin
                                             <td><?php echo $data['komposisi_p']; ?></td>
                                             <td><?php echo $data['komposisi_k']; ?></td>
                                             <td>
-												<a data-toggle="modal" data-id="<?php echo $data['kode_pupuk']; ?>" id="getDetail" style="cursor: pointer;" data-color="grey" data-target="#tampil_detail" aria-expanded="false">Edit</a> | <a id="del_<?php echo $data['kode_pupuk']; ?>" style="cursor: pointer;" onclick="deletePupuk('<?php echo $data['kode_pupuk'];?>', '<?php echo $data['nama_pupuk'];?>')">Delete</a>
+												<a 	data-id="<?php echo $data['kode_pupuk']; ?>" 
+													data-nama="<?php echo $data['nama_pupuk']; ?>"
+													data-n="<?php echo $data['komposisi_n']; ?>"
+													data-p="<?php echo $data['komposisi_p']; ?>"
+													data-k="<?php echo $data['komposisi_k']; ?>"
+													id="getDetail" style="cursor: pointer;" >Edit</a> 
+												| 
+												<a id="del_<?php echo $data['kode_pupuk']; ?>" style="cursor: pointer;" onclick="deletePupuk('<?php echo $data['kode_pupuk'];?>', '<?php echo $data['nama_pupuk'];?>')">Delete</a>
 											</td>
                                         </tr>
 										<?php 
@@ -113,25 +120,38 @@ $(document).ready(function(){
 
     $(document).on('click', '#getDetail', function(e){
   
-     e.preventDefault();
-  
-     var uid = $(this).data('id'); // get id of clicked row
-  
-     $('#dynamic-content').html(''); // leave this div blank
-     $.ajax({
-          url: './ajax/pupuk_getdetail_action.php',
-          type: 'POST',
-          data: 'id='+uid,
-          dataType: 'html'
-     })
-     .done(function(data){
-          console.log(data); 
-          $('#dynamic-content').html(''); // blank before load.
-          $('#dynamic-content').html(data); // load here
-     })
-     .fail(function(){
-          $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
-     });
+		e.preventDefault();
+
+		var uid = $(this).data('id'); // get id of clicked row
+		var nama = $(this).data('nama');
+		var n = $(this).data('n');
+		var p = $(this).data('p');
+		var k = $(this).data('k');
+
+		$("#judul").html("Edit pupuk");
+		$("#kodePupuk").val(uid);
+		$("#namaPupuk").val(nama);
+		$("#pupuk_N").val(n);
+		$("#pupuk_P").val(p);
+		$("#pupuk_K").val(k);
+
+		$('#tambah_pupuk').modal('show');
+
+		// $('#dynamic-content').html(''); // leave this div blank
+		// $.ajax({
+		//   url: './ajax/pupuk_getdetail_action.php',
+		//   type: 'POST',
+		//   data: 'id='+uid,
+		//   dataType: 'html'
+		// })
+		// .done(function(data){
+		//   //console.log(data); 
+		//   $('#dynamic-content').html(''); // blank before load.
+		//   $('#dynamic-content').html(data); // load here
+		// })
+		// .fail(function(){
+		//   $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+		// });
 
     });
 });

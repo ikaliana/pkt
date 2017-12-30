@@ -1,6 +1,9 @@
 <script type="text/javascript">
     $(document).ready(function (e) {
         $('#save').on('click', function () {
+			var mode = "tambah";
+			var kodePupuk = $("#kodePupuk").val();
+			if(kodePupuk != "") mode = "edit";
 			var namaPupuk = $("#namaPupuk").val();
 			var pupuk_N = $("#pupuk_N").val();
 			var pupuk_P = $("#pupuk_P").val();
@@ -16,6 +19,8 @@
 			form_data.append("pupuk_n", pupuk_N);
 			form_data.append("pupuk_p", pupuk_P);
 			form_data.append("pupuk_k", pupuk_K);
+			form_data.append("kode_pupuk",kodePupuk);
+			form_data.append("mode",mode);
             
             $.ajax({
                 url: './ajax/pupuk_add_action.php', // point to server-side PHP script 
@@ -27,9 +32,11 @@
                 type: 'post',
                 success: function (response) {
                     $('#hasil_add_pupuk').html(response); // display success response from the PHP script
+                    $("#judul").html("Tambah pupuk");
                 },
                 error: function (response) {
                     $('#hasil_add_pupuk').html(response); // display error response from the PHP script
+                    $("#judul").html("Tambah pupuk");
                 }
             });
         });
@@ -45,7 +52,7 @@
 					</a>
 				</div>
 				<div class="media-body">
-					<h4 class="media-heading">Tambah Pupuk</h4>
+					<h4 class="media-heading" id="judul">Tambah Pupuk</h4>
 				</div>
 			</div>
 		</div>
@@ -58,6 +65,7 @@
 					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 						<div class="form-group">
 							<div class="form-line">
+								<input type="hidden" id="kodePupuk" />
 								<input type="text" id="namaPupuk" class="form-control" placeholder="masukkan nama pupuk">
 							</div>
 						</div>

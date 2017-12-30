@@ -1,29 +1,3 @@
-<script type="text/javascript">
-	$(document).ready(function (e) {
-		$('#editPupuk').on('click', function () {
-			var form_data = new FormData();
-			form_data.append("namaPupuk",$("#namaPupuk").val());
-			form_data.append("n",$("#pupuk_N").val());
-			form_data.append("p",$("#pupuk_P").val());
-			form_data.append("k",$("#pupuk_K").val());
-			$.ajax({
-				url: 'pupuk_edit_action.php', // point to server-side PHP script 
-				dataType: 'text', // what to expect back from the PHP script
-				cache: false,
-				contentType: false,
-				processData: false,
-				data: form_data,
-				type: 'post',
-				success: function (response) {
-					$('#hasil_edit_model').html(response); // display success response from the PHP script
-				},
-				error: function (response) {
-					$('#hasil_edit_model').html(response); // display error response from the PHP script
-				}
-			});
-		});
-	});
-</script>
 <?php
 include "../config.php";
 
@@ -75,7 +49,8 @@ $data = pg_fetch_assoc($sql);
 	</div>
 </form>
 <div class="modal-footer">
-	<button type="button" onclick="editPupuk()" class="btn btn-link waves-effect">SIMPAN</button>
+	<!--button type="button" id="btnEditSimpan" onclick="editPupuk()" class="btn btn-link waves-effect">SIMPAN</button-->
+	<button type="button" id="btnEditSimpan" class="btn btn-link waves-effect">SIMPAN</button>
 	<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
 </div>
 	
