@@ -71,6 +71,9 @@ include './user_access.php';
 	<!-- datepicker-->
 	<link rel="stylesheet" href="plugins/datepicker/css/datepicker.css">
 	
+    <!-- Bootstrap slider -->
+    <link href="plugins/bootstrap-slider/css/bootstrap-slider.css" rel="stylesheet"/>
+    <script src="plugins/bootstrap-slider/js/bootstrap-slider.js"></script>
 	
 </head>
 

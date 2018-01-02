@@ -81,17 +81,17 @@
 								<div class="col-md-4">
 									<div class="col-xs-2 form-control-label"><label for="area">N</label></div>
 									<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
-										<input type="text" id="pupuk_N" class="form-control" placeholder="0"></div>
+										<input type="text" id="pupuk_N" class="form-control" placeholder=""></div>
 								</div>
 								<div class="col-md-4">
 									<div class="col-xs-2 form-control-label"><label for="area">P</label></div>
 									<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
-										<input type="text" id="pupuk_P" class="form-control" placeholder="0"></div>
+										<input type="text" id="pupuk_P" class="form-control" placeholder=""></div>
 								</div>
 								<div class="col-md-4">
 									<div class="col-xs-2 form-control-label"><label for="area">K</label></div>
 									<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
-										<input type="text" id="pupuk_K" class="form-control" placeholder="0"></div>
+										<input type="text" id="pupuk_K" class="form-control" placeholder=""></div>
 								</div>
 								<!--div class="row">
 								</div-->

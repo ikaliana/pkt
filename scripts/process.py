@@ -8,6 +8,7 @@ import numpy as np
 import math
 import sys
 import os
+import time
 
 
 def ClassificationValue(val,unsur):
@@ -189,14 +190,6 @@ class_color_2 = [0x00000000,0xFF1C19D7,0xFF5390F6,0xFF9ADFFF,0xFF9EF0DC,0xFF62CC
 critical_value_daun = { "N" : 2.5, "P" : 0.15, "K" : 1.00 }
 critival_value_tanah = { "N" : 0.25, "P" : 40, "K" : 97.5 }
 
-# --- VARIABLE dibawah ini seharusnya ambil dari database -- #
-rekomendasi_pupuk = { "UREA" : 272, "KCL" : 200, "TSP" : 200, "NPK" : 200 }  # kg / hektar
-
-# rekomendasi_ppks = 	{
-# 						"urea" : { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0, "8": 0, "9": 0, "10": 0, "11": 0, }
-# 					}
-# --- END OF VARIABLE dibawah ini seharusnya ambil dari database -- #
-
 id_analisis = str(sys.argv[1])
 
 work_folder = "../result/"
@@ -222,7 +215,7 @@ strquery += " where a.kode_analisis = " + id_analisis
 datavar = GetData(strquery,True)
 
 #initiate working files
-sentinel_file += str(datavar["kode_citra"]) + "/" + datavar["citra_file"]
+sentinel_file += str(datavar["kode_area"]) + "/" + datavar["citra_file"]
 shp_file += str(datavar["kode_area"]) + "/" + datavar["area_file"][:-4] + ".shp"
 clipped_file = work_folder + datavar["citra_file"][:-4] + "_clipped" + datavar["citra_file"][-4:]
 
@@ -236,7 +229,8 @@ unsur_id["K-Tanah"] = datavar["kode_model_k_tanah"]
 
 #initiate fertilizer composition
 komposisi_pupuk = {}
-datapupuk = GetData("select * from pkt_pupuk",False)
+# datapupuk = GetData("select * from pkt_pupuk",False)
+datapupuk = GetData("select * from pkt_pupuk where kode_pupuk in (select distinct kode_pupuk from pkt_rekomendasi)",False)
 for row in datapupuk:
 	temp = {}
 	temp["N"] = float(row["komposisi_n"])
@@ -246,12 +240,30 @@ for row in datapupuk:
 	temp["JENIS"] = ClassifyPupuk(temp)
 	komposisi_pupuk[row["nama_pupuk"]] = temp
 
+#initiate data rekomendasi pupuk PPKS
+rekomendasi_pupuk = {}
+strquery = ""
+strquery += "select p.nama_pupuk,r.* from pkt_rekomendasi r "
+strquery += "left join pkt_pupuk p on r.kode_pupuk = p.kode_pupuk "
+strquery += "order by p.nama_pupuk,r.umur_tanaman"
+datarekomendasi = GetData(strquery,False)
+
+temp_nama = ""
+for row in datarekomendasi:
+	if temp_nama != row["nama_pupuk"]:
+		rekomendasi_pupuk[row["nama_pupuk"]] = {}
+		temp = rekomendasi_pupuk[row["nama_pupuk"]]
+	temp_nama = row["nama_pupuk"]
+	temp[row["umur_tanaman"]] = row["jumlah_pupuk"] 
+
+
 # print work_folder
 # print sentinel_file
 # print shp_file
 # print clipped_file
 # print unsur_id
 # print komposisi_pupuk
+# print rekomendasi_pupuk
 # exit()
 
 ## ========== CLIP RASTER WITH SHAPEFILE  ====================
@@ -334,6 +346,9 @@ for unsur in kelompok_unsur:
 			if band1[i,j] != null_value:
 				
 				luas_area += 1
+				tahun_tanam = 2011  #ambil data ini dari raster/vector
+				tahun_now = int(time.strftime("%Y"))
+				umur_tanaman = tahun_now - tahun_tanam
 
 				# --- calculate nutrient using model --- #
 				raster_unsur[unsur][i,j] = \
@@ -358,7 +373,8 @@ for unsur in kelompok_unsur:
 				for nama_pupuk in komposisi_pupuk:
 					data_pupuk = pupuk[nama_pupuk][unsur]
 					if data_pupuk["komposisi"] > 0:
-						data_pupuk["peta_prev"][i,j] = rekomendasi_pupuk[nama_pupuk] / 100.0
+						# data_pupuk["peta_prev"][i,j] = rekomendasi_pupuk[nama_pupuk] / 100.0
+						data_pupuk["peta_prev"][i,j] = rekomendasi_pupuk[nama_pupuk][umur_tanaman] / 100.0
 						crValue = critival_value_tanah[unsur[:1]]
 						if unsur[1:] == "": crValue = critical_value_daun[unsur]
 

@@ -4,8 +4,18 @@
                     var form_data = new FormData();
 					var tanggal = $("#tanggal").val();
 					var area = $("#area").val();
+					var files = $("#tif").prop('files')
+
+					//alert(files.length);
+					if(tanggal == "") { setTimeout(function () { swal("","Isikan tanggal akuisisi","error")}); return; }
+					if(area == "0") { setTimeout(function () { swal("","Pilih area perkebunan yang terkait dengan citra","error")}); return; }
+					if(files.length == 0) { setTimeout(function () { swal("","Pilih citra sentinel yang akan di upload","error")}); return; }
+
 					form_data.append("tanggal", tanggal);
 					form_data.append("area", area);
+					form_data.append("tif",files[0]);
+
+					//return;
                     $.ajax({
                         url: './ajax/citra_add_action.php', // point to server-side PHP script 
                         dataType: 'text', // what to expect back from the PHP script
@@ -93,7 +103,7 @@
  					<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
  						<div class="form-group">
  							<div class="form-line">
- 								<input name="" id="tif" type="file" class="file" data-show-preview="false" data-show-upload="false" required>
+ 								<input id="tif" name="tif" type="file" class="file" data-show-preview="false" data-show-upload="false" required>
  								<script>
  									$("#tif").fileinput({
  										maxFileCount: 1

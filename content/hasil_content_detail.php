@@ -135,8 +135,12 @@
                 <div class="card">
             		<div class="header">
                         <div class="row clearfix">
-                            <div class="col-xs-12">
+                            <div class="col-sm-12 col-md-6">
                                 <h2>Rekomendasi Pemupukan</h2>
+                            </div>
+                            <div class="col-sm-12 col-md-6" style="text-align:right">
+                                Jumlah pokok per ha: <span id="jum_pokok" style="font-weight:bold">136</span> &nbsp; 
+                                <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="120" data-slider-max="145" data-slider-step="1" data-slider-value="136"/>
                             </div>
                         </div>
                     </div>
@@ -163,16 +167,20 @@
 									$query .= "and d.kode_analisis=".$analisis_id;
 									$query .= " order by d.nama_pupuk";
 
+									$row_counter = 0;
 									$sql_area = pg_query($db_conn, $query);
 									while($data = pg_fetch_assoc($sql_area)){
                                 ?>
 									<tr>
 										<td><?php echo $data['nama_pupuk']; ?></td>
                                         <td align="center"><?php echo number_format($data['dosis_total'], 0); ?></td>
-                                        <td align="center"><?php echo number_format($data['dosis_hektar'], 0); ?></td>
-										<td align="center"><?php echo number_format($data['dosis_pohon'], 2); ?></td>
+                                        <td align="center" class="dosis_hektar" data-id="<?php echo $row_counter ?>"><?php echo number_format($data['dosis_hektar'], 0); ?></td>
+										<td align="center" class="dosis_pohon_<?php echo $row_counter ?>"><?php echo number_format($data['dosis_pohon'], 2); ?></td>
                                     </tr>
-								<?php } ?>
+								<?php 
+										$row_counter++; 
+									} 
+								?>
 								</tbody>
 							</table>
 						</div>
@@ -215,8 +223,8 @@
 									<td align="center"><?php echo $urut; ?>.</td>
 									<td class="text-left"><?php echo $data['nama_pupuk']; ?></td>
                                     <td align="center"><?php echo number_format($data['dosis_total'], 0); ?></td>
-                                    <td align="center"><?php echo number_format($data['dosis_hektar'], 0); ?></td>
-									<td align="center"><?php echo number_format($data['dosis_pohon'], 2); ?></td>
+                                    <td align="center" class="dosis_hektar" data-id="<?php echo $row_counter ?>"><?php echo number_format($data['dosis_hektar'], 0); ?></td>
+									<td align="center" class="dosis_pohon_<?php echo $row_counter ?>"><?php echo number_format($data['dosis_pohon'], 2); ?></td>
                                 </tr>
 								<?php 
 										}
@@ -259,13 +267,14 @@
 									<td align="center">&nbsp;</td>
 									<td class="text-right">+ <?php echo $nama_pupuk_2; ?></td>
                                     <td align="center"><?php echo number_format($curr_dosis_2, 0); ?></td>
-                                    <td align="center"><?php echo number_format($curr_dosis_hektar, 0); ?></td>
-									<td align="center"><?php echo number_format($curr_dosis_pohon, 2); ?></td>
+                                    <td align="center" class="dosis_hektar" data-id="<?php echo $row_counter ?>"><?php echo number_format($curr_dosis_hektar, 0); ?></td>
+									<td align="center" class="dosis_pohon_<?php echo $row_counter ?>"><?php echo number_format($curr_dosis_pohon, 2); ?></td>
                                 </tr>
 								<?php 
 										}
 										$counter++;
 										if($counter >= 3) { $counter = 0; $urut++; }
+										$row_counter++;
 									} 
 								?>
 								</tbody>
@@ -395,9 +404,11 @@
 										<label for="cbpupuk" class="col-xs-2" style="margin:5px 0 10px">Pupuk</label>
 										<select id="cbpupuk">
 											<?php
-												$sql_area = pg_query($db_conn, "select * from pkt_pupuk order by nama_pupuk");
+												$nama_pupuk = "";
+												$sql_area = pg_query($db_conn, "select * from pkt_pupuk where kode_pupuk in (select distinct kode_pupuk from pkt_rekomendasi)");
 												while($data = pg_fetch_assoc($sql_area)){
-												echo "<option value='".$data['nama_pupuk']."'>".$data['nama_pupuk']."</option>";
+													if ($nama_pupuk == "") $nama_pupuk = $data['nama_pupuk'];
+													echo "<option value='".$data['nama_pupuk']."'>".$data['nama_pupuk']."</option>";
 												};
 											?>
 										</select>
@@ -434,12 +445,13 @@
 		var map1 = L.map('mapid1'); //.setView([107.018, -6.46722], 13);;
 		var map2 = L.map('mapid2');
 		var layer1 = L.imageOverlay(imageUrl + "Citra_Klasifikasi_N.png", imageBounds);
-		var layer2 = L.imageOverlay(imageUrl + "Citra_Klasifikasi_Pupuk_urea.png", imageBounds);
+		var layer2 = L.imageOverlay(imageUrl + "Citra_Klasifikasi_Pupuk_<?php echo $nama_pupuk; ?>.png", imageBounds);
 		map1.addLayer(layer1);
 		map2.addLayer(layer2);
 		map1.fitBounds(imageBounds);
 		map2.fitBounds(imageBounds);
-		map1.sync(map2)
+		map1.sync(map2);
+
 	   $("#cbunsur").on('change', function() {
 	   		var unsur = $("#cbunsur").val();
 	   		layer1.setUrl(imageUrl + "Citra_Klasifikasi_" + unsur + ".png");
@@ -455,5 +467,19 @@
 	   		var pupuk = $("#cbpupuk").val();
 	   		layer2.setUrl(imageUrl + "Citra_Klasifikasi_Pupuk_" + pupuk + ".png");
 	   });
+
+	   $('#ex1').slider();
+	   $("#ex1").on("slide", function(e) {
+			var jum_pokok = e.value;
+			$("#jum_pokok").html(jum_pokok);
+
+			$( ".dosis_hektar" ).each(function() {
+				var dosis_hektar = $(this).html();
+				var data_id = $(this).data("id");
+				var dosis_pohon = Math.round((dosis_hektar / jum_pokok) * 100) / 100;
+
+				$(".dosis_pohon_" + data_id).html(dosis_pohon);
+			});
+		});
 	</script>
 </section>
