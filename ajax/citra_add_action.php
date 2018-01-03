@@ -48,6 +48,9 @@ try {
 		echo "No!|Semua form harus diisi!|error";
 	}
 }
+catch (Throwable $t) {
+	echo "Oh tidak!|".$t->getMessage()."|error";
+}
 catch(Exception $e) {
 	echo "Oh tidak!|".$e->getMessage()."|error";
 } 
