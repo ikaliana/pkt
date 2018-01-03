@@ -141,6 +141,15 @@
         </div>
     </section>
     <script type="text/javascript">
+    	var swal_option = 	{
+						        title: "Konfirmasi",
+						        text: "Jalankan proses perhitungan?",
+						        type: "info",
+						        showCancelButton: true,
+						        closeOnConfirm: false,
+						        showLoaderOnConfirm: true,
+						    };
+
     	$('#cmbCitra').on('change', function() {
     		var txt = "";
     		if($(this).val() != "") {
@@ -178,25 +187,33 @@
 			form_data.append("p_tanah", p_tanah);
 			form_data.append("k_tanah", k_tanah);
 
-			var request = new XMLHttpRequest();
-			request.responseType = 'text';
-			request.onload = function () {
-			    if (request.readyState === request.DONE) {
-			        if (request.status === 200) {
-			            //$('#hasil_add_area').html(request.response);
-			            var res = request.response.split("|");
-			            if (res.length > 1) {
-			            	location.href = './index.php?p=hasil_content_detail&kd=' + res[0];
-			            }
-			            else {
-			            	$('#hasil_add_area').html(request.response);
-			            }
-			        }
-			    }
-			};
+			swal(swal_option,
+				function () {
+					var request = new XMLHttpRequest();
+					request.responseType = 'text';
+					request.onload = function () {
+					    if (request.readyState === request.DONE) {
+					        if (request.status === 200) {
+					            var res = JSON.parse(request.response);
+					            if(res.type == "success") location.href = './index.php?p=hasil_content_detail&kd=' + res.ID;
+					            else swal(res.title, res.text, res.type);
 
-			request.open("POST", './ajax/analisis_add_action.php');
-			request.send(form_data);
+					            //$('#hasil_add_area').html(request.response);
+					            //var res = request.response.split("|");
+					            // if (res.length > 1) {
+					            // 	location.href = './index.php?p=hasil_content_detail&kd=' + res[0];
+					            // }
+					            // else {
+					            // 	$('#hasil_add_area').html(request.response);
+					            // }
+					        }
+					    }
+					};
+
+					request.open("POST", './ajax/analisis_add_action.php');
+					request.send(form_data);
+				});
+
 
             // $.ajax({
             //     url: './ajax/analisis_add_action.php', // point to server-side PHP script 

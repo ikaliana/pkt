@@ -25,49 +25,25 @@ if(!empty($tanggal) && $area <> 0){
 			if(!in_array($kode_area, $dir_citra)) mkdir('../uploads/citra/'.$kode_area.'');
 
 			if ($_FILES["tif"]["error"] > 0) {
-				?>
-				<script type="text/javascript">
-					setTimeout(function () { swal("No!",'Error: Kode error <?php echo $_FILES["tif"]["error"] ?> <br>',"error");
-				});</script>	
-				<?php
+				echo "No!|Error: Kode error ".$_FILES["tif"]["error"]."<br>|error";
 			} else {
 				$dir_citra2 = scandir('../uploads/citra/'.$kode_area.'');
 				if(!in_array($filename_ext, $dir_citra2)){
 					$sql = pg_query($db_conn, "INSERT INTO pkt_citra (tanggal, kode_area, nama_file) VALUES ('".$tanggal."', '".$area."', '".$filename_ext."')");	
 					move_uploaded_file($_FILES["tif"]["tmp_name"], '../uploads/citra/' .$kode_area. '/' . $filename_ext);
-					?>
-					<script type="text/javascript">
-						setTimeout(function () { swal("Yes!","Citra <?php echo $area_name[0]; ?>, tanggal akuisisi <?php echo $tanggal; ?> berhasil ditambahkan!","success");
-					});</script>
-				<?php
+					echo "Yes!|Citra ".$area_name[0].", tanggal akuisisi ".$tanggal." berhasil ditambahkan!|success";
 				}else{
-					?>
-					<script type="text/javascript">
-						setTimeout(function () { swal("Oh tidak!","Citra <?php echo $filename_ext; ?> untuk area <?php echo $area_name[0]; ?> sudah tersedia! Anda dapat langsung menggunakannya, atau silakan pilih file lainnya","error");
-					});</script>
-					<?php
+					echo "Oh tidak!|Citra ".$filename_ext." untuk area ".$area_name[0]." sudah tersedia! Anda dapat langsung menggunakannya, atau silakan pilih file lainnya|error";
 				}
 			}
 
 		}else{
-			?>
-			<script type="text/javascript">
-				setTimeout(function () { swal("Oh tidak!","Anda mungkin mengupload file dengan ekstensi yang salah! Pastikan anda hanya mengupload file dengan ekstensi *.tif","error");
-			});</script>		
-			<?php
+			echo "Oh tidak!|Anda mungkin mengupload file dengan ekstensi yang salah! Pastikan anda hanya mengupload file dengan ekstensi *.tif|error";
 		}
 	} else {
-		?>
-		<script type="text/javascript">
-		setTimeout(function () { swal("No!","Pilih file *.tif untuk diupload!","error");
-		});</script>	
-		<?php	
+		echo "No!|Pilih file *.tif untuk diupload!|error";
 	}
 }else{
-?>
-	<script type="text/javascript">
-	setTimeout(function () { swal("No!","Semua form harus diisi!","error");
-	});</script>
-<?php 
+	echo "No!|Semua form harus diisi!|error";
 }
 ?>

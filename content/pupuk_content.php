@@ -119,7 +119,7 @@ $help_content = "Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disin
 $(document).ready(function(){
 
     $(document).on('click', '#getDetail', function(e){
-  
+
 		e.preventDefault();
 
 		var uid = $(this).data('id'); // get id of clicked row

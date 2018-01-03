@@ -183,7 +183,7 @@
 										</div>
 										<div class="row clearfix">
 											<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-												<button type="button" class="btn btn-primary m-t-15 waves-effect">JALANKAN</button>								
+												<button type="button" id="recalculate" class="btn btn-primary m-t-15 waves-effect">JALANKAN</button>								
 												<button type="button" class="btn btn-success m-t-15 waves-effect">LIHAT HASIL</button>
 											</div>
 										</div>

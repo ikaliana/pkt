@@ -15,22 +15,46 @@
 					form_data.append("area", area);
 					form_data.append("tif",files[0]);
 
-					//return;
-                    $.ajax({
-                        url: './ajax/citra_add_action.php', // point to server-side PHP script 
-                        dataType: 'text', // what to expect back from the PHP script
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: form_data,
-                        type: 'post',
-                        success: function (response) {
-                            $('#hasil_add_citra').html(response); // display success response from the PHP script
-                        },
-                        error: function (response) {
-                            $('#hasil_add_citra').html(response); // display error response from the PHP script
-                        }
-                    });
+				    swal({
+				        title: "Konfirmasi",
+				        text: "Simpan data dan unggah citra?",
+				        type: "info",
+				        showCancelButton: true,
+				        closeOnConfirm: false,
+				        showLoaderOnConfirm: true,
+				    }, function () {
+	                    $.ajax({
+	                        url: './ajax/citra_add_action.php', // point to server-side PHP script 
+	                        dataType: 'text', // what to expect back from the PHP script
+	                        cache: false,
+	                        contentType: false,
+	                        processData: false,
+	                        data: form_data,
+	                        type: 'post',
+	                        success: function (response) {
+	                            var msg = response.split("|");
+	                            if(msg.length == 3) {
+		                            //swal(msg[0], msg[1], msg[2]);
+		                            if(msg[2]=="success") {
+									    swal({
+									        title: msg[0],
+									        text: msg[1],
+									        type: msg[2],
+									        closeOnConfirm: false
+									    }, function () {
+									        location.reload();
+									    });		
+		                            } 
+		                            else swal(msg[0], msg[1], msg[2]);
+	                            }
+	                            //$('#hasil_add_citra').html(response); // display success response from the PHP script
+	                        },
+	                        error: function (response) {
+	                            swal("Error!",response,"error");
+	                            //$('#hasil_add_citra').html(response); // display error response from the PHP script
+	                        }
+	                    });
+				    });
                 });
             });
 </script>
