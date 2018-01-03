@@ -23,13 +23,15 @@ try {
 				$kode_area = $area;
 				$dir_citra = scandir('../uploads/citra/');
 
-				if(!in_array($kode_area, $dir_citra)) mkdir('../uploads/citra/'.$kode_area.'');
+				//if(!in_array($kode_area, $dir_citra)) mkdir('../uploads/citra/'.$kode_area.'');
+				if(!file_exists('../uploads/citra/'.$kode_area.'')) mkdir('../uploads/citra/'.$kode_area.'',0777);
 
 				if ($_FILES["tif"]["error"] > 0) {
 					echo "No!|Error: Kode error ".$_FILES["tif"]["error"]."<br>|error";
 				} else {
 					$dir_citra2 = scandir('../uploads/citra/'.$kode_area.'');
-					if(!in_array($filename_ext, $dir_citra2)){
+					//if(!in_array($filename_ext, $dir_citra2)){
+					if(!file_exists('../uploads/citra/'.$kode_area. '/' . $filename_ext)){
 						$sql = pg_query($db_conn, "INSERT INTO pkt_citra (tanggal, kode_area, nama_file) VALUES ('".$tanggal."', '".$area."', '".$filename_ext."')");	
 						move_uploaded_file($_FILES["tif"]["tmp_name"], '../uploads/citra/' .$kode_area. '/' . $filename_ext);
 						echo "Yes!|Citra ".$area_name[0].", tanggal akuisisi ".$tanggal." berhasil ditambahkan!|success";
