@@ -141,15 +141,6 @@
         </div>
     </section>
     <script type="text/javascript">
-    	var swal_option = 	{
-						        title: "Konfirmasi",
-						        text: "Jalankan proses perhitungan?",
-						        type: "info",
-						        showCancelButton: true,
-						        closeOnConfirm: false,
-						        showLoaderOnConfirm: true,
-						    };
-
     	$('#cmbCitra').on('change', function() {
     		var txt = "";
     		if($(this).val() != "") {
@@ -186,6 +177,15 @@
 			form_data.append("n_tanah", n_tanah);
 			form_data.append("p_tanah", p_tanah);
 			form_data.append("k_tanah", k_tanah);
+
+	    	var swal_option = 	{
+							        title: "Konfirmasi",
+							        text: "Jalankan proses perhitungan?",
+							        type: "info",
+							        showCancelButton: true,
+							        closeOnConfirm: false,
+							        showLoaderOnConfirm: true,
+							    };
 
 			swal(swal_option,
 				function () {

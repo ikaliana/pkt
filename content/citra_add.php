@@ -42,7 +42,7 @@
 									        type: msg[2],
 									        closeOnConfirm: false
 									    }, function () {
-									        location.reload();
+									        //location.reload();
 									    });		
 		                            } 
 		                            else swal(msg[0], msg[1], msg[2]);
