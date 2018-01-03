@@ -14,7 +14,7 @@
 			form_data.append("tanggal", tanggal);
 			form_data.append("area", area);
 			form_data.append("tif",files[0]);
-			console.log(files[0]);
+			//console.log(files[0]);
 
 		    swal({
 		        title: "Konfirmasi",
@@ -33,7 +33,7 @@
                     data: form_data,
                     type: 'post',
                     success: function (response) {
-                        console.log(response);
+                        // console.log(response);
                         var msg = response.split("|");
                         if(msg.length == 3) {
                             //swal(msg[0], msg[1], msg[2]);

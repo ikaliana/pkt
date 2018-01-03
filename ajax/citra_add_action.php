@@ -24,8 +24,6 @@ try {
 				$dir_citra = scandir('../uploads/citra/');
 
 				if(!in_array($kode_area, $dir_citra)) mkdir('../uploads/citra/'.$kode_area.'');
-				throw new Exception(strval(in_array($kode_area, $dir_citra));
-				
 
 				if ($_FILES["tif"]["error"] > 0) {
 					echo "No!|Error: Kode error ".$_FILES["tif"]["error"]."<br>|error";
