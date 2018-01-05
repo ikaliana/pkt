@@ -24,7 +24,10 @@ if(empty($area_exist)){
 					$sql = pg_query($db_conn, "INSERT INTO pkt_area (nama, lokasi, deskripsi, nama_file) VALUES ('".$area_name."', '".$lokasi."', '".$deskripsi."', '".$filename."')");
 					$sql = pg_query($db_conn, "SELECT kode_area FROM pkt_area WHERE nama='".$area_name."'");
 					$kode_area = pg_fetch_array($sql);
-					mkdir('../uploads/area/'.$kode_area[0].'');
+
+					mkdir('../uploads/area/'.$kode_area[0].'',0777);
+					chmod('../uploads/area/'.$kode_area[0].'',0777);
+					
 					for ($i = 0; $i < $no_files; $i++) {
 						if ($_FILES["shp"]["error"][$i] > 0) {
 							?>

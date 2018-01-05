@@ -24,6 +24,7 @@
 		        closeOnConfirm: false,
 		        showLoaderOnConfirm: true,
 		    }, function () {
+				//console.log(tanggal,area,files[0]);
                 $.ajax({
                     url: './ajax/citra_add_action.php', // point to server-side PHP script 
                     dataType: 'text', // what to expect back from the PHP script

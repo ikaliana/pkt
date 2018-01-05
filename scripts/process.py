@@ -194,7 +194,8 @@ id_analisis = str(sys.argv[1])
 
 work_folder = "../result/"
 if not os.path.isdir(work_folder + id_analisis):
-	os.makedirs(work_folder + id_analisis)
+	os.makedirs(work_folder + id_analisis,0777)
+	os.chmod(work_folder + id_analisis,0777)
 
 work_folder += id_analisis + "/"
 source_folder = "../uploads"
