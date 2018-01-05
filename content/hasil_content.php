@@ -240,6 +240,7 @@
 			var nt = $(this).data('nt');
 			var pt = $(this).data('pt');
 			var kt = $(this).data('kt');
+			console.log(uid,citra,n,p,k,nt,pt,kt);
 
 			$("#id_analisis").val(uid);
 			$("#cmbCitra").val(citra).trigger('change');
