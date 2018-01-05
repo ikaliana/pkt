@@ -78,7 +78,7 @@
 	                                            <td align="center"><?php echo date('d F Y',strtotime($data['tanggal_citra'])); ?></td>
 	                                            <td align="center"><?php echo date('d F Y H:i:s',strtotime($data['tanggal_analisis'])); ?></td>
 												<td align="center">
-													<a style="cursor: pointer;" id="editData"
+													<a style="cursor: pointer;" class="editData"
 														data-kode="<?php echo $data['kode_analisis']; ?>" 
 														data-citra="<?php echo $data['kode_citra']; ?>" 
 														data-n="<?php echo $data['kode_model_n']; ?>" 
@@ -229,7 +229,7 @@
     		$("#area_name").val(txt);
     	});
 
-		$('#editData').on('click', function (e) {
+		$('.editData').on('click', function (e) {
 			e.preventDefault();
 
 			var uid = $(this).data('kode'); // get id of clicked row
