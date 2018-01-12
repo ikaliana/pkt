@@ -51,6 +51,6 @@ $data = pg_fetch_assoc($sql);
 <div class="modal-footer">
 	<!--button type="button" id="btnEditSimpan" onclick="editPupuk()" class="btn btn-link waves-effect">SIMPAN</button-->
 	<button type="button" id="btnEditSimpan" class="btn btn-link waves-effect">SIMPAN</button>
-	<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+	<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">KELUAR</button>
 </div>
 	

@@ -112,7 +112,7 @@ $data = pg_fetch_assoc($sql_area);
 </form>
 	<div class="modal-footer">
 				<button type="button" onclick="editArea()" class="btn btn-link waves-effect">SIMPAN</button>
-				<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+				<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">KELUAR</button>
 	</div>
 <div id="hasil_edit_area">
 </div>
