@@ -1,6 +1,7 @@
 <?php
 include "../config.php";
 
+$id_model	 	= $_POST['id_model'];
 $model_name 	= $_POST['model_name'];
 $nutrisi 		= $_POST['nutrisi'];
 $b1				= $_POST['b1'];
@@ -47,7 +48,7 @@ if($error1){
 	<?php
 	}else{
 		$query2 = "UPDATE pkt_model SET (nama, nutrisi, band1, band2, band3, band4, band5, band6, band7, band8, band8a, band9, band10, band11, band12) =";	
-		$query2 .= "('".$model_name."','".$nutrisi."',".$b1.",".$b2.",".$b3.",".$b4.",".$b5.",".$b6.",".$b7.",".$b8.",".$b8a.",".$b9.",".$b10.",".$b11.",".$b12.")";
+		$query2 .= "('".$model_name."','".$nutrisi."',".$b1.",".$b2.",".$b3.",".$b4.",".$b5.",".$b6.",".$b7.",".$b8.",".$b8a.",".$b9.",".$b10.",".$b11.",".$b12.") WHERE id_model=".$id_model."";
 		$sql = pg_query($db_conn, $query2);
 	?>
 		<script type="text/javascript">

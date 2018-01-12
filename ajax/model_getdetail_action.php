@@ -1,6 +1,7 @@
 <script type="text/javascript">
-	$(document).ready(function (e) {
+	
 		$('#editModel').on('click', function () {
+
 			var form_data = new FormData();
 			form_data.append("model_name",$("#model_name").val());
 			form_data.append("nutrisi",$("#nutrisi").val());
@@ -33,7 +34,6 @@
 				}
 			});
 		});
-	});
 </script>
 <?php
 include "../config.php";
@@ -193,6 +193,7 @@ $nutrisi_selected = $data['nutrisi'];
 	</div>
 </form>
 	<div class="modal-footer">
-				<button type="button" onclick="editModel()" class="btn btn-link waves-effect">SIMPAN</button>
-				<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+				<button type="button" id="editModel" class="btn btn-link waves-effect">SIMPAN</button>
+				<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">KELUAR</button>
 	</div>
+<div id="hasil_edit_model"></div>

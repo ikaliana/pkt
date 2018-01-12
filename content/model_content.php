@@ -1,21 +1,3 @@
-<script type="text/javascript">
-
-function editModel(id)
-{
-	var htmlobjek;
-    var model_id = +id;
-    $.ajax({
-        url: "ajax/model_edit.php",
-        data: "id="+model_id,
-        cache: false,
-        success: function(msg){
-            //jika data sukses diambil dari server kita tampilkan
-            //di <select id=dept>
-            $("#tampil_detail2").html(msg);
-        }
-    });
-}
-</script>
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -83,7 +65,7 @@ function editModel(id)
                                             <td><?php echo $data['nama']; ?></td>
                                             <td><?php echo $data['nutrisi']; ?></td>
                                             <td>
-												<a data-toggle="modal" data-id="<?php echo $data['id_model']; ?>" id="getDetail" style="cursor: pointer;" data-color="grey" data-target="#tampil_detail" aria-expanded="false">Edit</a> | <a id="del_<?php echo $data['id_model']; ?>" style="cursor: pointer;" onclick="deleteModel('<?php echo $data['id_model'];?>', '<?php echo $data['nama'];?>')">Delete</a>
+												<a href="index.php?p=model_edit&id=<?php echo $data['id_model']; ?>" style="cursor: pointer;">Edit</a> | <a id="del_<?php echo $data['id_model']; ?>" style="cursor: pointer;" onclick="deleteModel('<?php echo $data['id_model'];?>', '<?php echo $data['nama'];?>')">Delete</a>
 											</td>
                                         </tr>
 										<?php 
@@ -124,7 +106,7 @@ $(document).ready(function(){
   
      $('#dynamic-content').html(''); // leave this div blank
      $.ajax({
-          url: './ajax/model_getdetail_action.php',
+          url: 'model_edit.php',
           type: 'POST',
           data: 'id='+uid,
           dataType: 'html'
