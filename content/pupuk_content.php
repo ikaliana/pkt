@@ -74,12 +74,7 @@ $help_content = "Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disin
                                             <td><?php echo $data['komposisi_p']; ?></td>
                                             <td><?php echo $data['komposisi_k']; ?></td>
                                             <td>
-												<a 	data-id="<?php echo $data['kode_pupuk']; ?>" 
-													data-nama="<?php echo $data['nama_pupuk']; ?>"
-													data-n="<?php echo $data['komposisi_n']; ?>"
-													data-p="<?php echo $data['komposisi_p']; ?>"
-													data-k="<?php echo $data['komposisi_k']; ?>"
-													id="getDetail" style="cursor: pointer;" >Edit</a> 
+												<a href="index.php?p=pupuk_edit&id=<?php echo $data['kode_pupuk']; ?>" style="cursor: pointer;">Edit</a>
 												| 
 												<a id="del_<?php echo $data['kode_pupuk']; ?>" style="cursor: pointer;" onclick="deletePupuk('<?php echo $data['kode_pupuk'];?>', '<?php echo $data['nama_pupuk'];?>')">Delete</a>
 											</td>
