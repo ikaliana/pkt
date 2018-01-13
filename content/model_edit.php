@@ -34,6 +34,9 @@ $nutrisi_selected = $data['nutrisi'];
 			type: 'post',
 			success: function (response) {
 				$('#hasil_edit_model').html(response); // display success response from the PHP script
+				setTimeout(function () {
+				   window.location.replace("index.php?p=model_content");
+				}, 2000);
 			},
 			error: function (response) {
 				$('#hasil_edit_model').html(response); // display error response from the PHP script
@@ -73,11 +76,7 @@ $nutrisi_selected = $data['nutrisi'];
                             </div>
                             <ul class="header-dropdown m-r--5">
                                 <li>
-									<button class="btn btn-xs bg-grey waves-effect" style="cursor: pointer;" onclick="window.location.reload(); "aria-expanded="false"><i class="material-icons">replay</i> REFRESH</button>
-									
-								</li>
-								<li>
-									<button class="btn btn-xs bg-blue waves-effect" data-toggle="modal" style="cursor: pointer;" data-target="#tambah_model" aria-expanded="false" aria-controls="tambah_model"><i class="material-icons">add_box</i> TAMBAH</button>
+									<button class="btn btn-xs bg-deep-orange waves-effect" style="cursor: pointer;" onclick="window.location.replace('index.php?p=model_content'); "aria-expanded="false"><i class="material-icons">arrow_back</i> KEMBALI</button>
 									
 								</li>
                             </ul>
