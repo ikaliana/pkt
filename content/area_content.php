@@ -68,7 +68,7 @@
                                             <td><?php echo $data['lokasi']; ?></td>
 											<td><?php echo $data['deskripsi']; ?></td>
                                             <td>
-												<a data-toggle="modal" data-id="<?php echo $data['kode_area']; ?>" id="getDetail" style="cursor: pointer;" data-color="grey" data-target="#tampil_detail" aria-expanded="false">Edit</a> | <a id="del_<?php echo $data['kode_area']; ?>" style="cursor: pointer;" onclick="deleteArea('<?php echo $data['kode_area'];?>', '<?php echo $data['nama'];?>')">Delete</a>
+												<a href="index.php?p=area_edit&id=<?php echo $data['kode_area']; ?>" style="cursor: pointer;">Edit</a> | <a id="del_<?php echo $data['kode_area']; ?>" style="cursor: pointer;" onclick="deleteArea('<?php echo $data['kode_area'];?>', '<?php echo $data['nama'];?>')">Delete</a>
 											</td>
                                         </tr>
 										<?php 

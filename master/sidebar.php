@@ -32,13 +32,13 @@
                             <span>Beranda</span>
                         </a>
                     </li>
-                    <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content" OR $_GET['p']=="model_content" OR $_GET['p']=="model_edit" OR $_GET['p']=="citra_content" OR $_GET['p']=="pupuk_content" OR $_GET['p']=="pupuk_edit" OR $_GET['p']=="ppks_content" OR $_GET['p']=="ppks_edit"){echo 'active';}};?>">
+                    <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content" OR $_GET['p']=="area_edit" OR $_GET['p']=="model_content" OR $_GET['p']=="model_edit" OR $_GET['p']=="citra_content" OR $_GET['p']=="pupuk_content" OR $_GET['p']=="pupuk_edit" OR $_GET['p']=="ppks_content" OR $_GET['p']=="ppks_edit"){echo 'active';}};?>">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">storage</i>
                             <span>Administrasi Data</span>
                         </a>
                         <ul class="ml-menu">
-                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content"){echo 'active';}};?>">
+                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content" OR $_GET['p']=="area_edit"){echo 'active';}};?>">
                                 <a href="index.php?p=area_content">Area Lahan</a>
                             </li>
                             <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="citra_content"){echo 'active';}};?>">
