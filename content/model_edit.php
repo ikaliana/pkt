@@ -77,7 +77,6 @@ $nutrisi_selected = $data['nutrisi'];
                             <ul class="header-dropdown m-r--5">
                                 <li>
 									<button class="btn btn-xs bg-deep-orange waves-effect" style="cursor: pointer;" onclick="window.location.replace('index.php?p=model_content'); "aria-expanded="false"><i class="material-icons">arrow_back</i> KEMBALI</button>
-									
 								</li>
                             </ul>
                         </div>
