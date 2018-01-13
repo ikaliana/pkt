@@ -6,7 +6,6 @@ $data = pg_fetch_assoc($sql);
 ?>
 <script type="text/javascript">
 	function editPupuk() {
-		var form_data = new FormData();
 		var nama = $("#nama_pupuk").val();
 		var kom_n = $("#komposisi_n").val();
 		var kom_p = $("#komposisi_p").val();
@@ -22,6 +21,7 @@ $data = pg_fetch_assoc($sql);
 				});
 				return false;
 			}else{
+				var form_data = new FormData();
 				form_data.append("kode_pupuk",$("#kode_pupuk").val());
 				form_data.append("nama_pupuk",nama);
 				form_data.append("komposisi_n",kom_n);
