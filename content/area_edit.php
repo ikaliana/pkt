@@ -35,6 +35,9 @@ $data = pg_fetch_assoc($sql);
 					type: 'post',
 					success: function (response) {
 						$('#hasil_edit_area').html(response); // display success response from the PHP script
+						setTimeout(function () {
+						   window.location.replace("index.php?p=area_content");
+						}, 2000);
 					},
 					error: function (response) {
 						$('#hasil_edit_area').html(response); // display error response from the PHP script
