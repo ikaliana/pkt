@@ -17,36 +17,7 @@ $b10 			= $_POST['b10'];
 $b11 			= $_POST['b11'];
 $b12 			= $_POST['b12'];
 
-$required = array('model_name', 'nutrisi', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b8a', 'b9', 'b10', 'b11', 'b12' );
-$numeric = array('b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b8a', 'b9', 'b10', 'b11', 'b12');
-$error1 = false;
-$error2 = false;
-foreach($required as $field) {
-  if (empty($_POST[$field])) {
-    $error1 = true;
-  }
-}
-foreach($numeric as $field) {
-  if (!is_numeric($_POST[$field])) {
-    $error2 = true;
-  }
-}
 
-if($error1){
-	?>
-		<script type="text/javascript">
-		setTimeout(function () { swal("Oh tidak!","Semua isian harus diisi!","error");
-		});</script>
-	<?php
-}else{
-	if($error2){
-		?>
-		<script type="text/javascript">
-		setTimeout(function () { swal("Oh tidak!","Isian band harus dalam angka!","error");
-		});</script>
-	<?php
-	}else{
-	
 	$query = "SELECT id_model FROM pkt_model WHERE nama='".$model_name."'";
 	$sql = pg_query($db_conn, $query);
 	$data_exist = pg_fetch_array($sql);
@@ -65,7 +36,5 @@ if($error1){
 		<script type="text/javascript">
 		setTimeout(function () { swal("Oh tidak!","Model <?php echo $model_name ?> sudah tercatat di dalam sistem","error");
 		});</script>
-	<?php } 
-	}
-}
+	<?php }
 ?>

@@ -1,39 +1,72 @@
 <script type="text/javascript">
-            $(document).ready(function (e) {
-                $('#save').on('click', function () {
-                    var form_data = new FormData();
-					form_data.append("model_name",$("#model_name").val());
-					form_data.append("nutrisi",$("#nutrisi").val());
-					form_data.append("b1",$("#b1").val());
-					form_data.append("b2",$("#b2").val());
-					form_data.append("b3",$("#b3").val());
-					form_data.append("b4",$("#b4").val());
-					form_data.append("b5",$("#b5").val());
-					form_data.append("b6",$("#b6").val());
-					form_data.append("b7",$("#b7").val());
-					form_data.append("b8",$("#b8").val());
-					form_data.append("b8a",$("#b8a").val());
-					form_data.append("b9",$("#b9").val());
-					form_data.append("b10",$("#b10").val());
-					form_data.append("b11",$("#b11").val());
-					form_data.append("b12",$("#b12").val());
-                    $.ajax({
-                        url: './ajax/model_add_action.php', // point to server-side PHP script 
-                        dataType: 'text', // what to expect back from the PHP script
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: form_data,
-                        type: 'post',
-                        success: function (response) {
-                            $('#hasil_add_model').html(response); // display success response from the PHP script
-                        },
-                        error: function (response) {
-                            $('#hasil_add_model').html(response); // display error response from the PHP script
-                        }
-                    });
-                });
-            });
+	$(document).ready(function (e) {
+        $('#save').on('click', function () {
+			var model_name 	= 	$("#model_name").val();
+			var nutrisi 	= 	$("#nutrisi").val();
+			var b1 			= 	$("#b1").val();
+			var b2			=	$("#b2").val();
+			var b3			=	$("#b3").val();
+			var b4			=	$("#b4").val();
+			var b5			=	$("#b5").val();
+			var b6			=	$("#b6").val();
+			var b7			=	$("#b7").val();
+			var b8			=	$("#b8").val();
+			var b8a			=	$("#b8a").val();
+			var b9			=	$("#b9").val();
+			var b10			=	$("#b10").val();
+			var b11			=	$("#b11").val();
+			var b12			=	$("#b12").val();
+			if (model_name.length === 0 || nutrisi.length === 0
+			) 
+			  {
+				setTimeout(function () { swal("Oh tidak!","Semua isian wajib diisi!","error");
+				});
+				return false;
+			  }else{
+				if(isNaN(b1) || isNaN(b2) || isNaN(b3) || isNaN(b4) || isNaN(b5) || isNaN(b6) || isNaN(b7) || isNaN(b8) || isNaN(b8a) || isNaN(b9) || isNaN(b10) || isNaN(b11) || isNaN(b12)){
+					setTimeout(function () { swal("Oh tidak!","Isian band harus dalam angka!","error");
+					});
+					return false;
+				}else{
+					var form_data = new FormData();
+					form_data.append("id_model",$("#id_model").val());
+					form_data.append("model_name",model_name);
+					form_data.append("nutrisi",nutrisi);
+					form_data.append("b1",b1);
+					form_data.append("b2",b2);
+					form_data.append("b3",b3);
+					form_data.append("b4",b4);
+					form_data.append("b5",b5);
+					form_data.append("b6",b6);
+					form_data.append("b7",b7);
+					form_data.append("b8",b8);
+					form_data.append("b8a",b8a);
+					form_data.append("b9",b9);
+					form_data.append("b10",b10);
+					form_data.append("b11",b11);
+					form_data.append("b12",b12);
+					$.ajax({
+						url: './ajax/model_add_action.php', // point to server-side PHP script 
+						dataType: 'text', // what to expect back from the PHP script
+						cache: false,
+						contentType: false,
+						processData: false,
+						data: form_data,
+						type: 'post',
+						success: function (response) {
+							$('#hasil_add_model').html(response); // display success response from the PHP script
+							setTimeout(function () {
+							   window.location.replace("index.php?p=model_content");
+							}, 2000);
+						},
+						error: function (response) {
+							$('#hasil_add_model').html(response); // display error response from the PHP script
+						}
+					});
+				}
+			  }
+	});
+});
 </script>
 <div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content">
