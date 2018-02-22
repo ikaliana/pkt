@@ -81,9 +81,6 @@
 								  
 								</script>
                             </div>
-							<div class="modal fade" id="tampil_detail">
-								<?php include('model_edit.php') ?>
-							</div>
 							<div class="modal fade" id="tambah_model">
 								<?php include('model_add.php') ?>
 							</div>
