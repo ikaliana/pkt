@@ -32,7 +32,7 @@
                             <span>Beranda</span>
                         </a>
                     </li>
-                    <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content" OR $_GET['p']=="area_edit" OR $_GET['p']=="model_content" OR $_GET['p']=="model_edit" OR $_GET['p']=="citra_content" OR $_GET['p']=="pupuk_content" OR $_GET['p']=="pupuk_edit" OR $_GET['p']=="ppks_content" OR $_GET['p']=="ppks_edit"){echo 'active';}};?>">
+                    <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content" OR $_GET['p']=="area_edit" OR $_GET['p']=="model_content" OR $_GET['p']=="model_edit" OR $_GET['p']=="citra_content" OR $_GET['p']=="pupuk_content" OR $_GET['p']=="pupuk_edit" OR $_GET['p']=="ppks_content" OR $_GET['p']=="ppks_edit" OR $_GET['p']=="model_add"){echo 'active';}};?>">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">storage</i>
                             <span>Administrasi Data</span>
@@ -44,7 +44,7 @@
                             <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="citra_content"){echo 'active';}};?>">
                                 <a href="index.php?p=citra_content">Citra Sentinel</a>
                             </li>
-							<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="model_content" OR $_GET['p']=="model_edit"){echo 'active';}};?>">
+							<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="model_content" OR $_GET['p']=="model_edit" OR $_GET['p']=="model_add"){echo 'active';}};?>">
                                 <a href="index.php?p=model_content">Model Perhitungan Nutrisi</a>
                             </li>
                             <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="pupuk_content" OR $_GET['p']=="ppks_content" OR $_GET['p']=="pupuk_edit" OR $_GET['p']=="ppks_edit"){echo 'active';}};?>">

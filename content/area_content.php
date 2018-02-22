@@ -85,7 +85,7 @@
 								</script>
                             </div>
 							<div class="modal fade" id="tampil_detail">
-								<?php include('area_edit.php') ?>
+								<?php //include('area_edit.php') ?>
 							</div>
 							<div class="modal fade" id="tambah_area">
 								<?php include('area_add.php') ?>

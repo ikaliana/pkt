@@ -103,6 +103,7 @@ def CalculateDosisPupuk(nama_unsur,critical_value,current_value,prev_value,kompo
 				retval = retval / 1000000
 				retval = retval * 94 / 39
 			retval = retval * 100 / komposisi_value
+		retval = 0
 
 	return retval
 
@@ -347,7 +348,7 @@ for unsur in kelompok_unsur:
 			if band1[i,j] != null_value:
 				
 				luas_area += 1
-				tahun_tanam = 2011  #ambil data ini dari raster/vector
+				tahun_tanam = 2014  #ambil data ini dari raster/vector
 				tahun_now = int(time.strftime("%Y"))
 				umur_tanaman = tahun_now - tahun_tanam
 

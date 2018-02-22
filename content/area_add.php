@@ -1,10 +1,12 @@
 <script type="text/javascript">
             $(document).ready(function (e) {
                 $('#save').on('click', function () {
+
                     var form_data = new FormData();
 					var lokasi = $("#lokasi").val();
 					var area_name = $("#area_name").val();
 					var deskripsi = $("#deskripsi").val();
+
                     var ins = document.getElementById('multiSHP').files.length;
                     for (var x = 0; x < ins; x++) {
                         form_data.append("shp[]", document.getElementById('multiSHP').files[x]);

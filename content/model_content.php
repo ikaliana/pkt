@@ -30,11 +30,11 @@
                             </div>
                             <ul class="header-dropdown m-r--5">
                                 <li>
-									<button class="btn btn-xs bg-grey waves-effect" style="cursor: pointer;" onclick="window.location.reload(); "aria-expanded="false"><i class="material-icons">replay</i> REFRESH</button>
+									<button class="btn btn-xs bg-grey waves-effect" style="cursor: pointer;" onclick="window.location.reload();" aria-expanded="false"><i class="material-icons">replay</i> REFRESH</button>
 									
 								</li>
 								<li>
-									<button class="btn btn-xs bg-blue waves-effect" data-toggle="modal" style="cursor: pointer;" data-target="#tambah_model" aria-expanded="false" aria-controls="tambah_model"><i class="material-icons">add_box</i> TAMBAH</button>
+									<button class="btn btn-xs bg-blue waves-effect" style="cursor: pointer;" onclick="tambahModel();" aria-expanded="false"><i class="material-icons">add_box</i> TAMBAH</button>
 									
 								</li>
                             </ul>
@@ -122,6 +122,10 @@ $(document).ready(function(){
 
     });
 });
+
+function tambahModel() {
+	location.href = "index.php?p=model_add";
+}
 
 function deleteModel(id, nama) {
 	event.preventDefault(); // prevent form submit
