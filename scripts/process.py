@@ -348,7 +348,7 @@ for unsur in kelompok_unsur:
 			if band1[i,j] != null_value:
 				
 				luas_area += 1
-				tahun_tanam = 2014  #ambil data ini dari raster/vector
+				tahun_tanam = 2011  #ambil data ini dari raster/vector
 				tahun_now = int(time.strftime("%Y"))
 				umur_tanaman = tahun_now - tahun_tanam
 
