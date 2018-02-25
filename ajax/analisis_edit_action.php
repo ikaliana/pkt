@@ -13,7 +13,7 @@ try {
 
 	$query ="SELECT kode_analisis FROM pkt_analisis WHERE kode_citra=".$citra."";
 	$query .= " and kode_model_n=".$n_daun." and kode_model_p=".$p_daun." and kode_model_k=".$k_daun;
-	$query .= " and kode_model_n_tanah=".$n_tanah." and kode_model_p_tanah=".$p_tanah." and kode_model_k_tanah=".$k_tanah;
+	// $query .= " and kode_model_n_tanah=".$n_tanah." and kode_model_p_tanah=".$p_tanah." and kode_model_k_tanah=".$k_tanah;
 	$query .= " and kode_analisis <> ".$id;
 	$sql = pg_query($db_conn, $query);
 	$data_exist = pg_fetch_array($sql);

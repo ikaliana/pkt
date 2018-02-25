@@ -303,9 +303,9 @@
 											<option value="N" selected>Nitrogen Daun</option>
 											<option value="P">Fosfor Daun</option>
 											<option value="K">Kalium Daun</option>
-											<option value="N-Tanah">Nitrogen Tanah</option>
+											<!--option value="N-Tanah">Nitrogen Tanah</option>
 											<option value="P-Tanah">Fosfor Tanah</option>
-											<option value="K-Tanah">Kalium Tanah</option>
+											<option value="K-Tanah">Kalium Tanah</option-->
 										</select>
 										<div id="mapid1" style="width: 100%; height: 350px;"></div>
 									</div>

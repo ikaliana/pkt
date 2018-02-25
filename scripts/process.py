@@ -179,8 +179,8 @@ def ExecuteQuery(strquery,params,singleRowOnly,fetchResult):
 
 ## ==================== VARIABLES  ====================
 
-# kelompok_unsur = ["N", "P", "K"]
-kelompok_unsur = ["N", "P", "K", "N-Tanah", "P-Tanah", "K-Tanah"]
+kelompok_unsur = ["N", "P", "K"]
+# kelompok_unsur = ["N", "P", "K", "N-Tanah", "P-Tanah", "K-Tanah"]
 nama_unsur = { "N" : "Nitrogen", "P" : "Fosfor", "K" : "Kalium", "N-Tanah" : "Nitrogen", "P-Tanah" : "Fosfor", "K-Tanah" : "Kalium" }
 null_value = -9999
 format_file = "GTiff"
@@ -225,9 +225,9 @@ clipped_file = work_folder + datavar["citra_file"][:-4] + "_clipped" + datavar["
 unsur_id["N"] = datavar["kode_model_n"]
 unsur_id["P"] = datavar["kode_model_p"]
 unsur_id["K"] = datavar["kode_model_k"]
-unsur_id["N-Tanah"] = datavar["kode_model_n_tanah"]
-unsur_id["P-Tanah"] = datavar["kode_model_p_tanah"]
-unsur_id["K-Tanah"] = datavar["kode_model_k_tanah"]
+# unsur_id["N-Tanah"] = datavar["kode_model_n_tanah"]
+# unsur_id["P-Tanah"] = datavar["kode_model_p_tanah"]
+# unsur_id["K-Tanah"] = datavar["kode_model_k_tanah"]
 
 #initiate fertilizer composition
 komposisi_pupuk = {}
