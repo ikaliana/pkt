@@ -12,7 +12,7 @@ try {
 	$get_area = pg_query($db_conn, $query);
 	$area_name = pg_fetch_array($get_area);
 
-	if(!empty($tanggal) && $area <> 0){
+	if(!empty($tanggal) && $area <> "0"){
 		if (isset($_FILES['tif']) && !empty($_FILES['tif'])) {
 			$filename 		= pathinfo($_FILES["tif"]["name"], PATHINFO_FILENAME);
 			$filename_ext	= $_FILES["tif"]["name"];

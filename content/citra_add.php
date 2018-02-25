@@ -4,7 +4,7 @@
             var form_data = new FormData();
 			var tanggal = $("#tanggal").val();
 			var area = $("#area").val();
-			var files = $("#tif").prop('files')
+			var files = $("#tif").prop('files');
 
 			//alert(files.length);
 			if(tanggal == "") { setTimeout(function () { swal("","Isikan tanggal akuisisi","error")}); return; }
