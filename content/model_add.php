@@ -115,7 +115,7 @@
 					                                <tr>
 					                                    <th class="text-center" style="width:20%">Band</th>
 														<th class="text-center" style="width:40%;padding-right:10px">X</th>
-														<th class="text-center" style="width:40%;padding-right:10px">X^2</th>
+														<th class="text-center" style="width:40%;padding-right:10px">X<sup>2</sup></th>  
 					                                </tr>
 					                            </thead>
 					                            <tbody>

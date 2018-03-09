@@ -74,12 +74,6 @@
 					<h4 class="media-heading">Tambah Citra</h4>
 				</div>
 			</div>
-		<div class="alert bg-green" role="alert">
-			Sistem akan otomatis mendownload citra sesuai dengan yang anda butuhkan. Silakan masukkan detail citra yang diperlukan pada form berikut.<br/>
-			<strong>Petunjuk: </strong><br/>
-			<li><strong>Tanggal akuisisi</strong>, isi dengan tanggal  akuisisi citra yang diinginkan</li>
-			<li><strong>Area</strong>, pilih area yang sesuai. Jika area belum tersedia, silakan tambahkan pada <a data-target="#tambah_area" style="color:yellow" href="index.php?p=area_content">menu area</a></li>
-		</div>
 		</div>
 		<div class="modal-body">
 			<form class="form-horizontal">
