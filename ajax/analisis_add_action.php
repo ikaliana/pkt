@@ -35,22 +35,22 @@ try {
 
 		$last_line = shell_exec($full_cmd);
 		?>
-{
-	"title": "<?php echo "Yes!"; ?>"
-	,"text": "<?php echo "Analisis berhasil diinput dan dijalankan dengan sukses"; ?>"
-	,"type": "<?php echo "success"; ?>"
-	,"ID": "<?php echo $kode_analisis[0]; ?>"
-}
+		{
+			"title": "<?php echo "Yes!"; ?>"
+			,"text": "<?php echo "Analisis berhasil diinput dan dijalankan dengan sukses"; ?>"
+			,"type": "<?php echo "success"; ?>"
+			,"ID": "<?php echo $kode_analisis[0]; ?>"
+		}
 		<?php
 
 	} else {
 	?>
-{
-	"title": "<?php echo "Oh tidak!"; ?>"
-	,"text": "<?php echo "Analisis dengan model terpilih sudah terdaftar di database! Harap gunakan kombinasi model yang lain!"; ?>"
-	,"type": "<?php echo "error"; ?>"
-	,"ID": ""
-}
+	{
+		"title": "<?php echo "Oh tidak!"; ?>"
+		,"text": "<?php echo "Analisis dengan model terpilih sudah terdaftar di database! Harap gunakan kombinasi model yang lain!"; ?>"
+		,"type": "<?php echo "error"; ?>"
+		,"ID": ""
+	}
 	<?php }
 }
 catch(Exception $e) {
