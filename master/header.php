@@ -34,6 +34,8 @@ include './user_access.php';
 	<!-- Leqafletjs -->
     <link href="plugins/leaflet/leaflet.css" rel="stylesheet" />
 	<script src="plugins/leaflet/leaflet.js"></script>
+    <script src="plugins/proj4leaflet/proj4.js"></script>
+    <script src="plugins/proj4leaflet/proj4leaflet.js"></script>
 	
 	<!-- Bootstrap Tagsinput Css -->
     <link href="plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
@@ -74,6 +76,10 @@ include './user_access.php';
     <!-- Bootstrap slider -->
     <link href="plugins/bootstrap-slider/css/bootstrap-slider.css" rel="stylesheet"/>
     <script src="plugins/bootstrap-slider/js/bootstrap-slider.js"></script>
+    <style type="text/css">
+        .map-label { color: #000; /*font-size: small;*/ }
+        #mapid3 { background-color: #bcbcbc; }
+    </style>
 	
 </head>
 

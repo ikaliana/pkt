@@ -1,7 +1,9 @@
-from osgeo import gdal
+from osgeo import gdal,osr
 from osgeo.gdalnumeric import *
 from osgeo.gdalconst import *
 from PIL import Image
+from rasterstats import zonal_stats
+from pyproj import Proj,transform
 import psycopg2
 import psycopg2.extras
 import numpy as np
@@ -9,7 +11,12 @@ import math
 import sys
 import os
 import time
-
+import json
+import palettable.cmocean.sequential as c 
+import palettable.cubehelix as c1 
+import palettable.matplotlib as c2
+import palettable.colorbrewer.sequential as c3
+import gridify
 
 def ClassificationValue(val,unsur):
 	retval = 0
@@ -174,6 +181,18 @@ def ExecuteQuery(strquery,params,singleRowOnly,fetchResult):
 
     	if fetchResult: return retval
 
+def SaveDataToTiff(nama_raster,arraydata,g):
+	driver = gdal.GetDriverByName("GTiff")
+	ds = driver.Create(nama_raster, g.RasterXSize, g.RasterYSize, 1, g.GetRasterBand(1).DataType)
+	CopyDatasetInfo(g,ds)
+	bandOut=ds.GetRasterBand(1)
+	bandOut.SetNoDataValue(null_value)
+	BandWriteArray(bandOut, arraydata)
+
+def SaveDataToPNG(nama_raster,arraydata,cols,rows):
+	pilImage = Image.frombuffer("RGBA",(cols, rows),arraydata,"raw","RGBA",0,1)
+	pilImage.save(nama_raster)
+
 
 # ==============================================================================================================================
 
@@ -187,6 +206,12 @@ format_file = "GTiff"
 
 class_color = [0x00000000,0xFF0000FF,0xFF2DFFFC,0xFF48FE6A,0xFF30C602,0xFFDCE620,0xFF8F3A12]
 class_color_2 = [0x00000000,0xFF1C19D7,0xFF5390F6,0xFF9ADFFF,0xFF9EF0DC,0xFF62CC8A,0xFF41961A]
+# data_color = c.Algae_20.hex_colors
+data_color = c.Ice_15.hex_colors[::-1]
+# data_color = c1.purple_16.hex_colors[::-1]	#additional '[::-1]' --> reverse the array
+# data_color = c2.Viridis_20.hex_colors[::-1]
+# data_color = c3.Blues_9.hex_colors
+data_color_size = np.size(data_color)
 
 critical_value_daun = { "N" : 2.5, "P" : 0.15, "K" : 1.00 }
 critival_value_tanah = { "N" : 0.25, "P" : 40, "K" : 97.5 }
@@ -203,6 +228,7 @@ source_folder = "../uploads"
 sentinel_file = source_folder + "/citra/"
 shp_file = source_folder + "/area/"
 clipped_file = ""
+grid_file = ""
 unsur_id = {}
 
 # load raster and shape filename and model ID from table Analisis
@@ -220,6 +246,7 @@ datavar = GetData(strquery,True)
 sentinel_file += str(datavar["kode_area"]) + "/" + datavar["citra_file"]
 shp_file += str(datavar["kode_area"]) + "/" + datavar["area_file"][:-4] + ".shp"
 clipped_file = work_folder + datavar["citra_file"][:-4] + "_clipped" + datavar["citra_file"][-4:]
+grid_file = work_folder + datavar["area_file"][:-4] + "_grid" + ".shp"
 
 #initiate model ID
 unsur_id["N"] = datavar["kode_model_n"]
@@ -281,12 +308,34 @@ warp_opts = gdal.WarpOptions(
 gdal.Warp(clipped_file, sentinel_file, options=warp_opts,)
 #cari opsi lain buat clip raster (lihat di sample GDAL di internet). bbrp titik hasilnya meleset
 
+## ========== CREATE GRID FILE  ====================
+
+gridify.GenerateGrid(shp_file,grid_file)
+
 ## ========== LOAD RASTER AND ITS BAND  ====================
 
 g = gdal.Open(clipped_file)
 rows = g.RasterYSize
 cols = g.RasterXSize
 # print rows,cols
+x1, xres, xskew, y2, yskew, yres = g.GetGeoTransform()
+x2 = x1 + g.RasterXSize * xres
+y1 = y2 + g.RasterYSize * yres
+prj = g.GetProjection()
+srs = osr.SpatialReference(wkt=prj)
+crs = srs.GetAttrValue("AUTHORITY",1)
+
+p1 = Proj(init="epsg:"+crs)
+p2 = Proj(init="epsg:4326")
+x3,y3 = transform(p1,p2,x1,y1)
+x4,y4 = transform(p1,p2,x2,y2)
+
+#-- SAVE RASTER METADATA TO JSON FILE
+raster_metadata = { "x1_original": x1 , "y1_original": y1, "x2_original": x2, "y2_original": y2, 
+					"x1_4326": x3 , "y1_4326": y3, "x2_4326": x4, "y2_4326": y4, 
+					"crs": crs }
+with open(work_folder + "raster_metadata.json", 'w') as outfile:
+		    json.dump(raster_metadata, outfile)
 
 # --- LOAD RASTER DATA FOR EACH BAND --- #
 band1 = BandReadAsArray(g.GetRasterBand(1))  	#Band 1
@@ -319,11 +368,13 @@ for nama_pupuk in komposisi_pupuk:
 	for unsur in kelompok_unsur:
 		temp = {}
 		temp["komposisi"] = komposisi_pupuk[nama_pupuk][unsur[:1]]
-		temp["peta_prev"] = np.empty((cols, rows),numpy.float32)
+		temp["peta_prev"] = np.empty((cols, rows),np.float32)
 		temp["peta_prev"].shape=rows, cols
-		temp["peta_dosis"] = np.empty((cols, rows),numpy.float32)
+		temp["peta_dosis"] = np.empty((cols, rows),np.float32)
 		temp["peta_dosis"].shape=rows, cols
-		temp["peta_warna"] = np.empty((cols, rows),numpy.uint32)
+		# temp["peta_dosis_warna"] = np.empty((cols, rows),np.uint32)
+		# temp["peta_dosis_warna"].shape=rows, cols
+		temp["peta_warna"] = np.empty((cols, rows),np.uint32)
 		temp["peta_warna"].shape=rows, cols
 		temp["dosis"] = 0.0
 		pupuk[nama_pupuk][unsur] = temp;
@@ -337,8 +388,8 @@ for unsur in kelompok_unsur:
 
 	# --- INITIATE NUMPY ARRAY OF RASTER --- #
 	raster_unsur[unsur] = np.empty([rows, cols])
-	raster_unsur_class[unsur] = np.empty((rows, cols),numpy.uint32)
-	raster_unsur_color[unsur] = np.empty((cols, rows),numpy.uint32)
+	raster_unsur_class[unsur] = np.empty((rows, cols),np.uint32)
+	raster_unsur_color[unsur] = np.empty((cols, rows),np.uint32)
 	raster_unsur_color[unsur].shape=rows, cols
 
 	# --- PROCESS THE RASTER --- #
@@ -349,7 +400,7 @@ for unsur in kelompok_unsur:
 				
 				luas_area += 1
 				tahun_tanam = 2011  #ambil data ini dari raster/vector
-				tahun_now = int(time.strftime("%Y"))
+				tahun_now = int(time.strftime("%Y"))  #harusnya ngambil dari tanggal sensing citra sentinel
 				umur_tanaman = tahun_now - tahun_tanam
 
 				# --- calculate nutrient using model --- #
@@ -400,25 +451,15 @@ for unsur in kelompok_unsur:
 	# --- END OF PROCESS THE RASTER --- #
 
 	# --- SAVE TO FILE --- #
-	driver = gdal.GetDriverByName(format_file)
 	nama_raster = work_folder + "Citra_Unsur_" + unsur + ".tif"
-	ds = driver.Create(nama_raster, g.RasterXSize, g.RasterYSize, 1, g.GetRasterBand(1).DataType)
-	CopyDatasetInfo(g,ds)
-	bandOut=ds.GetRasterBand(1)
-	bandOut.SetNoDataValue(null_value)
-	BandWriteArray(bandOut, raster_unsur[unsur])
+	SaveDataToTiff(nama_raster,raster_unsur[unsur],g)
 
 	nama_raster = work_folder + "Citra_Klasifikasi_" + unsur + ".png"
-	pilImage = Image.frombuffer("RGBA",(cols, rows),raster_unsur_color[unsur].tostring(),"raw","RGBA",0,1)
-	pilImage.save(nama_raster)
+	SaveDataToPNG(nama_raster,raster_unsur_color[unsur].tostring(),cols,rows)
 
 	for nama_pupuk in komposisi_pupuk:
 		nama_raster = work_folder + "Citra_Pupuk_" + nama_pupuk + "_" + unsur + ".tif"
-		ds2 = driver.Create(nama_raster, g.RasterXSize, g.RasterYSize, 1, g.GetRasterBand(1).DataType)
-		CopyDatasetInfo(g,ds2)
-		bandOut2=ds2.GetRasterBand(1)
-		bandOut2.SetNoDataValue(null_value)
-		BandWriteArray(bandOut2, pupuk[nama_pupuk][unsur]["peta_dosis"])
+		SaveDataToTiff(nama_raster,pupuk[nama_pupuk][unsur]["peta_dosis"],g)
 
 		# nama_raster = "Citra_Klasifikasi_Pupuk_" + nama_pupuk + "_" + unsur + ".png"
 		# pilImage = Image.frombuffer("RGBA",(cols, rows),pupuk[nama_pupuk][unsur]["peta_warna"].tostring(),"raw","RGBA",0,1)
@@ -465,16 +506,100 @@ for nama_pupuk in komposisi_pupuk:
 		pupuk[nama_pupuk]["unsur_terpilih"] = unsur_terpilih
 		print "Unsur terpilih: ", unsur_terpilih
 
+		# --- SAVE SELECTED FERTILIZER DATA TO PNG FILE --- #
 		nama_raster = work_folder + "Citra_Pupuk_" + nama_pupuk + ".tif"
-		ds3 = driver.Create(nama_raster, g.RasterXSize, g.RasterYSize, 1, g.GetRasterBand(1).DataType)
-		CopyDatasetInfo(g,ds3)
-		bandOut3=ds3.GetRasterBand(1)
-		bandOut3.SetNoDataValue(null_value)
-		BandWriteArray(bandOut3, pupuk[nama_pupuk][unsur_terpilih]["peta_dosis"])
+		SaveDataToTiff(nama_raster,pupuk[nama_pupuk][unsur_terpilih]["peta_dosis"],g)
+
+
+		# --- Create Fertilizer stats based on GRID file and save it to Geojson file --- #
+		stats = zonal_stats(grid_file, nama_raster, stats="count min mean max sum", geojson_out=True)
+		json_data = {}
+		json_data["type"] = "FeatureCollection"
+		json_data["features"] = [] #stats
+		for item in stats:
+			temp_item = {}
+			for key in item.keys():
+				if key != "geometry":
+					temp_item[key] = item[key]
+				else:
+					temp_geom = {}
+					item_geom = item[key]					
+					temp_geom["type"] = item_geom["type"]
+					temp_geom["coordinates"] = []
+					temp_geom["coordinates"].append([])
+					temp_coords = temp_geom["coordinates"][0]
+					item_coords = item_geom["coordinates"][0]
+					for coord in item_coords:
+						xc,yc = transform(p1,p2,coord[0],coord[1])
+						temp_geom["coordinates"][0].append([xc,yc])
+					temp_item[key] = temp_geom
+
+			json_data["features"].append(temp_item)
+
+
+		with open(work_folder + "Data_Grid_Pupuk_" + nama_pupuk + ".geojson", 'w') as outfile:
+		    json.dump(json_data, outfile)
+
+		
+		# --- SAVE SELECTED FERTILIZER DOSAGE DATA TO PNG FILE --- #
+		nama_raster = work_folder + "Citra_Dosis_Pupuk_" + nama_pupuk + ".png"
+		SaveDataToPNG(nama_raster,pupuk[nama_pupuk][unsur_terpilih]["peta_warna"].tostring(),cols,rows)
+
+		
+		# --- Classify fertilizer data and save to PNG --- #
+		data_dosis = pupuk[nama_pupuk][unsur_terpilih]["peta_dosis"]
+		dosis_max = np.ceil(np.amax(np.extract(data_dosis>=0,data_dosis)))
+		# print "dosis max: ", dosis_max
+		range_max = 1000
+		for i in range(8,0,-1):
+			if dosis_max <= (data_color_size * i): range_max = data_color_size * i 
+		if dosis_max <= (data_color_size/2): range_max = data_color_size/2
+
+		divider = range_max / (data_color_size * 1.0) #20.0
+		range_value = np.arange(0,range_max+(divider/2.0),divider)
+		# print range_value
+
+		raster_data = np.empty((cols, rows),numpy.uint32)
+		raster_data.shape=rows, cols
+
+		for i in range(rows):
+			for j in range(cols):
+
+				if data_dosis[i,j] != null_value:
+					dosis_val = data_dosis[i,j]
+					idx = range_value.searchsorted(dosis_val,'right')-1
+					color_val = data_color[idx]
+					color_val_new = '0xFF' + color_val[5:7] + color_val[3:5] + color_val[1:3] 
+					raster_data[i,j] = eval(color_val_new)
+				else:
+					raster_data[i,j] = 0x00000000
+
+		# raster_data = np.zeros((cols, rows),np.uint32)
+		# raster_data.shape=rows, cols
+
+		# for i in range(np.size(range_value)-1):
+		# 	minval = range_value[i]
+		# 	cond1 = np.greater_equal(data_dosis,minval)
+		# 	maxval = range_value[i+1]
+		# 	cond2 = np.less(data_dosis,maxval)
+		# 	cond3 = np.logical_and(cond1,cond2)
+
+		# 	color_val = data_color[i]
+		# 	color_val_new = '0xFF' + color_val[5:7] + color_val[3:5] + color_val[1:3] 
+		# 	temp_data = np.where(cond3,eval(color_val_new),0)
+		# 	raster_data = raster_data + temp_data
+
+		# 	if nama_pupuk == "UREA":
+		# 		print i,"-",minval,maxval
+		# 		nama_raster = work_folder + "Citra_Dosis_Pupuk_" + str(i) + ".png"
+		# 		SaveDataToPNG(nama_raster,temp_data.tostring(),cols,rows)
+
+		# raster_data = raster_data + np.where (data_dosis >= range_value[np.size(range_value)-1],0xFF000000,0)
+		# raster_data = raster_data + np.where( (data_dosis > null_value) & (data_dosis < 0),0xFFFFFFFF,0)
 
 		nama_raster = work_folder + "Citra_Klasifikasi_Pupuk_" + nama_pupuk + ".png"
-		pilImage = Image.frombuffer("RGBA",(cols, rows),pupuk[nama_pupuk][unsur_terpilih]["peta_warna"].tostring(),"raw","RGBA",0,1)
-		pilImage.save(nama_raster)
+		SaveDataToPNG(nama_raster,raster_data.tostring(),cols,rows)
+
 
 
 sql = "DELETE FROM pkt_analisis_summary WHERE kode_analisis = %s;"
@@ -489,8 +614,6 @@ ExecuteQuery(sql,data,True,False)
 sql = "UPDATE pkt_analisis SET status=True WHERE kode_analisis=%s"
 data = (int(id_analisis),)
 ExecuteQuery(sql,data,True,False)
-# TO DO:
-# - Total berat pupuk diambil dari total berat pupuk unsur yg paling kecil
-# - Klasifikasi dilakukan setelah didapatkan total berat pupuk umum
+
 
 print "DONE"
