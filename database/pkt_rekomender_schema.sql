@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.1
 -- Dumped by pg_dump version 9.5.1
 
--- Started on 2018-12-14 06:38:18
+-- Started on 2018-12-16 08:01:17
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -593,7 +593,7 @@ ALTER TABLE ONLY pkt_riwayat
     ADD CONSTRAINT pkt_pupuk_fkey FOREIGN KEY (kode_pupuk) REFERENCES pkt_pupuk(kode_pupuk);
 
 
--- Completed on 2018-12-14 06:38:21
+-- Completed on 2018-12-16 08:01:18
 
 --
 -- PostgreSQL database dump complete
