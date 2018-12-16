@@ -73,12 +73,9 @@
                                     </tbody>
                                 </table>
 								<script type="text/javascript">
-									$(document).ready(
-									function() {
-									  $('#model_table').DataTable();
-									  responsive: true
+									$(document).ready(function() {
+									    $('#model_table').DataTable( { responsive: true } );
 									});
-								  
 								</script>
                             </div>
 							<div class="modal fade" id="tambah_model">

@@ -125,7 +125,7 @@ include './user_access.php';
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-					<li><img src="images/pkt_logo.png" height="40px" style="margin-top:20px;"/></li>
+					<li><img src="images/pkt_logo.png" height="40px" style="margin-top:20px;display:none"/></li>
                 </ul>
             </div>
         </div>

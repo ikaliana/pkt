@@ -56,9 +56,9 @@
 								<div class="form-group">
 									<!--label for="area" class="col-sm-2 control-label">Model Daun</label-->
 									<label for="area" class="col-sm-2 control-label">Model Perhitungan</label>
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 										<select class="form-control show-tick" id="cmbNDaun">
-											<option value="">-- pilih model N --</option>
+											<option value="">-- model N --</option>
 											<?php
 												$sql_area = pg_query($db_conn, "select id_model,nama from pkt_model where nutrisi='N'");
 												while($data = pg_fetch_assoc($sql_area)){
@@ -67,9 +67,9 @@
 											?>
 										</select>
 									</div>
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 										<select class="form-control show-tick" id="cmbPDaun">
-											<option value="">-- pilih model P --</option>
+											<option value="">-- model P --</option>
 											<?php
 												$sql_area = pg_query($db_conn, "select id_model,nama from pkt_model where nutrisi='P'");
 												while($data = pg_fetch_assoc($sql_area)){
@@ -78,11 +78,22 @@
 											?>
 										</select>
 									</div>
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 										<select class="form-control show-tick" id="cmbKDaun">
-											<option value="">-- pilih model K --</option>
+											<option value="">-- model K --</option>
 											<?php
 												$sql_area = pg_query($db_conn, "select id_model,nama from pkt_model where nutrisi='K'");
+												while($data = pg_fetch_assoc($sql_area)){
+												echo "<option value='".$data['id_model']."'>".$data['nama']."</option>";
+												};
+											?>
+										</select>
+									</div>
+									<div class="col-sm-2">
+										<select class="form-control show-tick" id="cmbMgDaun">
+											<option value="">-- model Mg --</option>
+											<?php
+												$sql_area = pg_query($db_conn, "select id_model,nama from pkt_model where nutrisi='Mg'");
 												while($data = pg_fetch_assoc($sql_area)){
 												echo "<option value='".$data['id_model']."'>".$data['nama']."</option>";
 												};
@@ -157,6 +168,7 @@
 			var n_daun = $("#cmbNDaun").val();
 			var p_daun = $("#cmbPDaun").val();
 			var k_daun = $("#cmbKDaun").val();
+			var mg_daun = $("#cmbMgDaun").val();
 			// var n_tanah = $("#cmbNTanah").val();
 			// var p_tanah = $("#cmbPTanah").val();
 			// var k_tanah = $("#cmbKTanah").val();
@@ -169,6 +181,7 @@
 			if(n_daun=="") { setTimeout(function () { swal("","Pilih salah satu model Nitrogen Daun","error")}); return; }
 			if(p_daun=="") { setTimeout(function () { swal("","Pilih salah satu model Fosfor Daun","error")}); return; }
 			if(k_daun=="") { setTimeout(function () { swal("","Pilih salah satu model Kalium Daun","error")}); return; }
+			if(mg_daun=="") { setTimeout(function () { swal("","Pilih salah satu model Magnesium Daun","error")}); return; }
 			// if(n_tanah=="") { setTimeout(function () { swal("","Pilih salah satu model Nitrogen Tanah","error")}); return; }
 			// if(p_tanah=="") { setTimeout(function () { swal("","Pilih salah satu model Fosfor Tanah","error")}); return; }
 			// if(k_tanah=="") { setTimeout(function () { swal("","Pilih salah satu model Kalium Tanah","error")}); return; }
@@ -178,6 +191,7 @@
 			form_data.append("n_daun", n_daun);
 			form_data.append("p_daun", p_daun);
 			form_data.append("k_daun", k_daun);
+			form_data.append("mg_daun", mg_daun);
 			form_data.append("n_tanah", n_tanah);
 			form_data.append("p_tanah", p_tanah);
 			form_data.append("k_tanah", k_tanah);

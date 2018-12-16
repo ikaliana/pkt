@@ -74,12 +74,9 @@
                                     </tbody>
                                 </table>
 								<script type="text/javascript">
-									$(document).ready(
-									function() {
-									  $('#citra_table').DataTable();
-									  responsive: true
+									$(document).ready(function() {
+									    $('#citra_table').DataTable( { responsive: true } );
 									});
-								  
 								</script>
                             </div>
 							<div class="modal fade" id="tambah_citra">

@@ -33,14 +33,14 @@ def VectorToRaster(pixel_size,NoData_value,vector_fn,raster_fn,attribute_name):
 
 
 # Define pixel_size and NoData value of new raster
-pixel_size = 10
-NoData_value = -9999
+# pixel_size = 10
+# NoData_value = -9999
 
-# Filename of input OGR file
-vector_fn = 'base_area.shp'
+# # Filename of input OGR file
+# vector_fn = 'base_area.shp'
 
-# # Filename of the raster Tiff that will be created
-raster_fn = 'base_area.tif'
+# # # Filename of the raster Tiff that will be created
+# raster_fn = 'base_area.tif'
 
-VectorToRaster(pixel_size,NoData_value,vector_fn,raster_fn,"TahunTanam")
-print "DONE"
+# VectorToRaster(pixel_size,NoData_value,vector_fn,raster_fn,"TahunTanam")
+# print "DONE"

@@ -47,11 +47,12 @@ $help_content = "Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disin
                                 <table id="pupuk_table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                     <thead>
                                         <tr>
-                                            <th width="45%">Nama Pupuk</th>
+                                            <th width="40%">Nama Pupuk</th>
                                             <th width="10%">N</th>
                                             <th width="10%">P</th>
 											<th width="10%">K</th>
-											<th width="25%">Action</th>
+											<th width="10%">Mg</th>
+											<th width="20%">Action</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -60,6 +61,7 @@ $help_content = "Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disin
                                             <th>N</th>
                                             <th>P</th>
 											<th>K</th>
+											<th>Mg</th>
                                             <th>Action</th>   
                                         </tr>
                                     </tfoot>
@@ -73,6 +75,7 @@ $help_content = "Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disin
                                             <td><?php echo $data['komposisi_n']; ?></td>
                                             <td><?php echo $data['komposisi_p']; ?></td>
                                             <td><?php echo $data['komposisi_k']; ?></td>
+                                            <td><?php echo $data['komposisi_mg']; ?></td>
                                             <td>
 												<a href="index.php?p=pupuk_edit&id=<?php echo $data['kode_pupuk']; ?>" style="cursor: pointer;">Edit</a>
 												| 
@@ -84,12 +87,9 @@ $help_content = "Petunjuknya disini loh Petunjuknya disini loh Petunjuknya disin
                                     </tbody>
                                 </table>
 								<script type="text/javascript">
-									$(document).ready(
-									function() {
-									  $('#pupuk_table').DataTable();
-									  responsive: true
+									$(document).ready(function() {
+									    $('#pupuk_table').DataTable( { responsive: true } );
 									});
-								  
 								</script>
                             </div>
 							<div class="modal fade" id="tampil_detail">

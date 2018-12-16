@@ -10,7 +10,9 @@ $data = pg_fetch_assoc($sql);
 		var kom_n = $("#komposisi_n").val();
 		var kom_p = $("#komposisi_p").val();
 		var kom_k = $("#komposisi_k").val();
-		if (nama.length == 0 || kom_n.length == 0 || kom_p.length == 0 || kom_k.length == 0) 
+		var kom_mg = $("#komposisi_mg").val();
+
+		if (nama.length == 0 || kom_n.length == 0 || kom_p.length == 0 || kom_k.length == 0 || kom_mg.length == 0) 
 		  {
 			setTimeout(function () { swal("Oh tidak!","Semua isian wajib diisi!","error");
 			});
@@ -27,6 +29,7 @@ $data = pg_fetch_assoc($sql);
 				form_data.append("komposisi_n",kom_n);
 				form_data.append("komposisi_p",kom_p);
 				form_data.append("komposisi_k",kom_k);
+				form_data.append("komposisi_mg",kom_mg);
 				$.ajax({
 					url: './ajax/pupuk_edit_action.php', // point to server-side PHP script 
 					dataType: 'text', // what to expect back from the PHP script
@@ -107,20 +110,25 @@ $data = pg_fetch_assoc($sql);
 									<div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 										<div class="form-group">
 											<div class="form-inline">
-												<div class="col-md-4">
-													<div class="col-xs-2 form-control-label"><label for="area">N</label></div>
+												<div class="col-md-3">
+													<div class="col-xs-2 form-control-label" style="margin-bottom: 0"><label for="area">N</label></div>
 													<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
 														<input type="text" id="komposisi_n" class="form-control" value="<?php echo $data['komposisi_n'];?>"></div>
 												</div>
-												<div class="col-md-4">
-													<div class="col-xs-2 form-control-label"><label for="area">P</label></div>
+												<div class="col-md-3">
+													<div class="col-xs-2 form-control-label" style="margin-bottom: 0"><label for="area">P</label></div>
 													<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
 														<input type="text" id="komposisi_p" class="form-control" value="<?php echo $data['komposisi_p'];?>"></div>
 												</div>
-												<div class="col-md-4">
-													<div class="col-xs-2 form-control-label"><label for="area">K</label></div>
+												<div class="col-md-3">
+													<div class="col-xs-2 form-control-label" style="margin-bottom: 0"><label for="area">K</label></div>
 													<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
 														<input type="text" id="komposisi_k" class="form-control" value="<?php echo $data['komposisi_k'];?>"></div>
+												</div>
+												<div class="col-md-3">
+													<div class="col-xs-2 form-control-label" style="margin-bottom: 0"><label for="area">Mg</label></div>
+													<div class="col-xs-10" style="border-bottom: 1px solid #ddd">
+														<input type="text" id="komposisi_mg" class="form-control" value="<?php echo $data['komposisi_mg'];?>"></div>
 												</div>
 												<!--div class="row">
 												</div-->

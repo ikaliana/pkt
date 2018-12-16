@@ -6,12 +6,13 @@ try {
 	$n_daun 		= $_POST['n_daun'];
 	$p_daun 		= $_POST['p_daun'];
 	$k_daun 		= $_POST['k_daun'];
+	$mg_daun 		= $_POST['mg_daun'];
 	$n_tanah 		= $_POST['n_tanah'];
 	$p_tanah 		= $_POST['p_tanah'];
 	$k_tanah 		= $_POST['k_tanah'];
 
 	$query ="SELECT kode_analisis FROM pkt_analisis WHERE kode_citra=".$citra."";
-	$query .= " and kode_model_n=".$n_daun." and kode_model_p=".$p_daun." and kode_model_k=".$k_daun;
+	$query .= " and kode_model_n=".$n_daun." and kode_model_p=".$p_daun." and kode_model_k=".$k_daun." and kode_model_mg=".$mg_daun;
 	$query .= " and kode_model_n_tanah=".$n_tanah." and kode_model_p_tanah=".$p_tanah." and kode_model_k_tanah=".$k_tanah;
 	$sql = pg_query($db_conn, $query);
 	$data_exist = pg_fetch_array($sql);
@@ -22,9 +23,9 @@ try {
 
 	if(empty($data_exist))
 	{
-		$query2 = "INSERT INTO pkt_analisis (tanggal_analisis, kode_citra, kode_model_n, kode_model_p, kode_model_k, ";
+		$query2 = "INSERT INTO pkt_analisis (tanggal_analisis, kode_citra, kode_model_n, kode_model_p, kode_model_k, kode_model_mg, ";
 		$query2 .= "kode_model_n_tanah, kode_model_p_tanah, kode_model_k_tanah, status) ";
-		$query2 .= "VALUES (now(),".$citra.",".$n_daun.",".$p_daun.",".$k_daun.",".$n_tanah.",".$p_tanah.",".$k_tanah.",FALSE)";
+		$query2 .= "VALUES (now(),".$citra.",".$n_daun.",".$p_daun.",".$k_daun.",".$mg_daun.",".$n_tanah.",".$p_tanah.",".$k_tanah.",FALSE)";
 
 		$sql = pg_query($db_conn, $query2);
 

@@ -17,6 +17,7 @@ import palettable.cubehelix as c1
 import palettable.matplotlib as c2
 import palettable.colorbrewer.sequential as c3
 import gridify
+import rasterize
 
 def ClassificationValue(val,unsur):
 	retval = 0
@@ -41,6 +42,13 @@ def ClassificationValue(val,unsur):
 		elif val <= 0.8 and val > 0.6: retval = 3 
 		elif val <= 0.6 and val > 0.4: retval = 2 
 		elif val <= 0.4: retval = 1 
+	if unsur == "Mg":
+		if val > 0.26: retval = 6
+		elif val <= 0.26 and val > 0.24: retval = 5
+		elif val <= 0.24 and val > 0.22: retval = 4 
+		elif val <= 0.22 and val > 0.20: retval = 3 
+		elif val <= 0.20 and val > 0.18: retval = 2 
+		elif val <= 0.18: retval = 1 
 	if unsur == "N-Tanah":
 		if val > 0.25: retval = 6
 		elif val <= 0.25 and val > 0.15: retval = 5
@@ -83,7 +91,10 @@ def CalculateDosisPupuk(nama_unsur,critical_value,current_value,prev_value,kompo
 	retval = 0
 	if current_value == 0: return 0
 	
-	if nama_unsur[1:] == "": 			# perhitungan pupuk berdasarkan nutrisi daun
+	kode_unsur = nama_unsur[:1]
+	if kode_unsur not in ["N","P","K"]: kode_unsur = nama_unsur[:2]
+
+	if (nama_unsur.replace(kode_unsur,"")) == "": 			# perhitungan pupuk berdasarkan nutrisi daun
 		retval = ( critical_value / current_value ) * prev_value
 	else:								# perhitungan pupuk berdasarkan nutrisi tanah
 		# R = 2 							# radius perakaran: 2 m (TM) / 1 m (TBM)
@@ -101,12 +112,12 @@ def CalculateDosisPupuk(nama_unsur,critical_value,current_value,prev_value,kompo
 		if retval <= 0: retval = 0
 		else:
 			retval = retval * L * D * BV
-			if nama_unsur[:1] == "N":
+			if kode_unsur == "N":
 				retval = retval / 100
-			if nama_unsur[:1] == "P":
+			if kode_unsur == "P":
 				retval = retval / 1000000
 				retval = retval * 142 / 62
-			if nama_unsur[:1] == "K":
+			if kode_unsur == "K":
 				retval = retval / 1000000
 				retval = retval * 94 / 39
 			retval = retval * 100 / komposisi_value
@@ -120,6 +131,7 @@ def ClassifyPupuk(data):
 	if data["N"] != 0: count+=1
 	if data["P"] != 0: count+=1
 	if data["K"] != 0: count+=1
+	if data["Mg"] != 0: count+=1
 	if count > 1: retval = "MAJEMUK"
 
 	return retval
@@ -198,11 +210,12 @@ def SaveDataToPNG(nama_raster,arraydata,cols,rows):
 
 ## ==================== VARIABLES  ====================
 
-kelompok_unsur = ["N", "P", "K"]
 # kelompok_unsur = ["N", "P", "K", "N-Tanah", "P-Tanah", "K-Tanah"]
-nama_unsur = { "N" : "Nitrogen", "P" : "Fosfor", "K" : "Kalium", "N-Tanah" : "Nitrogen", "P-Tanah" : "Fosfor", "K-Tanah" : "Kalium" }
+kelompok_unsur = ["N", "P", "K", "Mg"]
+nama_unsur = { "N" : "Nitrogen", "P" : "Fosfor", "K" : "Kalium", "Mg": "Magnesium", "N-Tanah" : "Nitrogen", "P-Tanah" : "Fosfor", "K-Tanah" : "Kalium" }
 null_value = -9999
 format_file = "GTiff"
+pixel_size = 10.0
 
 class_color = [0x00000000,0xFF0000FF,0xFF2DFFFC,0xFF48FE6A,0xFF30C602,0xFFDCE620,0xFF8F3A12]
 class_color_2 = [0x00000000,0xFF1C19D7,0xFF5390F6,0xFF9ADFFF,0xFF9EF0DC,0xFF62CC8A,0xFF41961A]
@@ -213,8 +226,8 @@ data_color = c.Ice_15.hex_colors[::-1]
 # data_color = c3.Blues_9.hex_colors
 data_color_size = np.size(data_color)
 
-critical_value_daun = { "N" : 2.5, "P" : 0.15, "K" : 1.00 }
-critival_value_tanah = { "N" : 0.25, "P" : 40, "K" : 97.5 }
+critical_value_daun = { "N" : 2.5, "P" : 0.15, "K" : 1.00, "Mg" : 0.24 }
+critival_value_tanah = { "N" : 0.25, "P" : 40, "K" : 97.5, "Mg" : 0 }
 
 id_analisis = str(sys.argv[1])
 
@@ -229,13 +242,14 @@ sentinel_file = source_folder + "/citra/"
 shp_file = source_folder + "/area/"
 clipped_file = ""
 grid_file = ""
+raster_tahun_tanam = ""
 unsur_id = {}
 
 # load raster and shape filename and model ID from table Analisis
 strquery = ""
-strquery += "select kode_model_n,kode_model_p,kode_model_k,"
+strquery += "select kode_model_n,kode_model_p,kode_model_k,kode_model_mg,"
 strquery += "kode_model_n_tanah,kode_model_p_tanah,kode_model_k_tanah,"
-strquery += "a.kode_citra,c.nama_file as citra_file,c.kode_area,ar.nama_file as area_file"
+strquery += "a.kode_citra,c.nama_file as citra_file,c.kode_area,ar.nama_file as area_file,c.tanggal as tanggal_citra"
 strquery += " from pkt_analisis a"
 strquery += " left join pkt_citra c on a.kode_citra = c.kode_citra"
 strquery += " left join pkt_area ar on c.kode_area = ar.kode_area"
@@ -243,15 +257,19 @@ strquery += " where a.kode_analisis = " + id_analisis
 datavar = GetData(strquery,True)
 
 #initiate working files
-sentinel_file += str(datavar["kode_area"]) + "/" + datavar["citra_file"]
-shp_file += str(datavar["kode_area"]) + "/" + datavar["area_file"][:-4] + ".shp"
+kode_area = datavar["kode_area"]
+sentinel_file += str(kode_area) + "/" + datavar["citra_file"]
+shp_file += str(kode_area) + "/" + datavar["area_file"][:-4] + ".shp"
 clipped_file = work_folder + datavar["citra_file"][:-4] + "_clipped" + datavar["citra_file"][-4:]
 grid_file = work_folder + datavar["area_file"][:-4] + "_grid" + ".shp"
+raster_tahun_tanam = work_folder + datavar["area_file"][:-4] + "_tahuntanam" + ".tif"
+tanggal_citra = datavar["tanggal_citra"]
 
 #initiate model ID
 unsur_id["N"] = datavar["kode_model_n"]
 unsur_id["P"] = datavar["kode_model_p"]
 unsur_id["K"] = datavar["kode_model_k"]
+unsur_id["Mg"] = datavar["kode_model_mg"]
 # unsur_id["N-Tanah"] = datavar["kode_model_n_tanah"]
 # unsur_id["P-Tanah"] = datavar["kode_model_p_tanah"]
 # unsur_id["K-Tanah"] = datavar["kode_model_k_tanah"]
@@ -265,9 +283,13 @@ for row in datapupuk:
 	temp["N"] = float(row["komposisi_n"])
 	temp["P"] = float(row["komposisi_p"])
 	temp["K"] = float(row["komposisi_k"])
+	temp["Mg"] = float(row["komposisi_mg"])
 	temp["ID"] = row["kode_pupuk"]
 	temp["JENIS"] = ClassifyPupuk(temp)
 	komposisi_pupuk[row["nama_pupuk"]] = temp
+
+# print komposisi_pupuk
+# exit(0)
 
 #initiate data rekomendasi pupuk PPKS
 rekomendasi_pupuk = {}
@@ -285,6 +307,22 @@ for row in datarekomendasi:
 	temp_nama = row["nama_pupuk"]
 	temp[row["umur_tanaman"]] = row["jumlah_pupuk"] 
 
+#initiate data riwayat pupuk
+riwayat_pupuk = {}
+strquery = ""
+strquery += "select p.nama_pupuk,r.kode_pupuk,r.tahun,r.dosis_pupuk "
+strquery += "from pkt_riwayat r left join pkt_pupuk p on r.kode_pupuk = p.kode_pupuk "
+strquery += "where r.kode_area = " + str(kode_area) + " "
+strquery += "order by p.nama_pupuk,r.tahun "
+datariwayat = GetData(strquery,False)
+
+temp_nama = ""
+for row in datariwayat:
+	if temp_nama != row["nama_pupuk"]:
+		riwayat_pupuk[row["nama_pupuk"]] = {}
+		temp = riwayat_pupuk[row["nama_pupuk"]]
+	temp_nama = row["nama_pupuk"]
+	temp[row["tahun"]] = row["dosis_pupuk"] 
 
 # print work_folder
 # print sentinel_file
@@ -293,6 +331,7 @@ for row in datarekomendasi:
 # print unsur_id
 # print komposisi_pupuk
 # print rekomendasi_pupuk
+# print riwayat_pupuk
 # exit()
 
 ## ========== CLIP RASTER WITH SHAPEFILE  ====================
@@ -301,16 +340,24 @@ warp_opts = gdal.WarpOptions(
     format=format_file,
     cutlineDSName=shp_file,
     cropToCutline=True,
-    dstNodata=-9999,
-    xRes=10.0,
-    yRes=10.0,
+    dstNodata=null_value,
+    xRes=pixel_size,
+    yRes=pixel_size,
 )
-gdal.Warp(clipped_file, sentinel_file, options=warp_opts,)
+gdal.Warp(clipped_file, sentinel_file, options=warp_opts)
 #cari opsi lain buat clip raster (lihat di sample GDAL di internet). bbrp titik hasilnya meleset
+# exit()
 
 ## ========== CREATE GRID FILE  ====================
 
 gridify.GenerateGrid(shp_file,grid_file)
+
+## ========== CREATE RASTER OF TahunTanam  ====================
+
+field_name = "TahunTanam"
+
+rasterize.VectorToRaster(pixel_size,null_value,shp_file,raster_tahun_tanam,field_name)
+# exit()
 
 ## ========== LOAD RASTER AND ITS BAND  ====================
 
@@ -351,6 +398,12 @@ band9 = BandReadAsArray(g.GetRasterBand(10))	#Band 9
 band11 = BandReadAsArray(g.GetRasterBand(11))	#Band 11
 band12 = BandReadAsArray(g.GetRasterBand(12))	#Band 12
 
+# ---- LOAD TAHUN TANAM RASTER
+g2 = gdal.Open(raster_tahun_tanam)
+rows2 = g2.RasterYSize
+cols2 = g2.RasterXSize
+tahun_tanam_data = BandReadAsArray(g2.GetRasterBand(1)) 
+
 
 ## ========== INITIALIZE CALCULATION PLACEHOLDER  ====================
 
@@ -367,7 +420,9 @@ for nama_pupuk in komposisi_pupuk:
 
 	for unsur in kelompok_unsur:
 		temp = {}
-		temp["komposisi"] = komposisi_pupuk[nama_pupuk][unsur[:1]]
+		kode_unsur = unsur[:1]
+		if kode_unsur not in ["N","P","K"]: kode_unsur = unsur[:2]
+		temp["komposisi"] = komposisi_pupuk[nama_pupuk][kode_unsur]
 		temp["peta_prev"] = np.empty((cols, rows),np.float32)
 		temp["peta_prev"].shape=rows, cols
 		temp["peta_dosis"] = np.empty((cols, rows),np.float32)
@@ -376,6 +431,8 @@ for nama_pupuk in komposisi_pupuk:
 		# temp["peta_dosis_warna"].shape=rows, cols
 		temp["peta_warna"] = np.empty((cols, rows),np.uint32)
 		temp["peta_warna"].shape=rows, cols
+		temp["peta_warna2"] = np.empty((cols, rows),np.uint32)
+		temp["peta_warna2"].shape=rows, cols
 		temp["dosis"] = 0.0
 		pupuk[nama_pupuk][unsur] = temp;
 
@@ -396,11 +453,18 @@ for unsur in kelompok_unsur:
 	for i in range(rows):
 		for j in range(cols):
 
-			if band1[i,j] != null_value:
+			tahun_tanam_null = True
+			if i < rows2 and j < cols2: tahun_tanam_null = (tahun_tanam_data[i,j] == null_value)
+
+			ndvi_value = (band8[i,j] - band4[i,j]) / (band8[i,j] + band4[i,j]) * 1.000
+			is_vegetation = (ndvi_value >= 0.4000)
+
+			# if band1[i,j] != null_value:
+			if band1[i,j] != null_value and not tahun_tanam_null and is_vegetation:
 				
 				luas_area += 1
-				tahun_tanam = 2011  #ambil data ini dari raster/vector
-				tahun_now = int(time.strftime("%Y"))  #harusnya ngambil dari tanggal sensing citra sentinel
+				tahun_tanam = tahun_tanam_data[i,j]  #ambil data ini dari raster/vector
+				tahun_now = int(tanggal_citra.strftime("%Y"))  #harusnya ngambil dari tanggal sensing citra sentinel
 				umur_tanaman = tahun_now - tahun_tanam
 
 				# --- calculate nutrient using model --- #
@@ -426,15 +490,29 @@ for unsur in kelompok_unsur:
 				for nama_pupuk in komposisi_pupuk:
 					data_pupuk = pupuk[nama_pupuk][unsur]
 					if data_pupuk["komposisi"] > 0:
+						
+						#Get Last year dosage value. If none, use PPKS recommendation value
 						# data_pupuk["peta_prev"][i,j] = rekomendasi_pupuk[nama_pupuk] / 100.0
-						data_pupuk["peta_prev"][i,j] = rekomendasi_pupuk[nama_pupuk][umur_tanaman] / 100.0
-						crValue = critival_value_tanah[unsur[:1]]
-						if unsur[1:] == "": crValue = critical_value_daun[unsur]
+						riwayat_data_pupuk = False
+						if nama_pupuk in riwayat_pupuk:
+							if (tahun_now-1) in riwayat_pupuk[nama_pupuk]:
+								data_pupuk["peta_prev"][i,j] = riwayat_pupuk[nama_pupuk][(tahun_now-1)] / 100.0
+								riwayat_data_pupuk = True
 
-						data_pupuk["peta_dosis"][i,j] = CalculateDosisPupuk(unsur,crValue,raster_unsur[unsur][i,j],data_pupuk["peta_prev"][i,j],komposisi_pupuk[nama_pupuk][unsur[:1]])
+						if not riwayat_data_pupuk:
+							data_pupuk["peta_prev"][i,j] = rekomendasi_pupuk[nama_pupuk][umur_tanaman] / 100.0
+
+						kode_unsur = unsur[:1]
+						if kode_unsur not in ["N","P","K",""]: kode_unsur = unsur[:2]
+						crValue = critival_value_tanah[kode_unsur]
+						if (unsur.replace(kode_unsur,"")) == "": crValue = critical_value_daun[unsur]
+						# print(kode_unsur,": ",crValue)
+
+						data_pupuk["peta_dosis"][i,j] = CalculateDosisPupuk(unsur,crValue,raster_unsur[unsur][i,j],data_pupuk["peta_prev"][i,j],komposisi_pupuk[nama_pupuk][kode_unsur])
 
 						data_pupuk["peta_warna"][i,j] = ClassificationValue2(data_pupuk["peta_prev"][i,j],data_pupuk["peta_dosis"][i,j])
-						data_pupuk["peta_warna"][i,j] = class_color_2[ data_pupuk["peta_warna"][i,j] ]
+						# data_pupuk["peta_warna"][i,j] = class_color_2[ data_pupuk["peta_warna"][i,j] ]
+						data_pupuk["peta_warna2"][i,j] = class_color_2[ data_pupuk["peta_warna"][i,j] ]
 						data_pupuk["dosis"] += data_pupuk["peta_dosis"][i,j]
 
 			else:
@@ -445,7 +523,8 @@ for unsur in kelompok_unsur:
 					data_pupuk = pupuk[nama_pupuk][unsur]
 					data_pupuk["peta_prev"][i,j] = null_value
 					data_pupuk["peta_dosis"][i,j] = null_value
-					data_pupuk["peta_warna"][i,j] = class_color_2[0]
+					data_pupuk["peta_warna"][i,j] = 0
+					data_pupuk["peta_warna2"][i,j] = class_color_2[0]
 
 			raster_unsur_color[unsur][i,j] = class_color[ raster_unsur_class[unsur][i,j] ]
 	# --- END OF PROCESS THE RASTER --- #
@@ -542,8 +621,10 @@ for nama_pupuk in komposisi_pupuk:
 
 		
 		# --- SAVE SELECTED FERTILIZER DOSAGE DATA TO PNG FILE --- #
+		# nama_raster = work_folder + "Citra_Dosis_Pupuk_Percent_" + nama_pupuk + ".tif"
+		# SaveDataToTiff(nama_raster,pupuk[nama_pupuk][unsur_terpilih]["peta_warna"],g)
 		nama_raster = work_folder + "Citra_Dosis_Pupuk_" + nama_pupuk + ".png"
-		SaveDataToPNG(nama_raster,pupuk[nama_pupuk][unsur_terpilih]["peta_warna"].tostring(),cols,rows)
+		SaveDataToPNG(nama_raster,pupuk[nama_pupuk][unsur_terpilih]["peta_warna2"].tostring(),cols,rows)
 
 		
 		# --- Classify fertilizer data and save to PNG --- #
@@ -568,6 +649,8 @@ for nama_pupuk in komposisi_pupuk:
 				if data_dosis[i,j] != null_value:
 					dosis_val = data_dosis[i,j]
 					idx = range_value.searchsorted(dosis_val,'right')-1
+					if idx > 14: idx = 14
+					if idx < 0: idx = 0
 					color_val = data_color[idx]
 					color_val_new = '0xFF' + color_val[5:7] + color_val[3:5] + color_val[1:3] 
 					raster_data[i,j] = eval(color_val_new)

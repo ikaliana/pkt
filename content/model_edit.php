@@ -105,6 +105,7 @@
 													<option value="N" <?php if($nutrisi_selected == 'N'){echo "selected";} ?>>N</option>
 													<option value="P" <?php if($nutrisi_selected == 'P'){echo "selected";} ?>>P</option>
 													<option value="K" <?php if($nutrisi_selected == 'K'){echo "selected";} ?>>K</option>
+													<option value="Mg" <?php if($nutrisi_selected == 'Mg'){echo "selected";} ?>>Mg</option>
 												</select>
 											</div>
 										</div>

@@ -223,18 +223,24 @@
 								$query .= "group by kode_analisis,kode_pupuk,left(nama_unsur,1) ";
 								$query .= ") d2 on d.kode_analisis=d2.kode_analisis and d.kode_pupuk=d2.kode_pupuk ";
 								$query .= "and left(d.nama_unsur,1)=d2.nama_unsur and d.dosis_total=d2.dosis_total ";
-								$query .= "where d.jenis_pupuk='MAJEMUK' and d.dosis_total<>0 ";
+								// $query .= "where d.jenis_pupuk='MAJEMUK' and d.dosis_total<>0 ";
+								$query .= "where d.jenis_pupuk='MAJEMUK' ";
 								$query .= "and d.kode_analisis=".$analisis_id;
 								$query .= " order by d.nama_pupuk ASC, d.dosis_total ASC";
 
 								$counter = 0;
-								$urut = 1;
+								$urut = 0;
 								$prev_dosis = 0;
+								$prev_pupuk = "";
 
 								$sql_area = pg_query($db_conn, $query);
 								while($data = pg_fetch_assoc($sql_area)){
+									$cur_pupuk = $data['nama_pupuk'];
+									if($cur_pupuk != $prev_pupuk) { $counter = 0; $urut++; }
+
 									if(!$counter) {
 										$prev_dosis = $data['dosis_total'];
+										$prev_pupuk = $cur_pupuk;
 	                        ?>
 							<tr>
 								<td align="center"><?php echo $urut; ?>.</td>
@@ -254,18 +260,23 @@
 										
 										if($nama_unsur == "N") {
 											$komposisi_unsur = $data['komposisi_n'];
-											$query2 .= "where komposisi_n>0 and komposisi_p=0 and komposisi_k=0 order by komposisi_n";
+											$query2 .= "where komposisi_n>0 and komposisi_p=0 and komposisi_k=0 and komposisi_mg=0 order by komposisi_n";
 											$col_index = 2;
 										}
 										if($nama_unsur == "P") {
 											$komposisi_unsur = $data['komposisi_p'];
-											$query2 .= "where komposisi_n=0 and komposisi_p>0 and komposisi_k=0 order by komposisi_p";
+											$query2 .= "where komposisi_n=0 and komposisi_p>0 and komposisi_k=0 and komposisi_mg=0 order by komposisi_p";
 											$col_index = 3;
 										}
 										if($nama_unsur == "K") {
 											$komposisi_unsur = $data['komposisi_k'];
-											$query2 .= "where komposisi_n=0 and komposisi_p=0 and komposisi_k>0 order by komposisi_k";
+											$query2 .= "where komposisi_n=0 and komposisi_p=0 and komposisi_k>0 and komposisi_mg=0 order by komposisi_k";
 											$col_index = 4;
+										}
+										if($nama_unsur == "M") {
+											$komposisi_unsur = $data['komposisi_mg'];
+											$query2 .= "where komposisi_n=0 and komposisi_p=0 and komposisi_k=0 and komposisi_mg>0 order by komposisi_k";
+											$col_index = 5;
 										}
 
 										$query2 .= " limit 1";
@@ -290,7 +301,7 @@
 							<?php 
 									}
 									$counter++;
-									if($counter >= 3) { $counter = 0; $urut++; }
+									//if($counter >= 4) { $counter = 0; $urut++; }
 									$row_counter++;
 								} 
 							?>
@@ -332,7 +343,7 @@
 				            <tr>
 				                <th>Kode Area</th>
 				                <th>Luas area (ha)</th>
-				                <th>Rekomendasi Pupuk (kg)</th>
+				                <th>Kebutuhan Pupuk (kg)</th>
 				                <th>Dosis per pohon</th>
 				            </tr>
 				        </thead>
@@ -357,6 +368,7 @@
 								<option value="N" selected>Nitrogen Daun</option>
 								<option value="P">Fosfor Daun</option>
 								<option value="K">Kalium Daun</option>
+								<option value="Mg">Magnesium Daun</option>
 								<!--option value="N-Tanah">Nitrogen Tanah</option>
 								<option value="P-Tanah">Fosfor Tanah</option>
 								<option value="K-Tanah">Kalium Tanah</option-->
@@ -445,6 +457,20 @@
 									<span style="width:25px;display:inline-block;background:#20E6DC;margin-right:25px;">&nbsp;</span> 97.5 ppm - 117 ppm</li>
 								<li class="list-group-item" style="padding: 5px 15px; border: none;">
 									<span style="width:25px;display:inline-block;background:#123A8F;margin-right:25px;">&nbsp;</span> &gt; 117 ppm</li>
+							</ul>							
+							<ul class="list-group" id="legend_Mg" style="border: 1px solid #ddd;margin-bottom:0;display:none;">
+								<li class="list-group-item" style="padding: 5px 15px; border: none;">
+									<span style="width:25px;display:inline-block;background:#FF0000;margin-right:25px;">&nbsp;</span> &lt;= 0.18 %</li>
+								<li class="list-group-item" style="padding: 5px 15px; border: none;">
+									<span style="width:25px;display:inline-block;background:#FCFF2D;margin-right:25px;">&nbsp;</span> 0.18 % - 0.20 %</li>
+								<li class="list-group-item" style="padding: 5px 15px; border: none;">
+									<span style="width:25px;display:inline-block;background:#6AFE48;margin-right:25px;">&nbsp;</span> 0.20 % - 0.22 %</li>
+								<li class="list-group-item" style="padding: 5px 15px; border: none;">
+									<span style="width:25px;display:inline-block;background:#02C630;margin-right:25px;">&nbsp;</span> 0.22 % - 0.24 %</li>
+								<li class="list-group-item" style="padding: 5px 15px; border: none;">
+									<span style="width:25px;display:inline-block;background:#20E6DC;margin-right:25px;">&nbsp;</span> 0.24 % - 0.26 %</li>
+								<li class="list-group-item" style="padding: 5px 15px; border: none;">
+									<span style="width:25px;display:inline-block;background:#123A8F;margin-right:25px;">&nbsp;</span> &gt; 0.26 %</li>
 							</ul>							
 						</div>
 					</div>
@@ -623,6 +649,7 @@
 	   		$("#legend_N").hide();
 	   		$("#legend_P").hide();
 	   		$("#legend_K").hide();
+	   		$("#legend_Mg").hide();
 	   		$("#legend_N-Tanah").hide();
 	   		$("#legend_P-Tanah").hide();
 	   		$("#legend_K-Tanah").hide();

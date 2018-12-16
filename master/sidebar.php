@@ -1,3 +1,20 @@
+<?php
+    $page = $_GET['p'];
+    
+    $area_group = ($page=="area_content" OR $page=="area_edit");
+    $citra_group = ($page=="citra_content");
+    $model_group = ($page=="model_content" OR $page=="model_edit" OR $page=="model_add");
+    $anorganik_group = ($page=="pupuk_content" OR $page=="pupuk_edit");
+    $ppks_group = ($page=="ppks_content" OR $page=="ppks_edit");
+    $riwayat_group = ($page=="riwayat_pupuk");
+    $pupuk_group = ($anorganik_group OR $ppks_group OR $riwayat_group);
+    $admin_group = ($area_group OR $citra_group OR $model_group OR $pupuk_group OR $riwayat_group);
+
+    $new_hitung = ($page=="hitung_content");
+    $hasil_hitung = ($page=="hasil_content" OR $page=="hasil_content_detail");
+    $rekomendasi_group = ($new_hitung OR $hasil_hitung);
+?>
+
 <section>
         <!-- Left Sidebar -->
         <aside id="leftsidebar" class="sidebar">
@@ -32,30 +49,35 @@
                             <span>Beranda</span>
                         </a>
                     </li>
-                    <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content" OR $_GET['p']=="area_edit" OR $_GET['p']=="model_content" OR $_GET['p']=="model_edit" OR $_GET['p']=="citra_content" OR $_GET['p']=="pupuk_content" OR $_GET['p']=="pupuk_edit" OR $_GET['p']=="ppks_content" OR $_GET['p']=="ppks_edit" OR $_GET['p']=="model_add"){echo 'active';}};?>">
+                    <li class="<?php if($admin_group){echo 'active';}?>">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">storage</i>
                             <span>Administrasi Data</span>
                         </a>
                         <ul class="ml-menu">
-                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="area_content" OR $_GET['p']=="area_edit"){echo 'active';}};?>">
+                            <li class="<?php if($area_group){echo 'active';}?>">
                                 <a href="index.php?p=area_content">Area Lahan</a>
                             </li>
-                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="citra_content"){echo 'active';}};?>">
+                            <li class="<?php if($citra_group){echo 'active';}?>">
                                 <a href="index.php?p=citra_content">Citra Sentinel</a>
                             </li>
-							<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="model_content" OR $_GET['p']=="model_edit" OR $_GET['p']=="model_add"){echo 'active';}};?>">
+							<li class="<?php if($model_group){echo 'active';}?>">
                                 <a href="index.php?p=model_content">Model Perhitungan Nutrisi</a>
                             </li>
-                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="pupuk_content" OR $_GET['p']=="ppks_content" OR $_GET['p']=="pupuk_edit" OR $_GET['p']=="ppks_edit"){echo 'active';}};?>">
+                            <li class="<?php if($pupuk_group){echo 'active';}?>">
                                 <a href="javascript:void(0);" class="menu-toggle">Pupuk</a>
 								<ul class="ml-menu">
-									<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="pupuk_content" OR $_GET['p']=="pupuk_edit"){echo 'active';}};?>">
+									<li class="<?php if($anorganik_group){echo 'active';}?>">
 										<a href="index.php?p=pupuk_content">
 											<span>Pupuk Anorganik</span>
 										</a>
 									</li>
-									<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="ppks_content" OR $_GET['p']=="ppks_edit"){echo 'active';}};?>">
+                                    <li class="<?php if($riwayat_group){echo 'active';}?>">
+                                        <a href="index.php?p=riwayat_pupuk">
+                                            <span>Riwayat Pupuk</span>
+                                        </a>
+                                    </li>
+									<li class="<?php if($ppks_group){echo 'active';}?>">
 										<a href="index.php?p=ppks_content">
 											<span>Rekomendasi PPKS</span>
 										</a>
@@ -64,18 +86,18 @@
 							</li>
                         </ul>
                     </li>
-					<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hasil_content" OR $_GET['p']=="hitung_content" OR $_GET['p']=="hasil_content_detail" ){echo 'active';}};?>">
+					<li class="<?php if($rekomendasi_group){echo 'active';}?>">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">assignment</i>
                             <span>Rekomendasi Pupuk</span>
                         </a>
                         <ul class="ml-menu">
-							<li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hitung_content"){echo 'active';}};?>">
+							<li class="<?php if($new_hitung){echo 'active';}?>">
                                 <a href="index.php?p=hitung_content">
                                     <span>Perhitungan Baru</span>
                                 </a>
                             </li>
-                            <li class="<?php if(!empty($_GET['p'])){if($_GET['p']=="hasil_content" OR $_GET['p']=="hasil_content_detail"){echo 'active';}};?>">
+                            <li class="<?php if($hasil_hitung){echo 'active';}?>">
                                 <a href="index.php?p=hasil_content">
                                     <span>Hasil Perhitungan</span>
                                 </a>

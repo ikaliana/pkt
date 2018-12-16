@@ -76,12 +76,9 @@
                                     </tbody>
                                 </table>
 								<script type="text/javascript">
-									$(document).ready(
-									function() {
-									  $('#pupuk_table').DataTable();
-									  responsive: true
+									$(document).ready(function() {
+									    $('#pupuk_table').DataTable( { responsive: true } );
 									});
-								  
 								</script>
                             </div>
                         </div>	

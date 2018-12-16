@@ -99,6 +99,7 @@
 													<option value="N">N</option>
 													<option value="P">P</option>
 													<option value="K">K</option>
+													<option value="Mg">Mg</option>
 												</select>
 											</div>
 										</div>

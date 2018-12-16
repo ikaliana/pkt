@@ -7,12 +7,13 @@ try {
 	$n_daun 		= $_POST['n_daun'];
 	$p_daun 		= $_POST['p_daun'];
 	$k_daun 		= $_POST['k_daun'];
+	$mg_daun 		= $_POST['mg_daun'];
 	$n_tanah 		= $_POST['n_tanah'];
 	$p_tanah 		= $_POST['p_tanah'];
 	$k_tanah 		= $_POST['k_tanah'];
 
 	$query ="SELECT kode_analisis FROM pkt_analisis WHERE kode_citra=".$citra."";
-	$query .= " and kode_model_n=".$n_daun." and kode_model_p=".$p_daun." and kode_model_k=".$k_daun;
+	$query .= " and kode_model_n=".$n_daun." and kode_model_p=".$p_daun." and kode_model_k=".$k_daun." and kode_model_mg=".$mg_daun;
 	// $query .= " and kode_model_n_tanah=".$n_tanah." and kode_model_p_tanah=".$p_tanah." and kode_model_k_tanah=".$k_tanah;
 	$query .= " and kode_analisis <> ".$id;
 	$sql = pg_query($db_conn, $query);
@@ -31,6 +32,7 @@ try {
 		$query2 .= ",kode_model_n=".$n_daun.",kode_model_n_tanah=".$n_tanah;
 		$query2 .= ",kode_model_p=".$p_daun.",kode_model_p_tanah=".$p_tanah;
 		$query2 .= ",kode_model_k=".$k_daun.",kode_model_k_tanah=".$k_tanah;
+		$query2 .= ",kode_model_mg=".$mg_daun;
 		$query2 .= " WHERE kode_analisis=".$id;
 		
 		$sql = pg_query($db_conn, $query2);
