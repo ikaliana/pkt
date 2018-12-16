@@ -44,12 +44,12 @@ try {
 
 		$last_line = shell_exec($full_cmd);
 		?>
-{
-	"title": "<?php echo "Yes!"; ?>"
-	,"text": "<?php echo "Analisis berhasil diinput dan dijalankan dengan sukses."; ?>"
-	,"type": "<?php echo "success"; ?>"
-	,"ID": "<?php echo $id; ?>"
-}
+		{
+			"title": "<?php echo "Yes!"; ?>"
+			,"text": "<?php echo "Analisis berhasil diinput dan dijalankan dengan sukses"; ?>"
+			,"type": "<?php echo "success"; ?>"
+			,"ID": "<?php echo $id; ?>"
+		}
 		<?php
 
 	} else {

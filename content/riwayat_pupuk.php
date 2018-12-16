@@ -47,7 +47,7 @@
                                             <th width="35%">Area</th>
                                             <th width="30%">Nama Pupuk</th>
                                             <th width="10%">Tahun</th>
-                                            <th width="10%">Dosis</th>
+                                            <th width="10%">Dosis (kg/ha)</th>
 											<th width="15%">Action</th>
                                         </tr>
                                     </thead>

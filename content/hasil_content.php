@@ -65,6 +65,7 @@
 											$query .= ",a.kode_model_n,a.kode_model_n_tanah ";
 											$query .= ",a.kode_model_p,a.kode_model_p_tanah ";
 											$query .= ",a.kode_model_k,a.kode_model_k_tanah ";
+											$query .= ",a.kode_model_mg ";
 											$query .= ",ar.kode_area,ar.nama as nama_area ";
 											$query .= "from pkt_analisis a ";
 											$query .= "left join pkt_citra c on a.kode_citra = c.kode_citra ";
@@ -84,6 +85,7 @@
 														data-n="<?php echo $data['kode_model_n']; ?>" 
 														data-p="<?php echo $data['kode_model_p']; ?>" 
 														data-k="<?php echo $data['kode_model_k']; ?>" 
+														data-mg="<?php echo $data['kode_model_mg']; ?>" 
 														data-nt="<?php echo $data['kode_model_n_tanah']; ?>" 
 														data-pt="<?php echo $data['kode_model_p_tanah']; ?>" 
 														data-kt="<?php echo $data['kode_model_k_tanah']; ?>" 
@@ -128,9 +130,9 @@
 									</div>
 									<div class="form-group">
 										<label for="area" class="col-sm-2 control-label">Model Daun</label>
-										<div class="col-sm-3">
+										<div class="col-sm-2">
 											<select class="form-control show-tick" id="cmbNDaun">
-												<option value="">-- pilih model N --</option>
+												<option value="">-- model N --</option>
 												<?php
 													$sql_area = pg_query($db_conn, "select id_model,nama from pkt_model where nutrisi='N'");
 													while($data = pg_fetch_assoc($sql_area)){
@@ -139,9 +141,9 @@
 												?>
 											</select>
 										</div>
-										<div class="col-sm-3">
+										<div class="col-sm-2">
 											<select class="form-control show-tick" id="cmbPDaun">
-												<option value="">-- pilih model P --</option>
+												<option value="">-- model P --</option>
 												<?php
 													$sql_area = pg_query($db_conn, "select id_model,nama from pkt_model where nutrisi='P'");
 													while($data = pg_fetch_assoc($sql_area)){
@@ -150,11 +152,22 @@
 												?>
 											</select>
 										</div>
-										<div class="col-sm-3">
+										<div class="col-sm-2">
 											<select class="form-control show-tick" id="cmbKDaun">
-												<option value="">-- pilih model K --</option>
+												<option value="">-- model K --</option>
 												<?php
 													$sql_area = pg_query($db_conn, "select id_model,nama from pkt_model where nutrisi='K'");
+													while($data = pg_fetch_assoc($sql_area)){
+													echo "<option value='".$data['id_model']."'>".$data['nama']."</option>";
+													};
+												?>
+											</select>
+										</div>
+										<div class="col-sm-2">
+											<select class="form-control show-tick" id="cmbMgDaun">
+												<option value="">-- model Mg --</option>
+												<?php
+													$sql_area = pg_query($db_conn, "select id_model,nama from pkt_model where nutrisi='Mg'");
 													while($data = pg_fetch_assoc($sql_area)){
 													echo "<option value='".$data['id_model']."'>".$data['nama']."</option>";
 													};
@@ -237,6 +250,7 @@
 			var n = $(this).data('n');
 			var p = $(this).data('p');
 			var k = $(this).data('k');
+			var mg = $(this).data('mg');
 			var nt = $(this).data('nt');
 			var pt = $(this).data('pt');
 			var kt = $(this).data('kt');
@@ -247,6 +261,7 @@
 			$("#cmbNDaun").val(n).trigger('change');
 			$("#cmbPDaun").val(p).trigger('change');
 			$("#cmbKDaun").val(k).trigger('change');
+			$("#cmbMgDaun").val(mg).trigger('change');
 			// $("#cmbNTanah").val(nt).trigger('change');
 			// $("#cmbPTanah").val(pt).trigger('change');
 			// $("#cmbKTanah").val(kt).trigger('change');
@@ -260,6 +275,7 @@
 			var n_daun = $("#cmbNDaun").val();
 			var p_daun = $("#cmbPDaun").val();
 			var k_daun = $("#cmbKDaun").val();
+			var mg_daun = $("#cmbMgDaun").val();
 			// var n_tanah = $("#cmbNTanah").val();
 			// var p_tanah = $("#cmbPTanah").val();
 			// var k_tanah = $("#cmbKTanah").val();
@@ -273,6 +289,7 @@
 			if(n_daun=="") { setTimeout(function () { swal("","Pilih salah satu model Nitrogen Daun","error")}); return; }
 			if(p_daun=="") { setTimeout(function () { swal("","Pilih salah satu model Fosfor Daun","error")}); return; }
 			if(k_daun=="") { setTimeout(function () { swal("","Pilih salah satu model Kalium Daun","error")}); return; }
+			if(mg_daun=="") { setTimeout(function () { swal("","Pilih salah satu model Magnesium Daun","error")}); return; }
 			// if(n_tanah=="") { setTimeout(function () { swal("","Pilih salah satu model Nitrogen Tanah","error")}); return; }
 			// if(p_tanah=="") { setTimeout(function () { swal("","Pilih salah satu model Fosfor Tanah","error")}); return; }
 			// if(k_tanah=="") { setTimeout(function () { swal("","Pilih salah satu model Kalium Tanah","error")}); return; }
@@ -283,6 +300,7 @@
 			form_data.append("n_daun", n_daun);
 			form_data.append("p_daun", p_daun);
 			form_data.append("k_daun", k_daun);
+			form_data.append("mg_daun", mg_daun);
 			form_data.append("n_tanah", n_tanah);
 			form_data.append("p_tanah", p_tanah);
 			form_data.append("k_tanah", k_tanah);
@@ -305,6 +323,7 @@
 					request.onload = function () {
 					    if (request.readyState === request.DONE) {
 					        if (request.status === 200) {
+					            //alert(request.response);
 					            var res = JSON.parse(request.response);
 					            if(res.type == "success") {
 					            	// swal(res.title, res.text, res.type);

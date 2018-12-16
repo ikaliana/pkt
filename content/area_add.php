@@ -1,36 +1,49 @@
 <script type="text/javascript">
-            $(document).ready(function (e) {
-                $('#save').on('click', function () {
+    $(document).ready(function (e) {
+        $('#save').on('click', function () {
 
-                    var form_data = new FormData();
-					var lokasi = $("#lokasi").val();
-					var area_name = $("#area_name").val();
-					var deskripsi = $("#deskripsi").val();
+            var form_data = new FormData();
+			var lokasi = $("#lokasi").val();
+			var area_name = $("#area_name").val();
+			var deskripsi = $("#deskripsi").val();
 
-                    var ins = document.getElementById('multiSHP').files.length;
-                    for (var x = 0; x < ins; x++) {
-                        form_data.append("shp[]", document.getElementById('multiSHP').files[x]);
-                    }
-					form_data.append("lokasi", lokasi);
-					form_data.append("area_name", area_name);
-					form_data.append("deskripsi", deskripsi);
-                    $.ajax({
-                        url: './ajax/area_add_action.php', // point to server-side PHP script 
-                        dataType: 'text', // what to expect back from the PHP script
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: form_data,
-                        type: 'post',
-                        success: function (response) {
-                            $('#hasil_add_area').html(response); // display success response from the PHP script
-                        },
-                        error: function (response) {
-                            $('#hasil_add_area').html(response); // display error response from the PHP script
-                        }
-                    });
-                });
-            });
+			if(area_name == "") { setTimeout(function () { swal("","Isikan nama area perkebunan","error")}); return; }
+
+            var ins = document.getElementById('multiSHP').files.length;
+            for (var x = 0; x < ins; x++) {
+                form_data.append("shp[]", document.getElementById('multiSHP').files[x]);
+            }
+			form_data.append("lokasi", lokasi);
+			form_data.append("area_name", area_name);
+			form_data.append("deskripsi", deskripsi);
+
+			swal({
+		        title: "Konfirmasi",
+		        text: "Simpan data dan unggah citra?",
+		        type: "info",
+		        showCancelButton: true,
+		        closeOnConfirm: false,
+		        showLoaderOnConfirm: true,
+		    }, function () {
+				//console.log(tanggal,area,files[0]);
+	            $.ajax({
+	                url: './ajax/area_add_action.php', // point to server-side PHP script 
+	                dataType: 'text', // what to expect back from the PHP script
+	                cache: false,
+	                contentType: false,
+	                processData: false,
+	                data: form_data,
+	                type: 'post',
+	                success: function (response) {
+	                    $('#hasil_add_area').html(response); // display success response from the PHP script
+	                },
+	                error: function (response) {
+	                    $('#hasil_add_area').html(response); // display error response from the PHP script
+	                }
+	            });
+		    });
+        });
+    });
 </script>
 <div class="modal-dialog modal-lg" role="document">
 	<div class="modal-content">

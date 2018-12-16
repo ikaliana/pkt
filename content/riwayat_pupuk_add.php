@@ -84,7 +84,7 @@
 					</a>
 				</div>
 				<div class="media-body">
-					<h4 class="media-heading">Tambah Area</h4>
+					<h4 class="media-heading">Tambah Riwayat Pemupukan</h4>
 				</div>
 			</div>
 		</div>
@@ -150,7 +150,7 @@
 				</div>
 				<div class="row clearfix">
 					<div class="col-lg-3 col-md-3 col-sm-4 col-xs-5 form-control-label">
-						<label for="dosis">Dosis per hektar</label>
+						<label for="dosis">Dosis per hektar (kg)</label>
 					</div>
 					<div class="col-lg-9 col-md-9 col-sm-8 col-xs-7">
 						<div class="form-group">

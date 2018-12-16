@@ -32,51 +32,72 @@ if(empty($area_exist)){
 						if ($_FILES["shp"]["error"][$i] > 0) {
 							?>
 							<script type="text/javascript">
-								setTimeout(function () { swal("No!","Error: " . $_FILES["area"]["error"][$i] . "<br>","error");
-							});</script>	
+								setTimeout(function () { 
+									swal("No!","Error: " . $_FILES["area"]["error"][$i] . "<br>","error");
+								});
+							</script>	
 							<?php
 						} else {	
 							move_uploaded_file($_FILES["shp"]["tmp_name"][$i], '../uploads/area/' .$kode_area[0] . '/' . $_FILES["shp"]["name"][$i]);
 							?>
 							<script type="text/javascript">
-								setTimeout(function () { swal("Yes!","<?php echo $area_name; ?> berhasil ditambahkan!","success");
-							});</script>		
+								setTimeout(function () { 
+									swal(
+										{ 
+											title:"Yes!",
+											text: "<?php echo $area_name; ?> berhasil ditambahkan!",
+											type: "success",
+											closeOnConfirm: false
+										},
+										function () { location.reload(); });
+								});
+							</script>		
 							<?php
 						}
 					}
 				}else{
 					?>
 					<script type="text/javascript">
-						setTimeout(function () { swal("Oh tidak!","Anda mungkin mengupload file dengan ekstensi yang salah! Pastikan anda hanya mengupload file *.shp, *.shx, *.dbf, dan *.prj","error");
-					});</script>		
+						setTimeout(function () { 
+							swal("Oh tidak!","Anda mungkin mengupload file dengan ekstensi yang salah! Pastikan anda hanya mengupload file *.shp, *.shx, *.dbf, dan *.prj","error");
+						});
+					</script>		
 					<?php
 				}
 			}else{
 				?>
 				<script type="text/javascript">
-					setTimeout(function () { swal("Oh no!","File yang anda upload mungkin tidak lengkap! Pastikan anda mengupload file *.shp, *.shx, *.dbf, dan *.prj","error");
-				});</script>		
+					setTimeout(function () { 
+						swal("Oh no!","File yang anda upload mungkin tidak lengkap! Pastikan anda mengupload file *.shp, *.shx, *.dbf, dan *.prj","error");
+					});
+				</script>		
 				<?php
 			}
 		} else {
 			?>
 			<script type="text/javascript">
-			setTimeout(function () { swal("No!","Pilih file untuk diupload!","error");
-			});</script>	
+				setTimeout(function () { 
+					swal("No!","Pilih file untuk diupload!","error");
+				});
+			</script>	
 			<?php	
 		}
 	}else{
 	?>
 		<script type="text/javascript">
-		setTimeout(function () { swal("No!","Semua form harus diisi!","error");
-		});</script>
+			setTimeout(function () { 
+				swal("No!","Semua form harus diisi!","error");
+			});
+		</script>
 	<?php 
 	}
 }else{
 	?>
 		<script type="text/javascript">
-		setTimeout(function () { swal("Oh tidak!","Area <?php echo $area_name; ?> sudah tersedia! Buat nama lain!","error");
-		});</script>
+			setTimeout(function () { 
+				swal("Oh tidak!","Area <?php echo $area_name; ?> sudah tersedia! Buat nama lain!","error");
+			});
+		</script>
 	<?php
 }
 ?>

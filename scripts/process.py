@@ -143,6 +143,7 @@ def db_config():
 def GetData(strquery,firstRowOnly):
 	try:
 
+		retval = None
 		dbconf = db_config()
 		# conn = psycopg2.connect(host=db_host,database=db_name, user=db_user, password=dp_pass)
 		conn = psycopg2.connect(host=dbconf["host"],database=dbconf["database"], user=dbconf["username"], password=dbconf["password"])
@@ -316,13 +317,14 @@ strquery += "where r.kode_area = " + str(kode_area) + " "
 strquery += "order by p.nama_pupuk,r.tahun "
 datariwayat = GetData(strquery,False)
 
-temp_nama = ""
-for row in datariwayat:
-	if temp_nama != row["nama_pupuk"]:
-		riwayat_pupuk[row["nama_pupuk"]] = {}
-		temp = riwayat_pupuk[row["nama_pupuk"]]
-	temp_nama = row["nama_pupuk"]
-	temp[row["tahun"]] = row["dosis_pupuk"] 
+if datariwayat is not None:
+	temp_nama = ""
+	for row in datariwayat:
+		if temp_nama != row["nama_pupuk"]:
+			riwayat_pupuk[row["nama_pupuk"]] = {}
+			temp = riwayat_pupuk[row["nama_pupuk"]]
+		temp_nama = row["nama_pupuk"]
+		temp[row["tahun"]] = row["dosis_pupuk"] 
 
 # print work_folder
 # print sentinel_file
