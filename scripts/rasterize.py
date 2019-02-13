@@ -11,6 +11,11 @@ def VectorToRaster(pixel_size,NoData_value,vector_fn,raster_fn,attribute_name):
 	epsg_value = spatial_ref.GetAttrValue("AUTHORITY",1)
 	x_min, x_max, y_min, y_max = source_layer.GetExtent()
 
+	# print vector_fn
+	# print source_ds
+	# print source_layer
+	# print spatial_ref
+
 	srs = osr.SpatialReference()
 	srs.ImportFromEPSG(int(epsg_value))
 
