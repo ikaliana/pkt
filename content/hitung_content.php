@@ -30,7 +30,7 @@
 							<form class="form-horizontal">
 								<div class="form-group">
 									<label for="area" class="col-sm-2 control-label">Citra Sentinel</label>
-									<div class="col-sm-10">
+									<div class="col-sm-8">
 										<select class="form-control show-tick" id="cmbCitra">
 											<option value="">-- pilih --</option>
 											<?php
@@ -138,6 +138,25 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label for="area" class="col-sm-2 control-label">Tanggal Pemupukan</label>
+									<div class="col-sm-3">
+										<input type="text" class="form-control docs-date" id="tanggal" name="tanggal" 
+											placeholder="Pilih tanggal pemupukan" data-toggle="datepicker">
+									</div>
+									<label for="area" class="col-sm-3 control-label">Persentase Dosis Pupuk</label>
+									<div class="col-sm-2">
+										<input type="number" class="form-control" id="persentase" name="persentase" required aria-required="true" aria-invalid="false" value="60"></input>
+									</div>
+								</div>
+								<script>
+									$(function() {
+									  $('[data-toggle="datepicker"]').datepicker({
+										autoHide: true,
+										zIndex: 2048,
+									  });
+									});
+								  </script>
+								<div class="form-group">
 									<div class="col-sm-offset-2 col-sm-2">
 										<button id="btnAnalisis" type="button" class="btn btn-primary m-t-15 waves-effect">ANALISIS</button>
 									</div>
@@ -155,12 +174,19 @@
     <script type="text/javascript">
     	$('#cmbCitra').on('change', function() {
     		var txt = "";
+    		var tgl = "";
+    		var dt = new Date();
     		if($(this).val() != "") {
     			txt = $("#cmbCitra option:selected").text();
     			var txts = txt.split("(");
     			txt = txts[0];
+    			tgl = txts[txts.length-1];
+    			tgl = tgl.replace(")","");
+    			dt = new Date(tgl);
     		}
+
     		$("#area_name").val(txt);
+    		$("#tanggal").datepicker("setDate", dt);
     	});
 
 		$('#btnAnalisis').on('click', function () {
@@ -169,6 +195,11 @@
 			var p_daun = $("#cmbPDaun").val();
 			var k_daun = $("#cmbKDaun").val();
 			var mg_daun = $("#cmbMgDaun").val();
+			var persentase = $("persentase").val();
+			var tanggal = $("#tanggal").datepicker("getDate");
+
+			console.log(tanggal);
+			return;
 			// var n_tanah = $("#cmbNTanah").val();
 			// var p_tanah = $("#cmbPTanah").val();
 			// var k_tanah = $("#cmbKTanah").val();
@@ -195,6 +226,8 @@
 			form_data.append("n_tanah", n_tanah);
 			form_data.append("p_tanah", p_tanah);
 			form_data.append("k_tanah", k_tanah);
+			form_data.append("tgl_pupuk", tanggal);
+			form_data.append("persentase",persentase);
 
 	    	var swal_option = 	{
 							        title: "Konfirmasi",

@@ -10,6 +10,8 @@ try {
 	$n_tanah 		= $_POST['n_tanah'];
 	$p_tanah 		= $_POST['p_tanah'];
 	$k_tanah 		= $_POST['k_tanah'];
+	$tgl_pupuk		= $_POST['tgl_pupuk'];
+	$persentase		= $_POST['persentase'];
 
 	$query ="SELECT kode_analisis FROM pkt_analisis WHERE kode_citra=".$citra."";
 	$query .= " and kode_model_n=".$n_daun." and kode_model_p=".$p_daun." and kode_model_k=".$k_daun." and kode_model_mg=".$mg_daun;
@@ -24,8 +26,9 @@ try {
 	if(empty($data_exist))
 	{
 		$query2 = "INSERT INTO pkt_analisis (tanggal_analisis, kode_citra, kode_model_n, kode_model_p, kode_model_k, kode_model_mg, ";
-		$query2 .= "kode_model_n_tanah, kode_model_p_tanah, kode_model_k_tanah, status) ";
-		$query2 .= "VALUES (now(),".$citra.",".$n_daun.",".$p_daun.",".$k_daun.",".$mg_daun.",".$n_tanah.",".$p_tanah.",".$k_tanah.",FALSE)";
+		$query2 .= "kode_model_n_tanah, kode_model_p_tanah, kode_model_k_tanah, tanggal_pemupukan, persentase_dosis, status) ";
+		$query2 .= "VALUES (now(),".$citra.",".$n_daun.",".$p_daun.",".$k_daun.",".$mg_daun.",".$n_tanah.",".$p_tanah.",".$k_tanah;
+		$query2 .= ",".$tgl_pupuk.",".$persentase.",FALSE)";
 
 		$sql = pg_query($db_conn, $query2);
 

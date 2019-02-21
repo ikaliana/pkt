@@ -250,6 +250,7 @@ unsur_id = {}
 strquery = ""
 strquery += "select kode_model_n,kode_model_p,kode_model_k,kode_model_mg,"
 strquery += "kode_model_n_tanah,kode_model_p_tanah,kode_model_k_tanah,"
+strquery += "tanggal_pemupukan,persentase_dosis,"
 strquery += "a.kode_citra,c.nama_file as citra_file,c.kode_area,ar.nama_file as area_file,c.tanggal as tanggal_citra"
 strquery += " from pkt_analisis a"
 strquery += " left join pkt_citra c on a.kode_citra = c.kode_citra"
@@ -265,6 +266,8 @@ clipped_file = work_folder + datavar["citra_file"][:-4] + "_clipped" + datavar["
 grid_file = work_folder + datavar["area_file"][:-4] + "_grid" + ".shp"
 raster_tahun_tanam = work_folder + datavar["area_file"][:-4] + "_tahuntanam" + ".tif"
 tanggal_citra = datavar["tanggal_citra"]
+tanggal_pemupukan = datavar["tanggal_pemupukan"]
+persentase_dosis = datavar["persentase_dosis"]
 
 #initiate model ID
 unsur_id["N"] = datavar["kode_model_n"]
