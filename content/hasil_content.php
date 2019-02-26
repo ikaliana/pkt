@@ -67,6 +67,7 @@
 											$query .= ",a.kode_model_k,a.kode_model_k_tanah ";
 											$query .= ",a.kode_model_mg ";
 											$query .= ",ar.kode_area,ar.nama as nama_area ";
+											$query .= ",a.tanggal_pemupukan,a.persentase_dosis ";
 											$query .= "from pkt_analisis a ";
 											$query .= "left join pkt_citra c on a.kode_citra = c.kode_citra ";
 											$query .= "left join pkt_area ar on c.kode_area = ar.kode_area";
@@ -88,7 +89,9 @@
 														data-mg="<?php echo $data['kode_model_mg']; ?>" 
 														data-nt="<?php echo $data['kode_model_n_tanah']; ?>" 
 														data-pt="<?php echo $data['kode_model_p_tanah']; ?>" 
-														data-kt="<?php echo $data['kode_model_k_tanah']; ?>" 
+														data-kt="<?php echo $data['kode_model_k_tanah']; ?>"
+														data-tgl="<?php echo $data['tanggal_pemupukan']; ?>"
+														data-dos="<?php echo $data['persentase_dosis']; ?>" 
 														>Edit</a> 
 													| <a href="">Delete</a> 
 													| <a href="index.php?p=hasil_content_detail&kd=<?php echo $data['kode_analisis']; ?>">Lihat</a>
@@ -175,6 +178,25 @@
 											</select>
 										</div>
 									</div>
+									<div class="form-group">
+										<label for="area" class="col-sm-2 control-label">Tanggal Pemupukan</label>
+										<div class="col-sm-3">
+											<input type="text" class="form-control docs-date" id="tanggal" name="tanggal" 
+												placeholder="Pilih tanggal pemupukan" data-toggle="datepicker">
+										</div>
+										<label for="area" class="col-sm-3 control-label">Persentase Dosis Pupuk</label>
+										<div class="col-sm-2">
+											<input type="number" class="form-control" id="persentase" name="persentase" required aria-required="true" aria-invalid="false" value="60"></input>
+										</div>
+									</div>
+									<script>
+										$(function() {
+										  $('[data-toggle="datepicker"]').datepicker({
+											autoHide: true,
+											zIndex: 2048,
+										  });
+										});
+									  </script>
 									<div class="form-group" style="display:none">
 										<label for="area" class="col-sm-2 control-label">Model Tanah</label>
 										<div class="col-sm-3">
@@ -254,6 +276,9 @@
 			var nt = $(this).data('nt');
 			var pt = $(this).data('pt');
 			var kt = $(this).data('kt');
+			var tgl = $(this).data('tgl');
+			var dos = $(this).data('dos');
+			var dt = new Date(tgl);
 			// console.log(uid,citra,n,p,k,nt,pt,kt);
 
 			$("#id_analisis").val(uid);
@@ -262,6 +287,8 @@
 			$("#cmbPDaun").val(p).trigger('change');
 			$("#cmbKDaun").val(k).trigger('change');
 			$("#cmbMgDaun").val(mg).trigger('change');
+			$("#tanggal").datepicker("setDate", dt);
+			$("#persentase").val(dos);
 			// $("#cmbNTanah").val(nt).trigger('change');
 			// $("#cmbPTanah").val(pt).trigger('change');
 			// $("#cmbKTanah").val(kt).trigger('change');

@@ -206,6 +206,34 @@ def SaveDataToPNG(nama_raster,arraydata,cols,rows):
 	pilImage = Image.frombuffer("RGBA",(cols, rows),arraydata,"raw","RGBA",0,1)
 	pilImage.save(nama_raster)
 
+def SaveStatsToGeojson(shp_file,nama_raster,output_geojson):
+	stats = zonal_stats(shp_file, nama_raster, stats="count min mean max sum", geojson_out=True)
+	json_data = {}
+	json_data["type"] = "FeatureCollection"
+	json_data["features"] = []
+	for item in stats:
+		temp_item = {}
+		for key in item.keys():
+			if key != "geometry":
+				temp_item[key] = item[key]
+			else:
+				temp_geom = {}
+				item_geom = item[key]
+				temp_geom["type"] = item_geom["type"]
+				temp_geom["coordinates"] = []
+				temp_geom["coordinates"].append([])
+				temp_coords = temp_geom["coordinates"][0]
+				item_coords = item_geom["coordinates"][0]
+				for coord in item_coords:
+					xc,yc = transform(p1,p2,coord[0],coord[1])
+					temp_geom["coordinates"][0].append([xc,yc])
+				temp_item[key] = temp_geom
+		json_data["features"].append(temp_item)
+
+	with open(output_geojson, 'w') as outfile:
+		json.dump(json_data, outfile)
+
+
 
 # ==============================================================================================================================
 
@@ -268,6 +296,11 @@ raster_tahun_tanam = work_folder + datavar["area_file"][:-4] + "_tahuntanam" + "
 tanggal_citra = datavar["tanggal_citra"]
 tanggal_pemupukan = datavar["tanggal_pemupukan"]
 persentase_dosis = datavar["persentase_dosis"]
+
+# print "tanggal citra: ", tanggal_citra
+# print "tanggal pemupukan: ", tanggal_pemupukan
+# print "dosis: ", persentase_dosis
+# exit(0)
 
 #initiate model ID
 unsur_id["N"] = datavar["kode_model_n"]
@@ -469,7 +502,8 @@ for unsur in kelompok_unsur:
 				
 				luas_area += 1
 				tahun_tanam = tahun_tanam_data[i,j]  #ambil data ini dari raster/vector
-				tahun_now = int(tanggal_citra.strftime("%Y"))  #harusnya ngambil dari tanggal sensing citra sentinel
+				# tahun_now = int(tanggal_citra.strftime("%Y"))  #harusnya ngambil dari tanggal sensing citra sentinel
+				tahun_now = int(tanggal_pemupukan.strftime("%Y"))  #harusnya ngambil dari tanggal sensing citra sentinel
 				umur_tanaman = tahun_now - tahun_tanam
 
 				# --- calculate nutrient using model --- #
@@ -514,6 +548,9 @@ for unsur in kelompok_unsur:
 						# print(kode_unsur,": ",crValue)
 
 						data_pupuk["peta_dosis"][i,j] = CalculateDosisPupuk(unsur,crValue,raster_unsur[unsur][i,j],data_pupuk["peta_prev"][i,j],komposisi_pupuk[nama_pupuk][kode_unsur])
+
+						#update on 2019, Feb 26. Total dosis dikalikan persentase penerapan dosis pupuk 
+						data_pupuk["peta_dosis"][i,j] = (persentase_dosis/100.000) * data_pupuk["peta_dosis"][i,j]
 
 						data_pupuk["peta_warna"][i,j] = ClassificationValue2(data_pupuk["peta_prev"][i,j],data_pupuk["peta_dosis"][i,j])
 						# data_pupuk["peta_warna"][i,j] = class_color_2[ data_pupuk["peta_warna"][i,j] ]
@@ -596,35 +633,12 @@ for nama_pupuk in komposisi_pupuk:
 
 
 		# --- Create Fertilizer stats based on GRID file and save it to Geojson file --- #
-		stats = zonal_stats(grid_file, nama_raster, stats="count min mean max sum", geojson_out=True)
-		json_data = {}
-		json_data["type"] = "FeatureCollection"
-		json_data["features"] = [] #stats
-		for item in stats:
-			temp_item = {}
-			for key in item.keys():
-				if key != "geometry":
-					temp_item[key] = item[key]
-				else:
-					temp_geom = {}
-					item_geom = item[key]					
-					temp_geom["type"] = item_geom["type"]
-					temp_geom["coordinates"] = []
-					temp_geom["coordinates"].append([])
-					temp_coords = temp_geom["coordinates"][0]
-					item_coords = item_geom["coordinates"][0]
-					for coord in item_coords:
-						xc,yc = transform(p1,p2,coord[0],coord[1])
-						temp_geom["coordinates"][0].append([xc,yc])
-					temp_item[key] = temp_geom
+		SaveStatsToGeojson(grid_file, nama_raster, work_folder + "Data_Grid_Pupuk_" + nama_pupuk + ".geojson")
 
-			json_data["features"].append(temp_item)
+		# --- Create Fertilizer stats based on BLOK and save it to Geojson file --- #
+		SaveStatsToGeojson(shp_file, nama_raster, work_folder + "Data_Blok_Pupuk_" + nama_pupuk + ".geojson")
 
 
-		with open(work_folder + "Data_Grid_Pupuk_" + nama_pupuk + ".geojson", 'w') as outfile:
-		    json.dump(json_data, outfile)
-
-		
 		# --- SAVE SELECTED FERTILIZER DOSAGE DATA TO PNG FILE --- #
 		# nama_raster = work_folder + "Citra_Dosis_Pupuk_Percent_" + nama_pupuk + ".tif"
 		# SaveDataToTiff(nama_raster,pupuk[nama_pupuk][unsur_terpilih]["peta_warna"],g)

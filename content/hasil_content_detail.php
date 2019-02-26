@@ -8,7 +8,8 @@
 		$analisis_id = $_GET['kd'];
 
 		$query = "";
-		$query .= "select ar.nama as nama_area,c.tanggal as tanggal_citra,s.luas_area ";
+		$query .= "select ar.nama as nama_area,c.tanggal as tanggal_citra,s.luas_area,";
+		$query .= "a.tanggal_pemupukan,a.persentase_dosis ";
 		$query .= "from pkt_analisis a ";
 		$query .= "left join pkt_analisis_summary s on a.kode_analisis = s.kode_analisis ";
 		$query .= "left join pkt_citra c on a.kode_citra = c.kode_citra ";
@@ -20,6 +21,8 @@
 		$nama_area = $data[0];
 		$tanggal_citra = $data[1];
 		$luas_area = $data[2];
+		$tanggal_pemupukan = $data[3];
+		$persentase_dosis = $data[4];
 	}
 	
 ?>
@@ -89,6 +92,34 @@
 								</div>
 							</div>
 						</div>
+						<div class="row clearfix">
+							<div class="col-md-4" style="margin-bottom: 0">
+								<div class="media">
+									<div class="media-left">
+										<a href="#">
+											<img class="media-object" src="images/icon/tanggal.png" alt="Tanggal Pemupukan" width="48">
+										</a>
+									</div>
+									<div class="media-body">
+										<h4 class="media-heading">Tanggal Pemupukan</h4>
+										<h5 style="font-weight:normal"><?php echo $tanggal_pemupukan; ?></h5>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4" style="margin-bottom: 0">
+								<div class="media">
+									<div class="media-left">
+										<a href="#">
+											<img class="media-object" src="images/icon/dosis.png" alt="Persentase dosis" width="48">
+										</a>
+									</div>
+									<div class="media-body">
+										<h4 class="media-heading">Persentase dosis</h4>
+										<h5 style="font-weight:normal"><?php echo $persentase_dosis; ?> %</h5>
+									</div>
+								</div>
+							</div>
+						</div>
 						<div class="row clearfix" style="display:none">
 							<div class="col-md-4" style="margin-bottom: 0">
 								<div class="media">
@@ -140,6 +171,8 @@
                     <li class="active"><a href="#rekomendasi_total" data-toggle="tab" aria-expanded="true">Rekomendasi Total</a>
                     </li>
                     <li class=""><a href="#rekomendasi_hektar" data-toggle="tab" aria-expanded="false">Rekomendasi Hektar</a>
+                    </li>
+                    <li class=""><a href="#rekomendasi_blok" data-toggle="tab" aria-expanded="false">Rekomendasi Blok</a>
                     </li>
                     <li class=""><a href="#peta_nutrisi" data-toggle="tab" aria-expanded="false">Peta Kandungan Unsur</a>
                     </li>
@@ -343,6 +376,49 @@
 				            <tr>
 				                <th>Kode Area</th>
 				                <th>Luas area (ha)</th>
+				                <th>Kebutuhan Pupuk (kg)</th>
+				                <th>Dosis per pohon</th>
+				            </tr>
+				        </thead>
+				        <tbody>
+				        </tbody>
+				    </table>
+	            </div>
+	        </div>
+	        <div class="card tab-pane active" id="rekomendasi_blok">
+	        	<div class="header">
+	                <div class="row clearfix">
+	                    <div class="col-xs-12">
+	                        <h2>Rekomendasi Pemupukan per Blok Area</h2>
+	                    </div>
+	                </div>
+	            </div>
+        		<div class="body">
+					<label for="cbpupuk" class="col-xs-2" style="margin:5px 0 10px">Pupuk</label>
+					<select id="cbpupuk3">
+						<?php
+							$nama_pupuk = "";
+							$sql_area = pg_query($db_conn, "select * from pkt_pupuk where kode_pupuk in (select distinct kode_pupuk from pkt_rekomendasi)");
+							while($data = pg_fetch_assoc($sql_area)){
+								if ($nama_pupuk == "") $nama_pupuk = $data['nama_pupuk'];
+								echo "<option value='".$data['nama_pupuk']."'>".$data['nama_pupuk']."</option>";
+							};
+						?>
+					</select>
+        			<div id="mapid4" style="width: 100%; height: 450px;"></div>
+        			<div id="template_legend_rekomendasi_blok" style="display:none">
+						<li class="list-group-item" style="padding: 5px 15px; border: none;">
+							<span style="width:25px;display:inline-block;background:{COLOR};margin-right:25px;">&nbsp;</span> {TEXT}</li>
+        			</div>
+					<!--ul class="list-group" id="legend_rekomendasi" style="border: 1px solid #ddd;margin-bottom:0;">
+					</ul-->	
+					<p>&nbsp;</p>						
+					<table id="tabel_rekomendasi_blok" class="table table-striped table-bordered" cellspacing="0" width="100%">
+						<thead>
+				            <tr>
+				                <th>Kode Area</th>
+				                <th>Blok</th>
+				                <th>Luas (ha)</th>
 				                <th>Kebutuhan Pupuk (kg)</th>
 				                <th>Dosis per pohon</th>
 				            </tr>
@@ -566,6 +642,55 @@
 			"ordering": true
 		});
 
+		var mapTableBlok = $("#tabel_rekomendasi_blok").DataTable({
+			"columns" : [
+	            { "data" : "id" },
+	            { "data" : "Blok" },
+	            { "data" : "count" },
+	            { "data" : "sum" },
+	            { "data" : "sum" }
+	        ],
+	        "columnDefs": [{
+			    "targets": [2],
+			    "sClass": 'text-center',
+			    "orderable": true,
+			    "render": function ( data, type, row ) {
+	                var sum = row.count;
+                    var sum = Math.round( (sum/100) * 100) / 100;
+                    return sum;
+                }
+          	},{
+			    "targets": [3],
+			    "sClass": 'text-center dosis_blok',
+			    "orderable": true,
+			    "render": function ( data, type, row ) {
+	                var sum = row.sum;
+                    var sum = Math.round(sum * 100) / 100;
+                    return sum;
+                }
+                ,"createdCell":  function (td, cellData, rowData, row, col) {
+		           $(td).attr("data-id", "blok" + rowData.id); 
+		        }
+          	},{
+			    "targets": [4],
+			    "sClass": 'text-center',
+			    "orderable": true,
+			    "render": function ( data, type, row ) {
+	                var sum = row.sum;
+	                var count = row.count;
+                    var jum = $("#jum_pokok").html();
+                    jum = jum * (count / 100);
+                    var dosis = sum / jum;
+                    var sum = Math.round(dosis * 100) / 100;
+                    return sum;
+                }
+                ,"createdCell":  function (td, cellData, rowData, row, col) {
+		           $(td).addClass("dosis_pohon_blok" + rowData.id); 
+		        }
+			}],
+			"ordering": true
+		});
+
 	    var arrc = ["#fff7fb","#ece7f2","#d0d1e6","#a6bddb","#74a9cf","#3690c0","#0570b0","#045a8d","#023858"];
 	    var i = 0;
 	    // $.each(arrc, function(key, value) {
@@ -598,6 +723,7 @@
 
 
 		var map3 = L.map('mapid3');
+		var map4 = L.map('mapid4');
 
 		//console.log(map1);
 		//map1.sync(map2);
@@ -699,6 +825,44 @@
 
 	   	});
 
+		$("#cbpupuk3").on('change', function() {
+	   		var pupuk = $("#cbpupuk3").val();
+
+	   		var data_json = imageUrl + "Data_Blok_Pupuk_" + pupuk + ".geojson";
+	   		// var data_json = imageUrl + "Data_Grid_Pupuk_UREA_4326.geojson";
+	   		var data_img = imageUrl + "Citra_Klasifikasi_Pupuk_"  + pupuk + ".png";
+
+	   		$.getJSON(data_raster).done(function (d) {
+
+				//console.log(data_raster);
+				var imgBounds = [[d.y1_4326,d.x1_4326], [d.y2_4326,d.x2_4326]];
+
+				$.getJSON(data_json, function(data){
+			        map4.eachLayer(function (layer) { map4.removeLayer(layer); });
+
+			        var mapData = L.geoJson(data, { filter: filter, style: style, onEachFeature: OnEachFeature });
+			        var mapBound = mapData.getBounds();
+			        mapData.addTo(map4);
+
+			        var img = L.imageOverlay(data_img,imgBounds);
+			        img.addTo(map4);
+
+			        map4.fitBounds(imgBounds);
+			        // map4.fitBounds(mapBound);
+
+					mapTableBlok.clear().draw();
+					table_data = [];
+					$.each(data.features, function (key, val) {
+						var sum = val.properties.sum;
+						if (sum != null) table_data.push(val.properties);
+			        });
+
+			        mapTableBlok.rows.add(table_data).draw();
+			    });
+	   		});
+
+	   	});
+
 	   	$('#ex1').slider();
 	   	$("#ex1").on("slide", function(e) {
 			var jum_pokok = e.value;
@@ -708,6 +872,15 @@
 				var dosis_hektar = $(this).html();
 				var data_id = $(this).data("id");
 				var dosis_pohon = Math.round((dosis_hektar / jum_pokok) * 100) / 100;
+
+				$(".dosis_pohon_" + data_id).html(dosis_pohon);
+			});
+
+			$( ".dosis_blok" ).each(function() {
+				var dosis_blok = $(this).html();
+				var luas_area = $(this).prev().html();
+				var data_id = $(this).data("id");
+				var dosis_pohon = Math.round(( (dosis_blok / luas_area) / jum_pokok) * 100) / 100;
 
 				$(".dosis_pohon_" + data_id).html(dosis_pohon);
 			});
