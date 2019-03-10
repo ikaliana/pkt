@@ -11,6 +11,8 @@ try {
 	$n_tanah 		= $_POST['n_tanah'];
 	$p_tanah 		= $_POST['p_tanah'];
 	$k_tanah 		= $_POST['k_tanah'];
+	$tgl_pupuk		= $_POST['tgl_pupuk'];
+	$persentase		= $_POST['persentase'];
 
 	$query ="SELECT kode_analisis FROM pkt_analisis WHERE kode_citra=".$citra."";
 	$query .= " and kode_model_n=".$n_daun." and kode_model_p=".$p_daun." and kode_model_k=".$k_daun." and kode_model_mg=".$mg_daun;
@@ -33,6 +35,7 @@ try {
 		$query2 .= ",kode_model_p=".$p_daun.",kode_model_p_tanah=".$p_tanah;
 		$query2 .= ",kode_model_k=".$k_daun.",kode_model_k_tanah=".$k_tanah;
 		$query2 .= ",kode_model_mg=".$mg_daun;
+		$query2 .= ",tanggal_pemupukan='".$tgl_pupuk."',persentase_dosis=".$persentase;
 		$query2 .= " WHERE kode_analisis=".$id;
 		
 		$sql = pg_query($db_conn, $query2);

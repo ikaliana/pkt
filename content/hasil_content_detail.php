@@ -114,7 +114,7 @@
 										</a>
 									</div>
 									<div class="media-body">
-										<h4 class="media-heading">Persentase dosis</h4>
+										<h4 class="media-heading">Proporsi dosis</h4>
 										<h5 style="font-weight:normal"><?php echo $persentase_dosis; ?> %</h5>
 									</div>
 								</div>
@@ -343,6 +343,43 @@
 					</div>
 	            </div>
 	        </div>
+	        <?php
+				$query1 = "select * from pkt_pupuk ";
+				$query3 = " limit 1";
+			?>
+			<?php
+				$query2 = "where komposisi_n>0 and komposisi_p=0 and komposisi_k=0 and komposisi_mg=0 order by komposisi_n";
+				$sql2 = pg_query($db_conn, $query1.$query2.$query3);
+				$data2 = pg_fetch_array($sql2);
+	        ?>
+	        <script type="text/javascript">
+	        	var pupuk_n = 	{
+	        						"nama": "<?php echo $data2['nama_pupuk'] ?>",
+	        						"komposisi": <?php echo $data2['komposisi_n'] ?>,
+	        					} 
+	        </script>
+			<?php
+				$query2 = "where komposisi_n=0 and komposisi_p>0 and komposisi_k=0 and komposisi_mg=0 order by komposisi_p";
+				$sql2 = pg_query($db_conn, $query1.$query2.$query3);
+				$data2 = pg_fetch_array($sql2);
+	        ?>
+	        <script type="text/javascript">
+	        	var pupuk_p = 	{
+	        						"nama": "<?php echo $data2['nama_pupuk'] ?>",
+	        						"komposisi": <?php echo $data2['komposisi_p'] ?>,
+	        					} 
+	        </script>
+			<?php
+				$query2 = "where komposisi_n=0 and komposisi_p=0 and komposisi_k>0 and komposisi_mg=0 order by komposisi_k";
+				$sql2 = pg_query($db_conn, $query1.$query2.$query3);
+				$data2 = pg_fetch_array($sql2);
+	        ?>
+	        <script type="text/javascript">
+	        	var pupuk_k = 	{
+	        						"nama": "<?php echo $data2['nama_pupuk'] ?>",
+	        						"komposisi": <?php echo $data2['komposisi_k'] ?>,
+	        					} 
+	        </script>
 	        <div class="card tab-pane active" id="rekomendasi_hektar">
 	        	<div class="header">
 	                <div class="row clearfix">
@@ -394,18 +431,29 @@
 	                </div>
 	            </div>
         		<div class="body">
-					<label for="cbpupuk" class="col-xs-2" style="margin:5px 0 10px">Pupuk</label>
-					<select id="cbpupuk3">
-						<?php
-							$nama_pupuk = "";
-							$sql_area = pg_query($db_conn, "select * from pkt_pupuk where kode_pupuk in (select distinct kode_pupuk from pkt_rekomendasi)");
-							while($data = pg_fetch_assoc($sql_area)){
-								if ($nama_pupuk == "") $nama_pupuk = $data['nama_pupuk'];
-								echo "<option value='".$data['nama_pupuk']."'>".$data['nama_pupuk']."</option>";
-							};
-						?>
-					</select>
-        			<div id="mapid4" style="width: 100%; height: 450px;"></div>
+					<div class="col-sm-6">
+						<label for="cbpupuk" class="col-xs-2" style="margin:5px 0 10px">Pupuk</label>
+						<select id="cbpupuk3" class="col-xs-10">
+							<?php
+								$nama_pupuk = "";
+								$sql_area = pg_query($db_conn, "select * from pkt_pupuk where kode_pupuk in (select distinct kode_pupuk from pkt_rekomendasi)");
+								while($data = pg_fetch_assoc($sql_area)){
+									if ($nama_pupuk == "") $nama_pupuk = $data['nama_pupuk'];
+									echo "<option value='".$data['nama_pupuk']."'>".$data['nama_pupuk']."</option>";
+								};
+							?>
+						</select>
+					</div>
+					<div class="col-sm-6">
+						<label for="cbKebutuhan" class="col-xs-6" style="margin:5px 0 10px">Berdasarkan kebutuhan</label>
+						<select id="cbKebutuhan" class="col-xs-6">
+							<option value="">Ideal</option>
+							<option value="N" selected>Nitrogen Daun</option>
+							<option value="P">Fosfor Daun</option>
+							<option value="K">Kalium Daun</option>
+						</select>
+					</div>
+        			<div id="mapid4" style="width: 100%; height: 450px;display:none"></div>
         			<div id="template_legend_rekomendasi_blok" style="display:none">
 						<li class="list-group-item" style="padding: 5px 15px; border: none;">
 							<span style="width:25px;display:inline-block;background:{COLOR};margin-right:25px;">&nbsp;</span> {TEXT}</li>
@@ -420,7 +468,7 @@
 				                <th>Blok</th>
 				                <th>Luas (ha)</th>
 				                <th>Kebutuhan Pupuk (kg)</th>
-				                <th>Dosis per pohon</th>
+				                <th>Dosis per pohon (kg)</th>
 				            </tr>
 				        </thead>
 				        <tbody>
@@ -445,9 +493,6 @@
 								<option value="P">Fosfor Daun</option>
 								<option value="K">Kalium Daun</option>
 								<option value="Mg">Magnesium Daun</option>
-								<!--option value="N-Tanah">Nitrogen Tanah</option>
-								<option value="P-Tanah">Fosfor Tanah</option>
-								<option value="K-Tanah">Kalium Tanah</option-->
 							</select>
 							<div id="mapid1" style="width: 100%; height: 450px;"></div>
 							<ul class="list-group" id="legend_N" style="border: 1px solid #ddd;margin-bottom:0;">
@@ -642,32 +687,94 @@
 			"ordering": true
 		});
 
+		function ProcessRowBlokTable(data,type,row,data_type) {
+            var unsur = $("#cbKebutuhan").val();
+            var terpilih = row["Unsur_Terpilih"];
+        	var jum = $("#jum_pokok").html();
+
+            var ideal = (unsur == "");
+            if (ideal) unsur = terpilih;
+        	var count = row[unsur + "_count"];
+        	var sum = row[unsur + "_sum"];
+        	jum = jum * (count / 100);
+
+        	var komposisi_n = row["komposisi_n"];
+        	var komposisi_p = row["komposisi_p"];
+        	var komposisi_k = row["komposisi_k"];
+        	var majemuk1 = (komposisi_n !=0  && komposisi_p !=0);
+        	var majemuk2 = (komposisi_n !=0  && komposisi_k !=0);
+        	var majemuk3 = (komposisi_p !=0  && komposisi_k !=0);
+        	var majemuk = majemuk1 || majemuk2 || majemuk3;
+
+        	if(majemuk) {
+        		var sum1 = row[terpilih + "_ideal"];
+        		var sum2 = 0.0;
+        		var sum3 = 0.0;
+        		var nama2 = "";
+        		var nama3 = "";
+
+        		if(terpilih == "N") {
+        			sum2 = (komposisi_p/pupuk_p["komposisi"]) * row["P_ideal"];
+        			sum3 = (komposisi_k/pupuk_k["komposisi"]) * row["K_ideal"];
+        			nama2 = pupuk_p["nama"];
+        			nama3 = pupuk_k["nama"];
+        		}
+        		if(terpilih == "P") {
+        			sum2 = (komposisi_n/pupuk_n["komposisi"]) * row["N_ideal"];
+        			sum3 = (komposisi_k/pupuk_k["komposisi"]) * row["K_ideal"];
+        			nama2 = pupuk_n["nama"];
+        			nama3 = pupuk_k["nama"];
+        		}
+        		if(terpilih == "K") {
+        			sum2 = (komposisi_n/pupuk_n["komposisi"]) * row["N_ideal"];
+        			sum3 = (komposisi_p/pupuk_p["komposisi"]) * row["P_ideal"];
+        			nama2 = pupuk_n["nama"];
+        			nama3 = pupuk_p["nama"];
+        		}
+
+        		sum1 = Math.round( sum1 * 100) / 100
+        		sum2 = Math.round( sum2 * 100) / 100
+        		sum3 = Math.round( sum3 * 100) / 100
+        		var dosis1 = Math.round((sum1 / jum) * 100) / 100;
+        		var dosis2 = Math.round((sum2 / jum) * 100) / 100;
+        		var dosis3 = Math.round((sum3 / jum) * 100) / 100;
+        	}
+
+            if(data_type == "count") {
+            	return Math.round( (count/100) * 100) / 100 ;
+            }
+            if(data_type == "sum") {
+            	if(!majemuk || !ideal) return Math.round( (sum/100) * 100) / 100;
+            	else return sum1 + "<br>+ " + sum2 + " kg " + nama2 + " <br>+ " + sum3 + " kg "  + nama3;
+            }
+            if(data_type == "dosis" ) {
+            	if(!majemuk || !ideal) {
+	            	var dosis = sum / jum;
+	                var sum = Math.round(dosis * 100) / 100;
+	                return sum;
+            	}
+            	else return dosis1 + " kg <br>+ " + dosis2 + " kg " + nama2 + "<br>+ " + dosis3 + " kg " + nama3;
+            }
+		}
+
 		var mapTableBlok = $("#tabel_rekomendasi_blok").DataTable({
 			"columns" : [
 	            { "data" : "id" },
 	            { "data" : "Blok" },
-	            { "data" : "count" },
-	            { "data" : "sum" },
-	            { "data" : "sum" }
+	            { "data" : "N_count" },
+	            { "data" : "N_count" },
+	            { "data" : "N_count" }
 	        ],
 	        "columnDefs": [{
 			    "targets": [2],
 			    "sClass": 'text-center',
 			    "orderable": true,
-			    "render": function ( data, type, row ) {
-	                var sum = row.count;
-                    var sum = Math.round( (sum/100) * 100) / 100;
-                    return sum;
-                }
+			    "render": function ( data, type, row ) { return ProcessRowBlokTable(data,type,row,"count"); }
           	},{
 			    "targets": [3],
 			    "sClass": 'text-center dosis_blok',
 			    "orderable": true,
-			    "render": function ( data, type, row ) {
-	                var sum = row.sum;
-                    var sum = Math.round(sum * 100) / 100;
-                    return sum;
-                }
+			    "render": function ( data, type, row ) { return ProcessRowBlokTable(data,type,row,"sum"); }
                 ,"createdCell":  function (td, cellData, rowData, row, col) {
 		           $(td).attr("data-id", "blok" + rowData.id); 
 		        }
@@ -675,15 +782,7 @@
 			    "targets": [4],
 			    "sClass": 'text-center',
 			    "orderable": true,
-			    "render": function ( data, type, row ) {
-	                var sum = row.sum;
-	                var count = row.count;
-                    var jum = $("#jum_pokok").html();
-                    jum = jum * (count / 100);
-                    var dosis = sum / jum;
-                    var sum = Math.round(dosis * 100) / 100;
-                    return sum;
-                }
+			    "render": function ( data, type, row ) { return ProcessRowBlokTable(data,type,row,"dosis"); }
                 ,"createdCell":  function (td, cellData, rowData, row, col) {
 		           $(td).addClass("dosis_pohon_blok" + rowData.id); 
 		        }
@@ -825,7 +924,9 @@
 
 	   	});
 
-		$("#cbpupuk3").on('change', function() {
+		$("#cbpupuk3").on('change', function() { PupukBlokObjectChange(); });
+		$("#cbKebutuhan").on('change', function() { PupukBlokObjectChange(); });
+		function PupukBlokObjectChange() {
 	   		var pupuk = $("#cbpupuk3").val();
 
 	   		var data_json = imageUrl + "Data_Blok_Pupuk_" + pupuk + ".geojson";
@@ -838,6 +939,7 @@
 				var imgBounds = [[d.y1_4326,d.x1_4326], [d.y2_4326,d.x2_4326]];
 
 				$.getJSON(data_json, function(data){
+			        
 			        map4.eachLayer(function (layer) { map4.removeLayer(layer); });
 
 			        var mapData = L.geoJson(data, { filter: filter, style: style, onEachFeature: OnEachFeature });
@@ -850,18 +952,21 @@
 			        map4.fitBounds(imgBounds);
 			        // map4.fitBounds(mapBound);
 
+	                var unsur = $("#cbKebutuhan").val();
 					mapTableBlok.clear().draw();
 					table_data = [];
 					$.each(data.features, function (key, val) {
-						var sum = val.properties.sum;
-						if (sum != null) table_data.push(val.properties);
+						// var fieldname = (unsur != "") ? unsur + "_sum" : "N_ideal";
+						// var sum = val.properties[fieldname];
+						// if (sum != null) table_data.push(val.properties);
+						table_data.push(val.properties);
 			        });
 
+			        // console.log(table_data);
 			        mapTableBlok.rows.add(table_data).draw();
 			    });
-	   		});
-
-	   	});
+	   		});			
+		}
 
 	   	$('#ex1').slider();
 	   	$("#ex1").on("slide", function(e) {

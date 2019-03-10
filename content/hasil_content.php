@@ -34,10 +34,11 @@
 											<th width="25%" style="text-align:center;">Tanggal Analisis</th>
 											<th width="20%" style="text-align:center;">Action</th>	
 											-->
-                                            <th width="35%" style="text-align:center;">Area</th>
+                                            <th width="30%" style="text-align:center;">Area</th>
                                             <th width="20%" style="text-align:center;">Tanggal Citra Sentinel</th>
-											<th width="25%" style="text-align:center;">Tanggal Analisis</th>
-											<th width="20%" style="text-align:center;">Action</th>	
+											<th width="20%" style="text-align:center;">Tanggal Pemupukan</th>
+											<th width="20%" style="text-align:center;">Tanggal Analisis</th>
+											<th width="10%" style="text-align:center;">Action</th>	
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -51,10 +52,11 @@
 											<th width="25%" style="text-align:center;">Tanggal Analisis</th>
 											<th width="20%" style="text-align:center;">Action</th>	
 											-->
-                                            <th width="35%" style="text-align:center;">Area</th>
+                                            <th width="30%" style="text-align:center;">Area</th>
                                             <th width="20%" style="text-align:center;">Tanggal Citra Sentinel</th>
-											<th width="25%" style="text-align:center;">Tanggal Analisis</th>
-											<th width="20%" style="text-align:center;">Action</th>	
+											<th width="20%" style="text-align:center;">Tanggal Pemupukan</th>
+											<th width="20%" style="text-align:center;">Tanggal Analisis</th>
+											<th width="10%" style="text-align:center;">Action</th>	
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -78,6 +80,7 @@
 											<tr>
 												<td><?php echo $data['nama_area']; ?></td>
 	                                            <td align="center"><?php echo date('d F Y',strtotime($data['tanggal_citra'])); ?></td>
+	                                            <td align="center"><?php echo date('d F Y',strtotime($data['tanggal_pemupukan'])); ?></td>
 	                                            <td align="center"><?php echo date('d F Y H:i:s',strtotime($data['tanggal_analisis'])); ?></td>
 												<td align="center">
 													<a style="cursor: pointer;" class="editData"
@@ -184,7 +187,7 @@
 											<input type="text" class="form-control docs-date" id="tanggal" name="tanggal" 
 												placeholder="Pilih tanggal pemupukan" data-toggle="datepicker">
 										</div>
-										<label for="area" class="col-sm-3 control-label">Persentase Dosis Pupuk</label>
+										<label for="area" class="col-sm-3 control-label">Proporsi Dosis Pupuk</label>
 										<div class="col-sm-2">
 											<input type="number" class="form-control" id="persentase" name="persentase" required aria-required="true" aria-invalid="false" value="60"></input>
 										</div>
@@ -303,12 +306,25 @@
 			var p_daun = $("#cmbPDaun").val();
 			var k_daun = $("#cmbKDaun").val();
 			var mg_daun = $("#cmbMgDaun").val();
+			var persentase = $("#persentase").val();
+			var tanggal = $("#tanggal").datepicker("getDate");
 			// var n_tanah = $("#cmbNTanah").val();
 			// var p_tanah = $("#cmbPTanah").val();
 			// var k_tanah = $("#cmbKTanah").val();
 			var n_tanah = n_daun;
 			var p_tanah = n_daun;
 			var k_tanah = n_daun;
+
+			var tahun = tanggal.getFullYear().toString();
+			var bulan = (tanggal.getMonth()+1).toString();
+			bulan = ("0" + bulan).slice(-2);
+			var hari = tanggal.getDate().toString();
+			hari = ("0" + hari).slice(-2);
+
+			tanggal = tahun + "-" + bulan + "-" + hari;
+			// alert(tanggal);
+			// alert(persentase);
+			// return;
 			
 			//alert("test");
 
@@ -331,6 +347,8 @@
 			form_data.append("n_tanah", n_tanah);
 			form_data.append("p_tanah", p_tanah);
 			form_data.append("k_tanah", k_tanah);
+			form_data.append("tgl_pupuk", tanggal);
+			form_data.append("persentase",persentase);
 			// console.log(citra,n_daun,p_daun,k_daun,n_tanah,p_tanah,k_tanah,uid);
 			// return;
 

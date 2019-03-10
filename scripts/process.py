@@ -206,8 +206,60 @@ def SaveDataToPNG(nama_raster,arraydata,cols,rows):
 	pilImage = Image.frombuffer("RGBA",(cols, rows),arraydata,"raw","RGBA",0,1)
 	pilImage.save(nama_raster)
 
-def SaveStatsToGeojson(shp_file,nama_raster,output_geojson):
-	stats = zonal_stats(shp_file, nama_raster, stats="count min mean max sum", geojson_out=True)
+def SaveStatsToGeojsonString(shp_file,nama_raster,prefix,json_data):
+	stats_text = "count min mean max sum"
+	stats_array = stats_text.split()
+	stats_set = frozenset(stats_array)
+	stats = zonal_stats(shp_file, nama_raster, stats=stats_text, geojson_out=True, prefix=prefix)
+
+	blank_json_data = False
+
+	if not json_data:
+		json_data = {}
+		json_data["type"] = "FeatureCollection"
+		json_data["features"] = []
+		blank_json_data = True
+
+	for idx,item in enumerate(stats):
+		if blank_json_data:
+			temp_item = {}
+			for key in item.keys():
+				if key != "geometry":
+					temp_item[key] = item[key]
+				else:
+					temp_geom = {}
+					item_geom = item[key]
+					temp_geom["type"] = item_geom["type"]
+					temp_geom["coordinates"] = []
+					temp_geom["coordinates"].append([])
+					temp_coords = temp_geom["coordinates"][0]
+					item_coords = item_geom["coordinates"][0]
+					for coord in item_coords:
+						xc,yc = transform(p1,p2,coord[0],coord[1])
+						temp_geom["coordinates"][0].append([xc,yc])
+					temp_item[key] = temp_geom
+			json_data["features"].append(temp_item)
+		else:
+			for key in json_data["features"][idx].keys():
+				if key == "properties":
+					for propkey in item[key].keys():
+						temp_key = propkey.replace(prefix,"")
+						if temp_key in stats_set:
+							json_data["features"][idx][key][propkey] = item[key][propkey]
+
+		# if blank_json_data: 
+			# json_data["features"].append(temp_item)
+			# SaveJsonToFile()
+
+	# return json.dumps(json_data)
+	return json_data
+
+def SaveJsonToFile(nama_file,json_data):
+	with open(nama_file, 'w') as outfile:
+		json.dump(json_data, outfile)	
+
+def SaveStatsToGeojson(shp_file,nama_raster,output_geojson,prefix):
+	stats = zonal_stats(shp_file, nama_raster, stats="count min mean max sum", geojson_out=True, prefix=prefix)
 	json_data = {}
 	json_data["type"] = "FeatureCollection"
 	json_data["features"] = []
@@ -297,6 +349,7 @@ tanggal_citra = datavar["tanggal_citra"]
 tanggal_pemupukan = datavar["tanggal_pemupukan"]
 persentase_dosis = datavar["persentase_dosis"]
 
+# print "shapefile: ", shp_file
 # print "tanggal citra: ", tanggal_citra
 # print "tanggal pemupukan: ", tanggal_pemupukan
 # print "dosis: ", persentase_dosis
@@ -495,7 +548,7 @@ for unsur in kelompok_unsur:
 			if i < rows2 and j < cols2: tahun_tanam_null = (tahun_tanam_data[i,j] == null_value)
 
 			ndvi_value = (band8[i,j] - band4[i,j]) / (band8[i,j] + band4[i,j]) * 1.000
-			is_vegetation = (ndvi_value >= 0.4000)
+			is_vegetation = (ndvi_value >= 0.5000)
 
 			# if band1[i,j] != null_value:
 			if band1[i,j] != null_value and not tahun_tanam_null and is_vegetation:
@@ -522,6 +575,7 @@ for unsur in kelompok_unsur:
 				
 				# --- make it non negative value --- #
 				if raster_unsur[unsur][i,j] < 0: raster_unsur[unsur][i,j] = 0
+				if pupuk[nama_pupuk][unsur]["komposisi"] > 0: raster_unsur[unsur][i,j] = 0
 
 				# --- classify the nutrient value --- #
 				raster_unsur_class[unsur][i,j] = ClassificationValue(raster_unsur[unsur][i,j],unsur)
@@ -552,10 +606,20 @@ for unsur in kelompok_unsur:
 						#update on 2019, Feb 26. Total dosis dikalikan persentase penerapan dosis pupuk 
 						data_pupuk["peta_dosis"][i,j] = (persentase_dosis/100.000) * data_pupuk["peta_dosis"][i,j]
 
+						#temporary solution: sampe model Mg bisa digunakan dengan akurasi tinggi
+						if komposisi_pupuk[nama_pupuk]["JENIS"] == "MAJEMUK" and unsur == "Mg": 
+							data_pupuk["peta_dosis"][i,j] = 0.0
+
+
 						data_pupuk["peta_warna"][i,j] = ClassificationValue2(data_pupuk["peta_prev"][i,j],data_pupuk["peta_dosis"][i,j])
 						# data_pupuk["peta_warna"][i,j] = class_color_2[ data_pupuk["peta_warna"][i,j] ]
 						data_pupuk["peta_warna2"][i,j] = class_color_2[ data_pupuk["peta_warna"][i,j] ]
 						data_pupuk["dosis"] += data_pupuk["peta_dosis"][i,j]
+					else:
+						data_pupuk["peta_prev"][i,j] = null_value
+						data_pupuk["peta_dosis"][i,j] = 0
+						data_pupuk["peta_warna"][i,j] = 0
+						data_pupuk["peta_warna2"][i,j] = class_color_2[0]
 
 			else:
 				raster_unsur[unsur][i,j] = null_value
@@ -596,9 +660,11 @@ data = (int(id_analisis),)
 ExecuteQuery(sql,data,True,False)
 
 # --- LOOP FOR EACH PUPUK, HITUNG TOTAL DOSIS UMUM --- #
+# print komposisi_pupuk
 for nama_pupuk in komposisi_pupuk:
 	unsur_terpilih = ""
 	temp_berat = 9999999
+	json_pupuk_blok = {}
 
 	jenis_pupuk = komposisi_pupuk[nama_pupuk]["JENIS"]
 	kode_pupuk = komposisi_pupuk[nama_pupuk]["ID"]
@@ -623,6 +689,15 @@ for nama_pupuk in komposisi_pupuk:
 		data = (int(id_analisis),kode_pupuk,nama_pupuk,jenis_pupuk,unsur,dosis_total,dosis_hektar,dosis_pohon,)
 		ExecuteQuery(sql,data,True,False)
 
+		# Create fertilizer stats based on BLOK and nutrient, save it to temporary data
+		nama_raster = work_folder + "Citra_Pupuk_" + nama_pupuk + "_" + unsur + ".tif"
+		# json_pupuk_blok = json.loads(SaveStatsToGeojsonString(shp_file, nama_raster, unsur + "_", json_pupuk_blok))
+		json_pupuk_blok = SaveStatsToGeojsonString(shp_file, nama_raster, unsur + "_", json_pupuk_blok)
+		# SaveJsonToFile(work_folder + "Data_Blok_Pupuk_" + nama_pupuk + "_" + unsur + ".geojson",json_pupuk_blok)
+
+	# --- Create Fertilizer stats based on BLOK and save it to Geojson file --- #
+	SaveJsonToFile(work_folder + "Data_Blok_Pupuk_" + nama_pupuk + ".geojson",json_pupuk_blok)
+
 	if unsur_terpilih != "":
 		pupuk[nama_pupuk]["unsur_terpilih"] = unsur_terpilih
 		print "Unsur terpilih: ", unsur_terpilih
@@ -633,10 +708,7 @@ for nama_pupuk in komposisi_pupuk:
 
 
 		# --- Create Fertilizer stats based on GRID file and save it to Geojson file --- #
-		SaveStatsToGeojson(grid_file, nama_raster, work_folder + "Data_Grid_Pupuk_" + nama_pupuk + ".geojson")
-
-		# --- Create Fertilizer stats based on BLOK and save it to Geojson file --- #
-		SaveStatsToGeojson(shp_file, nama_raster, work_folder + "Data_Blok_Pupuk_" + nama_pupuk + ".geojson")
+		SaveStatsToGeojson(grid_file, nama_raster, work_folder + "Data_Grid_Pupuk_" + nama_pupuk + ".geojson","")
 
 
 		# --- SAVE SELECTED FERTILIZER DOSAGE DATA TO PNG FILE --- #
@@ -676,32 +748,45 @@ for nama_pupuk in komposisi_pupuk:
 				else:
 					raster_data[i,j] = 0x00000000
 
-		# raster_data = np.zeros((cols, rows),np.uint32)
-		# raster_data.shape=rows, cols
-
-		# for i in range(np.size(range_value)-1):
-		# 	minval = range_value[i]
-		# 	cond1 = np.greater_equal(data_dosis,minval)
-		# 	maxval = range_value[i+1]
-		# 	cond2 = np.less(data_dosis,maxval)
-		# 	cond3 = np.logical_and(cond1,cond2)
-
-		# 	color_val = data_color[i]
-		# 	color_val_new = '0xFF' + color_val[5:7] + color_val[3:5] + color_val[1:3] 
-		# 	temp_data = np.where(cond3,eval(color_val_new),0)
-		# 	raster_data = raster_data + temp_data
-
-		# 	if nama_pupuk == "UREA":
-		# 		print i,"-",minval,maxval
-		# 		nama_raster = work_folder + "Citra_Dosis_Pupuk_" + str(i) + ".png"
-		# 		SaveDataToPNG(nama_raster,temp_data.tostring(),cols,rows)
-
-		# raster_data = raster_data + np.where (data_dosis >= range_value[np.size(range_value)-1],0xFF000000,0)
-		# raster_data = raster_data + np.where( (data_dosis > null_value) & (data_dosis < 0),0xFFFFFFFF,0)
-
 		nama_raster = work_folder + "Citra_Klasifikasi_Pupuk_" + nama_pupuk + ".png"
 		SaveDataToPNG(nama_raster,raster_data.tostring(),cols,rows)
 
+
+		# --- Calculate Fertilizer ideal for each BLOK area based on unsur terpilih ---- #
+		json_file_name = work_folder + "Data_Blok_Pupuk_" + nama_pupuk + ".geojson"
+		with open(json_file_name) as json_file:  
+			json_data_all = json.load(json_file)
+    		for feature in json_data_all["features"]:
+    			data = feature["properties"]
+    			data_terpilih = data[unsur_terpilih + "_sum"]
+
+    			N_sum = data["N_sum"] if data["N_count"] > 0 else 0
+    			P_sum = data["P_sum"] if data["P_count"] > 0 else 0
+    			K_sum = data["K_sum"] if data["K_count"] > 0 else 0
+    			Mg_sum = data["Mg_sum"] if data["Mg_count"] > 0 else 0
+
+    			N_ideal = N_sum if unsur_terpilih == "N" else (N_sum - data_terpilih)
+    			if N_ideal < 0: N_ideal = 0
+    			data["N_ideal"] = N_ideal
+
+    			P_ideal = P_sum if unsur_terpilih == "P" else (P_sum - data_terpilih)
+    			if P_ideal < 0: P_ideal = 0
+    			data["P_ideal"] = P_ideal
+
+    			K_ideal = K_sum if unsur_terpilih == "K" else (K_sum - data_terpilih)
+    			if K_ideal < 0: K_ideal = 0
+    			data["K_ideal"] = K_ideal
+
+    			Mg_ideal = Mg_sum if unsur_terpilih == "Mg" else (Mg_sum - data_terpilih)
+    			if Mg_ideal < 0: Mg_ideal = 0
+    			data["Mg_ideal"] = Mg_ideal
+
+    			data["Unsur_Terpilih"] = unsur_terpilih
+    			data["komposisi_n"] = komposisi_pupuk[nama_pupuk]["N"]
+    			data["komposisi_p"] = komposisi_pupuk[nama_pupuk]["P"]
+    			data["komposisi_k"] = komposisi_pupuk[nama_pupuk]["K"]
+
+			SaveJsonToFile(json_file_name,json_data_all)
 
 
 sql = "DELETE FROM pkt_analisis_summary WHERE kode_analisis = %s;"

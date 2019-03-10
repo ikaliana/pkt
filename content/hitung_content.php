@@ -143,7 +143,7 @@
 										<input type="text" class="form-control docs-date" id="tanggal" name="tanggal" 
 											placeholder="Pilih tanggal pemupukan" data-toggle="datepicker">
 									</div>
-									<label for="area" class="col-sm-3 control-label">Persentase Dosis Pupuk</label>
+									<label for="area" class="col-sm-3 control-label">Proporsi Dosis Pupuk</label>
 									<div class="col-sm-2">
 										<input type="number" class="form-control" id="persentase" name="persentase" required aria-required="true" aria-invalid="false" value="60"></input>
 									</div>
@@ -195,11 +195,19 @@
 			var p_daun = $("#cmbPDaun").val();
 			var k_daun = $("#cmbKDaun").val();
 			var mg_daun = $("#cmbMgDaun").val();
-			var persentase = $("persentase").val();
-			var tanggal = $("#tanggal").datepicker("getDate");
+			var persentase = $("#persentase").val();
 
-			console.log(tanggal);
-			return;
+			var tanggal = $("#tanggal").datepicker("getDate");
+			var tahun = tanggal.getFullYear().toString();
+			var bulan = (tanggal.getMonth()+1).toString();
+			bulan = ("0" + bulan).slice(-2);
+			var hari = tanggal.getDate().toString();
+			hari = ("0" + hari).slice(-2);
+
+			tanggal = tahun + "-" + bulan + "-" + hari;
+
+			// console.log(tanggal);
+			// return;
 			// var n_tanah = $("#cmbNTanah").val();
 			// var p_tanah = $("#cmbPTanah").val();
 			// var k_tanah = $("#cmbKTanah").val();

@@ -28,7 +28,7 @@ try {
 		$query2 = "INSERT INTO pkt_analisis (tanggal_analisis, kode_citra, kode_model_n, kode_model_p, kode_model_k, kode_model_mg, ";
 		$query2 .= "kode_model_n_tanah, kode_model_p_tanah, kode_model_k_tanah, tanggal_pemupukan, persentase_dosis, status) ";
 		$query2 .= "VALUES (now(),".$citra.",".$n_daun.",".$p_daun.",".$k_daun.",".$mg_daun.",".$n_tanah.",".$p_tanah.",".$k_tanah;
-		$query2 .= ",".$tgl_pupuk.",".$persentase.",FALSE)";
+		$query2 .= ",'".$tgl_pupuk."',".$persentase.",FALSE)";
 
 		$sql = pg_query($db_conn, $query2);
 
