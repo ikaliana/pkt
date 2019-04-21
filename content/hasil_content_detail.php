@@ -929,9 +929,9 @@
 		function PupukBlokObjectChange() {
 	   		var pupuk = $("#cbpupuk3").val();
 
-	   		var data_json = imageUrl + "Data_Blok_Pupuk_" + pupuk + ".geojson";
-	   		// var data_json = imageUrl + "Data_Grid_Pupuk_UREA_4326.geojson";
-	   		var data_img = imageUrl + "Citra_Klasifikasi_Pupuk_"  + pupuk + ".png";
+	   		var data_json = imageUrl + "Data_Blok_Pupuk_" + encodeURI(pupuk) + ".geojson";
+	   		var data_img = imageUrl + "Citra_Klasifikasi_Pupuk_"  + encodeURI(pupuk) + ".png";
+	   		console.log(data_json, data_img);
 
 	   		$.getJSON(data_raster).done(function (d) {
 
@@ -940,6 +940,8 @@
 
 				$.getJSON(data_json, function(data){
 			        
+			        //console.log(data_json);
+			        // console.log(data);
 			        map4.eachLayer(function (layer) { map4.removeLayer(layer); });
 
 			        var mapData = L.geoJson(data, { filter: filter, style: style, onEachFeature: OnEachFeature });
@@ -959,6 +961,7 @@
 						// var fieldname = (unsur != "") ? unsur + "_sum" : "N_ideal";
 						// var sum = val.properties[fieldname];
 						// if (sum != null) table_data.push(val.properties);
+						// console.log(key,": ",val.properties);
 						table_data.push(val.properties);
 			        });
 

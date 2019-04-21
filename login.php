@@ -64,7 +64,7 @@ if(isset($_POST['login'])){
 <body class="login-page" style="background-image: url('images/background-login.jpg');background-repeat: no-repeat;background-attachment: fixed;background-position: top; ">
     <div class="login-box" style="background:white;opacity:50;">
         <div class="logo" align="center">
-            <img src="images/pkt_logo.png" width="340px"/>
+            <img src="images/pkt_logo.png" width="340px"/ style="display:none">
 			<h3><?php echo $page_title; ?></h3>
         </div>
         <div class="card">
